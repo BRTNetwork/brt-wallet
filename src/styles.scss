@@ -103,3 +103,8 @@ i.csc-dialog-icon {
 input, button, textarea, :focus {
     outline: none; // You should add some other style for :focus to help UX/a11y
 }
+
+.button-break {
+  display: block;
+  margin-bottom: 15px;
+}
