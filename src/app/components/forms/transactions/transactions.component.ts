@@ -175,15 +175,11 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
   }
 
   loadTXLazy(event: LazyLoadEvent) {
-    this.logger.debug("### Transactions - loadTXLazy");
     setTimeout(() => {
       this.loadingTX = true;
       this.totalTXRecords = this.walletService.getWalletTxCount() ? this.walletService.getWalletTxCount() : 0;
-      this.logger.debug("### Transactions - DB count: " + this.totalTXRecords);
       if(this.transactions !== undefined && this.transactions.length > 0){
-        this.logger.debug("### Transactions - event: " + JSON.stringify(event));
         this.lazyTransactions = this.transactions.slice(event.first, (event.first + event.rows));
-        this.logger.debug("### Transactions - Lazy TX count: " + this.lazyTransactions.length);
       }
       this.loadingTX = false;
     }, 0);

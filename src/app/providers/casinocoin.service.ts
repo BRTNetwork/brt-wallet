@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import { Injectable, OnInit, OnDestroy } from '@angular/core';
 import { DecimalPipe } from '@angular/common';
 import { Observable } from 'rxjs/Observable';
@@ -10,15 +11,16 @@ import { LocalStorageService } from "ngx-store";
 import { LedgerStreamMessages, ServerStateMessage, 
          ServerDefinition } from '../domain/websocket-types';
 import { LogService } from './log.service';
-// import { CasinocoinBinaryCodec, CasinocoinKeypairs } from 'casinocoin-libjs';
-import { LokiKey, LokiAccount, LokiTransaction, LokiTxStatus } from '../domain/lokijs';
+import { LokiKey, LokiAccount, LokiTransaction, LokiTxStatus, LokiAccountSettings, LokiSignedTransaction } from '../domain/lokijs';
 import { AppConstants } from '../domain/app-constants';
 import { CasinocoinTxObject, PrepareTxPayment } from '../domain/csc-types';
 import { CSCUtil } from '../domain/csc-util';
 import { NotificationService } from './notification.service';
 import { ElectronService } from './electron.service';
 import Big from 'big.js';
-
+import BigNumber from 'bignumber.js'
+import {utils} from 'protractor';
+import * as CasinocoinAddressCodec from 'casinocoin-libjs-address-codec/src/index';
 const crypto = require('crypto');
 
 @Injectable()
@@ -37,11 +39,15 @@ export class CasinocoinService implements OnDestroy {
     public ledgers: Array<LedgerStreamMessages> = [];
     public serverStateSubject = new BehaviorSubject<ServerStateMessage>(this.initServerState());
     public accounts: Array<LokiAccount> = [];
+    public accountSettings: Array<LokiAccountSettings> = [];
+    public accountSettingsSubject = new Subject<LokiAccountSettings>();
     public accountSubject = new Subject<LokiAccount>();
     public transactions: Array<LokiTransaction> = [];
     public transactionSubject = new Subject<LokiTransaction>();
     public lastTransactionHash: string = "";
     public casinocoinConnectedSubject = new BehaviorSubject<boolean>(false);
+    public fullAccountRefresh = false;
+    public accountRefreshCount = 0;
 
     constructor(private logger: LogService, 
                 private wsService: WebsocketService,
@@ -51,7 +57,7 @@ export class CasinocoinService implements OnDestroy {
                 private localStorageService: LocalStorageService,
                 private electron: ElectronService ) {
         logger.debug("### INIT  CasinocoinService ###");
-        // Initialize server state
+
         this.initServerState();
     }
 
@@ -118,6 +124,7 @@ export class CasinocoinService implements OnDestroy {
                                     this.logger.debug("### CasinocoinService Accounts: " + JSON.stringify(subscribeAccounts));
                                     this.subscribeToAccountsStream(subscribeAccounts);
                                     // update all accounts from the network
+                                    this.fullAccountRefresh = true;
                                     this.checkAllAccounts();
                                     // do some checks on all transactions
                                     // this.checkAllTransactions();
@@ -270,6 +277,31 @@ export class CasinocoinService implements OnDestroy {
                     }
                     this.addLedger(ledgerMessage);
                     this.ledgerSubject.next(ledgerMessage);
+                } else if (incommingMessage['id'].startsWith('getAccountSettings')){
+                    let response = incommingMessage.result.account_data;
+                    let accountSettings: LokiAccountSettings = {
+                        accountID: response.Account,
+                        Sequence: response.Sequence
+                    };
+                    if(typeof response.signer_lists !== 'undefined' && response.signer_lists.length >= 1){
+                        response.signer_lists.forEach(signer_list => {
+                            accountSettings.signers = [];
+                            signer_list.SignerEntries.forEach(signer => {
+                                accountSettings.signerQuorum = signer_list.SignerQuorum
+                                accountSettings.signers.push({
+                                    accountID: signer.SignerEntry.Account,
+                                    weight: signer.SignerEntry.SignerWeight
+                                });
+                            });
+                        });
+                    }
+                    accountSettings.disableMasterKey = false;
+                    if(typeof response.Flags !== 'undefined' && response.Flags === 1048576){
+                        accountSettings.disableMasterKey = true;
+                    }
+
+                    this.accountSettings.push(accountSettings);
+                    this.accountSettingsSubject.next(accountSettings);
                 } else if (incommingMessage['id'].startsWith('getAccountInfo')){
                     // we received account info
                     this.logger.debug("### CasinocoinService - getAccountInfo: " + JSON.stringify(incommingMessage.result));
@@ -285,6 +317,19 @@ export class CasinocoinService implements OnDestroy {
                     walletAccount.lastSequence = account_result.Sequence;
                     walletAccount.lastTxID = account_result.PreviousTxnID;
                     walletAccount.lastTxLedger = account_result.PreviousTxnLgrSeq;
+                    if(typeof account_result.signer_lists !== 'undefined' && account_result.signer_lists.length >= 1){
+                        account_result.signer_lists.forEach(signer_list => {
+                            signer_list.SignerEntries.forEach(signer => {
+                                walletAccount.signerQuorum = signer_list.SignerQuorum
+                                walletAccount.signers = [];
+                                walletAccount.signers.push({
+                                    accountID: signer.SignerEntry.Account,
+                                    weight: signer.SignerEntry.SignerWeight
+                                });
+                            });
+                        });
+                    }
+
                     // save back to the wallet
                     this.walletService.updateAccount(walletAccount);
                     // update accounts array
@@ -320,6 +365,8 @@ export class CasinocoinService implements OnDestroy {
                         if(walletAccount.balance !== accountTxBalance){
                             // we are missing transactions or have still unvalidated transactions for this account so check all
                             this.getAccountTx(walletAccount.accountID, lastTxLedgerIndex);
+                        } else {
+                            this.accountRefreshCount --;
                         }
                     } else {
                         this.logger.debug("### CasinocoinService - AccountInfo without Refresh Tx");
@@ -418,7 +465,7 @@ export class CasinocoinService implements OnDestroy {
                     // update accounts
                     if(tx.direction == AppConstants.KEY_WALLET_TX_IN){
                         this.getAccountInfo(tx.destination, false);
-                        if(notifyUser){
+                        if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
                                 {title: 'Incoming CSC Transaction', 
                                 body: 'You received '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(tx.amount), "1.2-8") +
@@ -426,7 +473,7 @@ export class CasinocoinService implements OnDestroy {
                         }
                     } else if(tx.direction == AppConstants.KEY_WALLET_TX_OUT){
                         this.getAccountInfo(tx.accountID, false);
-                        if(notifyUser){
+                        if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
                                 {title: 'Outgoing CSC Transaction', 
                                 body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(tx.amount), "1.2-8") +
@@ -435,7 +482,7 @@ export class CasinocoinService implements OnDestroy {
                     } else {
                         this.getAccountInfo(tx.destination, false);
                         this.getAccountInfo(tx.accountID, false);
-                        if(notifyUser){
+                        if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
                                 {title: 'Wallet Transaction', 
                                 body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(tx.amount), "1.2-8") +
@@ -446,6 +493,7 @@ export class CasinocoinService implements OnDestroy {
                 } else if(incommingMessage['id'] == 'getAccountTx'){
                     let accountTxArray: Array<any> = incommingMessage.result.transactions;
                     this.logger.debug("### CasinocoinService - getAccountTx message TX Count: " + accountTxArray.length);
+                    this.logger.debug("### CasinocoinService - getAccountTx Full Refresh: " + this.fullAccountRefresh);
                     // Check all transactions against DB
                     accountTxArray.forEach(element => {
                         // check the TransactionType
@@ -470,6 +518,15 @@ export class CasinocoinService implements OnDestroy {
                     if(incommingMessage.result.marker){
                         this.logger.debug("### CasinocoinService - getAccountTx - Get Next Batch");
                         this.getAccountTx(incommingMessage.result.account, -1, incommingMessage.result.marker);
+                    } else {
+                        // we are done
+                        this.logger.debug("### CasinocoinService - getAccountTx - FINISHED");
+                        this.accountRefreshCount --;
+                        this.logger.debug("### CasinocoinService - getAccountTx - FINISHED - accountRefreshCount: " + this.accountRefreshCount);
+                        if (this.accountRefreshCount <= 0) {
+                            this.logger.debug("### CasinocoinService - getAccountTx - FINISHED - set refresh finished");
+                            this.fullAccountRefresh = false;
+                        }
                     }
                 }
             } else if(incommingMessage.status === 'error'){
@@ -514,12 +571,29 @@ export class CasinocoinService implements OnDestroy {
         this.sendCommand(ledgerRequest);
     }
 
+    getAccountSettings(accountID: string, callbackIdentifier: string = null){
+        if(callbackIdentifier === null){
+            callbackIdentifier = "getAccountSettings";
+        }
+
+
+        let accountInfoRequest = {
+            id: callbackIdentifier,
+            command: "account_info",
+            ledger_index: "validated",
+            account: accountID,
+            signer_lists: true
+        }
+        this.sendCommand(accountInfoRequest);
+    }
+
     getAccountInfo(accountID: string, refresh: boolean){
         let accountInfoRequest = {
             id: "getAccountInfo",
             command: "account_info",
             ledger_index: "validated",
-            account: accountID
+            account: accountID,
+            signer_lists: true
         }
         if(refresh)
             accountInfoRequest.id = "getAccountInfoRefresh";
@@ -592,6 +666,7 @@ export class CasinocoinService implements OnDestroy {
     checkAllAccounts(){
         // loop over all accounts
         let accounts:Array<LokiAccount> = this.walletService.getAllAccounts();
+        this.accountRefreshCount = accounts.length;
         accounts.forEach((account, index, arr) => {
             // get the account info for every account
             // accounts are already updated in the wallet on receiving
@@ -625,6 +700,10 @@ export class CasinocoinService implements OnDestroy {
             Sequence: txWalletAccount.lastSequence,
             LastLedgerSequence: lastLedgerForTx
         }
+
+        if(input.sequence !== undefined){
+             txJSON.Sequence = input.sequence;
+        }
     
         if (input.invoiceID !== undefined) {
             txJSON.InvoiceID = input.invoiceID;
@@ -638,20 +717,16 @@ export class CasinocoinService implements OnDestroy {
         if (input.description !== undefined && input.description.length > 0) {
             txJSON.Memos = [ CSCUtil.encodeMemo({ memo: { memoData: input.description, memoFormat: "plain/text"}})];
         }
+
         return txJSON;
     }
 
     signTx(tx: CasinocoinTxObject, password: string): string{
-        // get keypair for sending account
         let accountKey: LokiKey = this.walletService.getKey(tx.Account);
-        // decrypt private key
         let privateKey = this.walletService.getDecryptPrivateKey(password, accountKey);
         if(privateKey != AppConstants.KEY_ERRORED){
-            // set the linked public key
             tx.SigningPubKey = accountKey.publicKey;
-            // encode tx
             let encodedTx = this.electron.remote.getGlobal("vars").cscBinaryCodec.encodeForSigning(tx);
-            // sign transaction
             tx.TxnSignature = this.electron.remote.getGlobal("vars").cscKeypairs.sign(encodedTx, privateKey);
             return this.electron.remote.getGlobal("vars").cscBinaryCodec.encode(tx);   
         } else {
@@ -660,9 +735,45 @@ export class CasinocoinService implements OnDestroy {
         }
     }
 
-    submitTx(txBlob: string){
+    computeSignature(tx: Object, privateKey: string, signAs?: string) {
+        const signingData = signAs ?
+          this.electron.remote.getGlobal('vars').cscBinaryCodec.encodeForMultisigning(tx, signAs) : this.electron.remote.getGlobal('vars').cscBinaryCodec.encodeForSigning(tx)
+        return this.electron.remote.getGlobal('vars').cscKeypairs.sign(signingData, privateKey)
+    }
+
+    sign(txJSON: string, secret: string, options: { signAs?: string } = {}
+    ): { signedTransaction: string; id: string } {
+
+        const tx = JSON.parse(txJSON)
+        if (tx.TxnSignature || tx.Signers) {
+            delete tx.TxnSignature;
+            delete tx.Signers;
+        }
+
+        const keypair = this.electron.remote.getGlobal('vars').cscKeypairs.deriveKeypair(secret)
+        tx.SigningPubKey = options.signAs ? '' : keypair.publicKey
+
+        if (options.signAs) {
+            const signer = {
+                Account: options.signAs,
+                SigningPubKey: keypair.publicKey,
+                TxnSignature: this.computeSignature(tx, keypair.privateKey, options.signAs)
+            }
+            tx.Signers = [{Signer: signer}]
+        } else {
+            tx.TxnSignature = this.computeSignature(tx, keypair.privateKey)
+        }
+
+        const serialized = this.electron.remote.getGlobal('vars').cscBinaryCodec.encode(tx)
+        return {
+            signedTransaction: serialized,
+            id: this.electron.remote.getGlobal('vars').cscHashes.computeBinaryTransactionHash(serialized)
+        }
+    }
+
+    submitTx(txBlob: string) {
         let submitRequest = {
-            id: "submitTx",
+            id: 'submitTx',
             command: "submit",
             tx_blob: txBlob
         }
@@ -697,7 +808,9 @@ export class CasinocoinService implements OnDestroy {
             direction: txDirection,
             validated: validated,
             status: LokiTxStatus.received,
-            inLedger: inLedger
+            inLedger: inLedger,
+            engineResult: tx.engine_result,
+            engineResultMessage: tx.engine_result_message
         }
         // add Memos if defined
         if(tx.Memos){
@@ -739,26 +852,36 @@ export class CasinocoinService implements OnDestroy {
         }
         // notify tx change
         this.transactionSubject.next(dbTX);
+        let bodyMessage = '';
+        if(tx.engine_result !== 'tesSUCCESS'){
+            bodyMessage = ". Which got declined due to " + tx.engine_result_message;
+        }
         // update accounts
         if(dbTX.direction == AppConstants.KEY_WALLET_TX_IN){
             this.getAccountInfo(dbTX.destination, false);
-            this.notificationService.addMessage(
-                {title: 'Incoming CSC Transaction', 
-                body: 'You received '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
-                    ' coins from ' + dbTX.accountID});
+            if (!this.fullAccountRefresh) {
+                this.notificationService.addMessage(
+                    {title: 'Incoming CSC Transaction', 
+                    body: 'You received '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                        ' coins from ' + dbTX.accountID + bodyMessage});
+            }
         } else if(dbTX.direction == AppConstants.KEY_WALLET_TX_OUT){
             this.getAccountInfo(dbTX.accountID, false);
-            this.notificationService.addMessage(
-                {title: 'Outgoing CSC Transaction', 
-                body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
-                    ' coins to ' + dbTX.destination});
+            if (!this.fullAccountRefresh) {
+                this.notificationService.addMessage(
+                    {title: 'Outgoing CSC Transaction', 
+                    body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                        ' coins to ' + dbTX.destination + bodyMessage});
+            }
         } else {
             this.getAccountInfo(dbTX.destination, false);
             this.getAccountInfo(dbTX.accountID, false);
-            this.notificationService.addMessage(
-                {title: 'Wallet Transaction', 
-                body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
-                    ' coins to your own address ' + dbTX.destination});
+            if (!this.fullAccountRefresh) {
+                this.notificationService.addMessage(
+                    {title: 'Wallet Transaction', 
+                    body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                        ' coins to your own address ' + dbTX.destination + bodyMessage});
+            }
         }
     }
 
@@ -794,7 +917,9 @@ export class CasinocoinService implements OnDestroy {
                             direction: AppConstants.KEY_WALLET_TX_IN,
                             validated: true,
                             status: LokiTxStatus.received,
-                            inLedger: tx.LedgerSequence
+                            inLedger: tx.LedgerSequence,
+                            engineResult: tx.engine_result,
+                            engineResultMessage: tx.engine_result_message
                         }
                         // insert into the wallet
                         this.walletService.addTransaction(dbTX);
@@ -803,10 +928,12 @@ export class CasinocoinService implements OnDestroy {
                         this.transactionSubject.next(dbTX);
                         // update accounts
                         this.getAccountInfo(dbTX.destination, false);
-                        this.notificationService.addMessage(
-                            {title: 'Incoming CRN Fee Transaction', 
-                            body: 'You received '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
-                                ' coins for CRN Ledger Round ' + dbTX.lastLedgerSequence});
+                        if (!this.fullAccountRefresh) {
+                            this.notificationService.addMessage(
+                                {title: 'Incoming CRN Fee Transaction', 
+                                body: 'You received '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                                    ' coins for CRN Ledger Round ' + dbTX.lastLedgerSequence});
+                        }
                     } else {
                         this.logger.debug("### CasinocoinService - Account NOT mine: " + node.ModifiedNode.FinalFields.Account);
                     }
@@ -822,4 +949,49 @@ export class CasinocoinService implements OnDestroy {
             this.walletService.updateTransaction(dbTX);
         }
     }
+
+    getSettings(account: string){
+        this.getAccountSettings(account);
+    }
+
+    combine(signedTransactions: Array<string>): LokiSignedTransaction {
+        const txs: any[] = _.map(signedTransactions,  this.electron.remote.getGlobal('vars').cscBinaryCodec.decode)
+        const tx = _.omit(txs[0], 'Signers')
+        if (!_.every(txs, _tx => _.isEqual(tx, _.omit(_tx, 'Signers')))) {
+        throw new Error(
+            'txJSON is not the same for all signedTransactions');
+        }
+
+        const unsortedSigners = _.reduce(txs, (accumulator, _tx) =>
+        accumulator.concat(_tx.Signers || []), []);
+
+        const signers = unsortedSigners.sort((a, b) => {
+            const hexA = new BigNumber((Buffer.from( CasinocoinAddressCodec.decodeAddress(a.Signer.Account))).toString('hex'), 16);
+            const hexB = new BigNumber((Buffer.from( CasinocoinAddressCodec.decodeAddress(b.Signer.Account))).toString('hex'), 16);
+            return hexA.comparedTo(hexB);
+        });
+
+        const signedTx = _.assign({}, tx, {Signers: signers});
+        const signedTransaction = this.electron.remote.getGlobal('vars').cscBinaryCodec.encode(signedTx);
+        const id = this.electron.remote.getGlobal('vars').cscHashes.computeBinaryTransactionHash(signedTransaction);
+        return {signedTransaction, id};
+    }
+
+    hexToString(hex: string): string {
+        return hex ? new Buffer(hex, 'hex').toString('utf-8') : undefined
+    }
+
+    convertStringToHex(inputString: string) {
+        if (inputString !== undefined && inputString.length > 0) {
+        return new Buffer(inputString, 'utf8').toString('hex').toUpperCase();
+        } else {
+        return "";
+        }
+    }
+    
+    verifyMessage(msg: string, signature: string, publicKey: string): boolean {
+        return this.electron.remote.getGlobal('vars').cscKeypairs.verifyMessage(this.convertStringToHex(msg), signature, publicKey);
+    } 
+  
+
 }
