@@ -281,24 +281,24 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       ]};
     this.tools_context_menu.append(new this.electron.remote.MenuItem(messageSigningMenu));
 
-    const multiSigningMenu = { label: 'Multisigning', submenu: [
-        { label: 'Enable Multisigning',
-          click(menuItem, browserWindow, event) {
-            browserWindow.webContents.send('context-menu-event', 'enable-multisign');
-          }, enabled: true
-        },
-        { label: 'Sign Transaction',
-          click(menuItem, browserWindow, event) {
-            browserWindow.webContents.send('context-menu-event', 'sign-transaction');
-          }, enabled: true
-        },
-        { label: 'Compose Transaction',
-          click(menuItem, browserWindow, event) {
-            browserWindow.webContents.send('context-menu-event', 'compose-transaction');
-          }, enabled: true
-        }
-      ]};
-    this.tools_context_menu.append(new this.electron.remote.MenuItem(multiSigningMenu));
+    // const multiSigningMenu = { label: 'Multisigning', submenu: [
+    //     { label: 'Enable Multisigning',
+    //       click(menuItem, browserWindow, event) {
+    //         browserWindow.webContents.send('context-menu-event', 'enable-multisign');
+    //       }, enabled: true
+    //     },
+    //     { label: 'Sign Transaction',
+    //       click(menuItem, browserWindow, event) {
+    //         browserWindow.webContents.send('context-menu-event', 'sign-transaction');
+    //       }, enabled: true
+    //     },
+    //     { label: 'Compose Transaction',
+    //       click(menuItem, browserWindow, event) {
+    //         browserWindow.webContents.send('context-menu-event', 'compose-transaction');
+    //       }, enabled: true
+    //     }
+    //   ]};
+    // this.tools_context_menu.append(new this.electron.remote.MenuItem(multiSigningMenu));
     this.tools_context_menu.append(new this.electron.remote.MenuItem({ type: 'separator' }));
     this.tools_context_menu.append(new this.electron.remote.MenuItem(
       { label: 'Change Password',

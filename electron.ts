@@ -286,8 +286,6 @@ function createWindow() {
           });
           // save and close wallet
           win.webContents.send('action', 'quit-wallet');
-        } else {
-          win.close();
         }
       }
     }
