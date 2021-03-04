@@ -6,13 +6,13 @@
 
 // PrimeNG
 @import "~primeng/resources/primeng.min.css";
-@import "./assets/primeng-csc/theme.css";
+@import "./assets/primeng-brt/theme.css";
 
 // Font Awesome
 @import "~font-awesome/css/font-awesome.min.css";
 
-// CSC Icon Font
-@import "./assets/csc-icon-font/style.css";
+// BRT Icon Font
+@import "./assets/brt-icon-font/style.css";
 
 // Components
 // @import "./app/app.component";
@@ -64,7 +64,7 @@ html, body {
   color: $brtRed;
 }
 
-i.csc-dialog-icon {
+i.brt-dialog-icon {
   padding-right: 10px;
   color: $brtRed;
   font-size: 1.25em;

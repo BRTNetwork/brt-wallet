@@ -5,7 +5,7 @@ import { WalletService } from '../../providers/wallet.service';
 import { ElectronService } from '../../providers/electron.service';
 import { LocalStorage, SessionStorage, LocalStorageService, SessionStorageService } from "ngx-store";
 import { SelectItem } from 'primeng/primeng';
-import { CSCUtil } from '../../domain/csc-util';
+import { BRTUtil } from '../../domain/brt-util';
 import { AppConstants } from '../../domain/app-constants';
 import { LogService } from '../../providers/log.service';
 import { MessageService } from 'primeng/components/common/messageservice';
@@ -66,9 +66,9 @@ export class LoginComponent implements OnInit {
         for(let i=0; i< this.availableWallets.length; i++){
             this.logger.debug("Wallet: " + JSON.stringify(this.availableWallets[i]));
             let walletLabel = this.availableWallets[i]['walletUUID'].substring(0,12);
-            let walletCreationDate = new Date(CSCUtil.brtToUnixTimestamp(this.availableWallets[i]['creationDate']));
+            let walletCreationDate = new Date(BRTUtil.brtToUnixTimestamp(this.availableWallets[i]['creationDate']));
             if(this.availableWallets[i]['importedDate']){
-                let walletImportDate = new Date(CSCUtil.brtToUnixTimestamp(this.availableWallets[i]['importedDate']));
+                let walletImportDate = new Date(BRTUtil.brtToUnixTimestamp(this.availableWallets[i]['importedDate']));
                 walletLabel = walletLabel + "... [Imported: " + this.datePipe.transform(walletImportDate, "yyyy-MM-dd") + "]";
             } else {
                 walletLabel = walletLabel + "... [Created: " + this.datePipe.transform(walletCreationDate, "yyyy-MM-dd") + "]";

@@ -6,7 +6,7 @@ import { SelectItem, Dropdown, MenuItem, Message } from 'primeng/primeng';
 import { brtService } from '../../../providers/brt.service';
 import { WalletService } from '../../../providers/wallet.service';
 import { LedgerStreamMessages } from '../../../domain/websocket-types';
-import { CSCUtil } from '../../../domain/csc-util';
+import { BRTUtil } from '../../../domain/brt-util';
 import { AppConstants } from '../../../domain/app-constants';
 import { LokiTransaction } from '../../../domain/lokijs';
 import { ElectronService } from '../../../providers/electron.service';
@@ -107,7 +107,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
         this.accounts.push({label:'Select Account ...', value:null});
         this.walletService.getAllAccounts().forEach( element => {
           if(new Big(element.balance) > 0){
-            let accountLabel = element.label + "(" + element.accountID.substring(0,8)+ "...) [Balance: " + CSCUtil.dropsToCsc(element.balance) + "]";
+            let accountLabel = element.label + "(" + element.accountID.substring(0,8)+ "...) [Balance: " + BRTUtil.dropsToCsc(element.balance) + "]";
             this.accounts.push({label: accountLabel, value: element.accountID});
           }
         });
@@ -191,7 +191,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
     this.accounts.push({label:'Select Account ...', value:null});
     this.walletService.getAllAccounts().forEach( element => {
       if(new Big(element.balance) > 0){
-        let accountLabel = element.label + "(" + element.accountID.substring(0,8)+ "...) [Balance: " + CSCUtil.dropsToCsc(element.balance) + "]";
+        let accountLabel = element.label + "(" + element.accountID.substring(0,8)+ "...) [Balance: " + BRTUtil.dropsToCsc(element.balance) + "]";
         this.accounts.push({label: accountLabel, value: element.accountID});
       }
     });
@@ -273,7 +273,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
   }
 
   convertCscTimestamp(inputTime) {
-    return CSCUtil.brtToUnixTimestamp(inputTime);
+    return BRTUtil.brtToUnixTimestamp(inputTime);
   }
 
   showTxContextMenu(event){

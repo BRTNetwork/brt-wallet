@@ -8,7 +8,7 @@ import { CipherGCM,
          createCipheriv, 
          createDecipheriv }  from 'crypto';
 
-export class CSCCrypto {
+export class BRTCrypto {
 
   private static PASSPHRASE_WORD_COUNT = 8;
   private IV_LENGTH = 16; // For AES, this is always 16

@@ -1,8 +1,8 @@
 {
   "name": "brt-wallet",
   "version": "4.1.5",
-  "productName": "brt Wallet",
-  "description": "brt Desktop Wallet",
+  "productName": "BRT Wallet",
+  "description": "BRT Desktop Wallet",
   "homepage": "https://github.com/BRTNetwork/brt-wallet",
   "author": {
     "name": "brt Foundation",
@@ -10,7 +10,7 @@
   },
   "keywords": [
     "brt",
-    "csc",
+    "brt",
     "wallet"
   ],
   "main": "electron.js",
@@ -24,7 +24,7 @@
     "start": "npm-run-all --parallel webpack:watch electron:serve",
     "webpack:watch": "webpack --watch",
     "webpack:compile": "webpack --display-error-details",
-    "compile-sass-theme": "sass src/assets/primeng-csc/theme.scss src/assets/primeng-csc/theme.css",
+    "compile-sass-theme": "sass src/assets/primeng-brt/theme.scss src/assets/primeng-brt/theme.css",
     "start:web": "webpack-dev-server --content-base . --port 4200 --inline",
     "build:electron:main": "tsc electron.ts --outDir dist && copyfiles package.json dist && cd dist && npm install --prod && cd ..",
     "build": "webpack --display-error-details && npm run build:electron:main",

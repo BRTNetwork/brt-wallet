@@ -20,10 +20,10 @@
             </p-column>
             <p-column field="timestamp" [style]="{'width':'72px'}">
                 <ng-template let-data="rowData" pTemplate="body">
-                    <span class="text-large">{{data.timestamp | cscDate : 'dd'}}</span>
-                    <span class="text-small-bottom">{{data.timestamp | cscDate : 'MMM' | uppercase}}</span>
-                    <span class="text-large">{{data.timestamp | cscDate : 'HH'}}</span>
-                    <span class="text-small-top" >{{data.timestamp | cscDate : ':mm:ss'}}</span>
+                    <span class="text-large">{{data.timestamp | brtDate : 'dd'}}</span>
+                    <span class="text-small-bottom">{{data.timestamp | brtDate : 'MMM' | uppercase}}</span>
+                    <span class="text-large">{{data.timestamp | brtDate : 'HH'}}</span>
+                    <span class="text-small-top" >{{data.timestamp | brtDate : ':mm:ss'}}</span>
                 </ng-template>
             </p-column>
             <p-column [style]="{'width':'172px'}">
@@ -47,7 +47,7 @@
             </p-column>
             <p-column field="amount" [style]="{'width':'75px'}">
                 <ng-template let-data="rowData" pTemplate="body">
-                    <span class="text-large" #amountColText>{{ getTXTextColor(amountColText,data) }}{{data.amount | cscAmount : false : true}}</span>
+                    <span class="text-large" #amountColText>{{ getTXTextColor(amountColText,data) }}{{data.amount | brtAmount : false : true}}</span>
                 </ng-template>
             </p-column>
             <ng-template pTemplate="emptymessage">
@@ -63,7 +63,7 @@
 <p-dialog class="dialog-header" [(visible)]="showLedgerDialog" [width]="500" [height]="425" 
     [closable]="true" [modal]="true" appendTo="body">
     <p-header>
-        <i class="icon csc-dialog-icon icon-chip"></i>
+        <i class="icon brt-dialog-icon icon-chip"></i>
         Ledger Information
     </p-header>
     <p-dataTable [value]="ledgers" [immutable]="false" scrollable="true" scrollHeight="325px">

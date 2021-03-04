@@ -5,7 +5,7 @@ import { LogService } from '../../providers/log.service';
 import { ElectronService } from '../../providers/electron.service';
 import { SessionStorageService, LocalStorageService } from "ngx-store";
 import { AppConstants } from '../../domain/app-constants';
-import { CSCUtil } from '../../domain/csc-util';
+import { BRTUtil } from '../../domain/brt-util';
 import * as LokiTypes from '../../domain/lokijs';
 import { MenuItem, MessagesModule, Message } from 'primeng/primeng';
 import { UUID } from 'angular2-uuid';
@@ -13,7 +13,7 @@ import { UUID } from 'angular2-uuid';
 import { WalletService } from '../../providers/wallet.service';
 import { brtService } from '../../providers/brt.service';
 import { WebsocketService } from '../../providers/websocket.service';
-import { CSCCrypto } from '../../domain/csc-crypto';
+import { BRTCrypto } from '../../domain/brt-crypto';
 import { setTimeout } from 'timers';
 import { DatePipe } from '@angular/common';
 
@@ -79,8 +79,8 @@ export class WalletSetupComponent implements OnInit {
 
   // Create an offline brtAPI
   // Server connection will be done via native WebSockets instead of brt libjs
-  // cscAPI = new brtAPI({ server: 'ws://158.69.59.142:7007' });
-  // cscAPI = new brtAPI();
+  // brtAPI = new brtAPI({ server: 'ws://158.69.59.142:7007' });
+  // brtAPI = new brtAPI();
 
   @ViewChild('cancelButton') cancelButton;
   @ViewChild('previousButton') previousButton;
@@ -116,7 +116,7 @@ export class WalletSetupComponent implements OnInit {
       this.enableCancelCreation = true;
     }
 
-    this.recoveryMnemonicWords = CSCCrypto.getRandomMnemonic();
+    this.recoveryMnemonicWords = BRTCrypto.getRandomMnemonic();
 
     this.steps = [{
           label: 'Start',
@@ -256,7 +256,7 @@ export class WalletSetupComponent implements OnInit {
 
   finishStep4() {
     // toggle to step 5
-    this.recoveryHash = new CSCCrypto(this.recoveryMnemonicWords).encrypt(this.walletPassword);
+    this.recoveryHash = new BRTCrypto(this.recoveryMnemonicWords).encrypt(this.walletPassword);
     this.logger.debug("Mnemonic Recovery Hash Created: " + this.recoveryHash);
     if(this.activeIndex < this.maxActiveIndex){
       this.activeIndex += 1;
@@ -332,10 +332,10 @@ export class WalletSetupComponent implements OnInit {
   finishSetup() {
     // Close dialog and wallet setup and go to Home screen
     this.logger.debug("Setup Finished");
-    this.logger.debug("Current Timestamp CSC: " + CSCUtil.unixTobrtTimestamp(Date.now()));
+    this.logger.debug("Current Timestamp BRT: " + BRTUtil.unixTobrtTimestamp(Date.now()));
     let newAvailableWallet = 
       { "walletUUID": this.walletUUID, 
-        "creationDate": CSCUtil.iso8601TobrtTime(new Date().toISOString()),
+        "creationDate": BRTUtil.iso8601TobrtTime(new Date().toISOString()),
         "location": this.walletLocation,
         "hash": this.walletHash,
         "network" : (this.walletTestNetwork ? "TEST" : "LIVE")
@@ -429,7 +429,7 @@ export class WalletSetupComponent implements OnInit {
   }
 
   generateWalletAccount() {
-    // this.walletAccount = this.cscAPI.generateAddress();
+    // this.walletAccount = this.brtAPI.generateAddress();
     this.logger.debug("### WalletSetup - Account: " + JSON.stringify(this.walletAccount));
     // let account = this.walletService.addAccount(this.walletAccount['address'], this.walletAccount['secret'], "Default Account");
     // this.logger.debug("### WalletSetup - Account Created: " + JSON.stringify(account));

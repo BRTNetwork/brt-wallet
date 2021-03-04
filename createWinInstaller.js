@@ -31,7 +31,7 @@ function getInstallerConfig (arch) {
     iconUrl: iconUrlPath,
     loadingGif: path.join(rootPath, 'src', 'assets', 'brand', 'setup.gif'),
     // certificateFile: 'C:/Users/a.jochems/Documents/Crypto Service/Comodo/code-signing-cert.p12',
-    certificateFile: '/Users/ajochems/Documents/CSC/CodeSigningCert-CSCOpCo.p12',
+    certificateFile: '/Users/ajochems/Documents/BRT/CodeSigningCert-BRTOpCo.p12',
     certificatePassword: 'Lziio1wob716A4mLXxrF'
   })
 }

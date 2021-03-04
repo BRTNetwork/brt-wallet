@@ -13,8 +13,8 @@ import { LedgerStreamMessages, ServerStateMessage,
 import { LogService } from './log.service';
 import { LokiKey, LokiAccount, LokiTransaction, LokiTxStatus, LokiAccountSettings, LokiSignedTransaction } from '../domain/lokijs';
 import { AppConstants } from '../domain/app-constants';
-import { brtTxObject, PrepareTxPayment } from '../domain/csc-types';
-import { CSCUtil } from '../domain/csc-util';
+import { brtTxObject, PrepareTxPayment } from '../domain/brt-types';
+import { BRTUtil } from '../domain/brt-util';
 import { NotificationService } from './notification.service';
 import { ElectronService } from './electron.service';
 import Big from 'big.js';
@@ -410,7 +410,7 @@ export class brtService implements OnDestroy {
                             lastLedgerSequence: msg_tx.LastLedgerSequence,
                             sequence: msg_tx.Sequence,
                             signingPubKey: msg_tx.SigningPubKey,
-                            timestamp: CSCUtil.brtTimeNow(),
+                            timestamp: BRTUtil.brtTimeNow(),
                             transactionType: msg_tx.TransactionType,
                             txID: msg_tx.hash,
                             txnSignature: msg_tx.TxnSignature,
@@ -422,7 +422,7 @@ export class brtService implements OnDestroy {
                         }
                         // add Memos if defined
                         if(msg_tx.Memos){
-                            dbTX.memos = CSCUtil.decodeMemos(msg_tx.Memos);
+                            dbTX.memos = BRTUtil.decodeMemos(msg_tx.Memos);
                         }
                         // add Destination Tag if defined
                         if(msg_tx.DestinationTag){
@@ -430,7 +430,7 @@ export class brtService implements OnDestroy {
                         }
                         // add Invoice ID if defined
                         if(msg_tx.InvoiceID && msg_tx.InvoiceID.length > 0){
-                            dbTX.invoiceID = CSCUtil.decodeInvoiceID(msg_tx.InvoiceID);
+                            dbTX.invoiceID = BRTUtil.decodeInvoiceID(msg_tx.InvoiceID);
                         }
                         // insert into the wallet
                         this.walletService.addTransaction(dbTX);
@@ -467,16 +467,16 @@ export class brtService implements OnDestroy {
                         this.getAccountInfo(tx.destination, false);
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
-                                {title: 'Incoming CSC Transaction', 
-                                body: 'You received '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(tx.amount), "1.2-8") +
+                                {title: 'Incoming BRT Transaction', 
+                                body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
                                     ' coins from ' + tx.accountID});
                         }
                     } else if(tx.direction == AppConstants.KEY_WALLET_TX_OUT){
                         this.getAccountInfo(tx.accountID, false);
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
-                                {title: 'Outgoing CSC Transaction', 
-                                body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(tx.amount), "1.2-8") +
+                                {title: 'Outgoing BRT Transaction', 
+                                body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
                                     ' coins to ' + tx.destination});
                         }
                     } else {
@@ -485,7 +485,7 @@ export class brtService implements OnDestroy {
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
                                 {title: 'Wallet Transaction', 
-                                body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(tx.amount), "1.2-8") +
+                                body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
                                     ' coins to your own address ' + tx.destination});
                         }
                     }
@@ -647,11 +647,11 @@ export class brtService implements OnDestroy {
             secret: "", 
             encrypted: false
         };
-        newKeyPair.secret = this.electron.remote.getGlobal("vars").cscKeypairs.generateSeed();
-        const keypair = this.electron.remote.getGlobal("vars").cscKeypairs.deriveKeypair(newKeyPair.secret);
+        newKeyPair.secret = this.electron.remote.getGlobal("vars").brtKeypairs.generateSeed();
+        const keypair = this.electron.remote.getGlobal("vars").brtKeypairs.deriveKeypair(newKeyPair.secret);
         newKeyPair.privateKey = keypair.privateKey;
         newKeyPair.publicKey = keypair.publicKey;
-        newKeyPair.accountID = this.electron.remote.getGlobal("vars").cscKeypairs.deriveAddress(keypair.publicKey);
+        newKeyPair.accountID = this.electron.remote.getGlobal("vars").brtKeypairs.deriveAddress(keypair.publicKey);
         return newKeyPair;
     }
 
@@ -715,7 +715,7 @@ export class brtService implements OnDestroy {
             txJSON.DestinationTag = input.destinationTag.valueOf();
         }
         if (input.description !== undefined && input.description.length > 0) {
-            txJSON.Memos = [ CSCUtil.encodeMemo({ memo: { memoData: input.description, memoFormat: "plain/text"}})];
+            txJSON.Memos = [ BRTUtil.encodeMemo({ memo: { memoData: input.description, memoFormat: "plain/text"}})];
         }
 
         return txJSON;
@@ -726,9 +726,9 @@ export class brtService implements OnDestroy {
         let privateKey = this.walletService.getDecryptPrivateKey(password, accountKey);
         if(privateKey != AppConstants.KEY_ERRORED){
             tx.SigningPubKey = accountKey.publicKey;
-            let encodedTx = this.electron.remote.getGlobal("vars").cscBinaryCodec.encodeForSigning(tx);
-            tx.TxnSignature = this.electron.remote.getGlobal("vars").cscKeypairs.sign(encodedTx, privateKey);
-            return this.electron.remote.getGlobal("vars").cscBinaryCodec.encode(tx);   
+            let encodedTx = this.electron.remote.getGlobal("vars").brtBinaryCodec.encodeForSigning(tx);
+            tx.TxnSignature = this.electron.remote.getGlobal("vars").brtKeypairs.sign(encodedTx, privateKey);
+            return this.electron.remote.getGlobal("vars").brtBinaryCodec.encode(tx);   
         } else {
             // something went wrong, probably a wrong password
             return AppConstants.KEY_ERRORED;
@@ -737,8 +737,8 @@ export class brtService implements OnDestroy {
 
     computeSignature(tx: Object, privateKey: string, signAs?: string) {
         const signingData = signAs ?
-          this.electron.remote.getGlobal('vars').cscBinaryCodec.encodeForMultisigning(tx, signAs) : this.electron.remote.getGlobal('vars').cscBinaryCodec.encodeForSigning(tx)
-        return this.electron.remote.getGlobal('vars').cscKeypairs.sign(signingData, privateKey)
+          this.electron.remote.getGlobal('vars').brtBinaryCodec.encodeForMultisigning(tx, signAs) : this.electron.remote.getGlobal('vars').brtBinaryCodec.encodeForSigning(tx)
+        return this.electron.remote.getGlobal('vars').brtKeypairs.sign(signingData, privateKey)
     }
 
     sign(txJSON: string, secret: string, options: { signAs?: string } = {}
@@ -750,7 +750,7 @@ export class brtService implements OnDestroy {
             delete tx.Signers;
         }
 
-        const keypair = this.electron.remote.getGlobal('vars').cscKeypairs.deriveKeypair(secret)
+        const keypair = this.electron.remote.getGlobal('vars').brtKeypairs.deriveKeypair(secret)
         tx.SigningPubKey = options.signAs ? '' : keypair.publicKey
 
         if (options.signAs) {
@@ -764,10 +764,10 @@ export class brtService implements OnDestroy {
             tx.TxnSignature = this.computeSignature(tx, keypair.privateKey)
         }
 
-        const serialized = this.electron.remote.getGlobal('vars').cscBinaryCodec.encode(tx)
+        const serialized = this.electron.remote.getGlobal('vars').brtBinaryCodec.encode(tx)
         return {
             signedTransaction: serialized,
-            id: this.electron.remote.getGlobal('vars').cscHashes.computeBinaryTransactionHash(serialized)
+            id: this.electron.remote.getGlobal('vars').brtHashes.computeBinaryTransactionHash(serialized)
         }
     }
 
@@ -814,7 +814,7 @@ export class brtService implements OnDestroy {
         }
         // add Memos if defined
         if(tx.Memos){
-            dbTX.memos = CSCUtil.decodeMemos(tx.Memos);
+            dbTX.memos = BRTUtil.decodeMemos(tx.Memos);
         }
         // add Destination Tag if defined
         if(tx.DestinationTag){
@@ -822,7 +822,7 @@ export class brtService implements OnDestroy {
         }
         // add Invoice ID if defined
         if(tx.InvoiceID && tx.InvoiceID.length > 0){
-            dbTX.invoiceID = CSCUtil.decodeInvoiceID(tx.InvoiceID);
+            dbTX.invoiceID = BRTUtil.decodeInvoiceID(tx.InvoiceID);
         }
         // insert into the wallet
         this.walletService.addTransaction(dbTX);
@@ -861,16 +861,16 @@ export class brtService implements OnDestroy {
             this.getAccountInfo(dbTX.destination, false);
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
-                    {title: 'Incoming CSC Transaction', 
-                    body: 'You received '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                    {title: 'Incoming BRT Transaction', 
+                    body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
                         ' coins from ' + dbTX.accountID + bodyMessage});
             }
         } else if(dbTX.direction == AppConstants.KEY_WALLET_TX_OUT){
             this.getAccountInfo(dbTX.accountID, false);
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
-                    {title: 'Outgoing CSC Transaction', 
-                    body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                    {title: 'Outgoing BRT Transaction', 
+                    body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
                         ' coins to ' + dbTX.destination + bodyMessage});
             }
         } else {
@@ -879,7 +879,7 @@ export class brtService implements OnDestroy {
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
                     {title: 'Wallet Transaction', 
-                    body: 'You sent '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                    body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
                         ' coins to your own address ' + dbTX.destination + bodyMessage});
             }
         }
@@ -931,7 +931,7 @@ export class brtService implements OnDestroy {
                         if (!this.fullAccountRefresh) {
                             this.notificationService.addMessage(
                                 {title: 'Incoming CRN Fee Transaction', 
-                                body: 'You received '+ this.decimalPipe.transform(CSCUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                                body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
                                     ' coins for CRN Ledger Round ' + dbTX.lastLedgerSequence});
                         }
                     } else {
@@ -955,7 +955,7 @@ export class brtService implements OnDestroy {
     }
 
     combine(signedTransactions: Array<string>): LokiSignedTransaction {
-        const txs: any[] = _.map(signedTransactions,  this.electron.remote.getGlobal('vars').cscBinaryCodec.decode)
+        const txs: any[] = _.map(signedTransactions,  this.electron.remote.getGlobal('vars').brtBinaryCodec.decode)
         const tx = _.omit(txs[0], 'Signers')
         if (!_.every(txs, _tx => _.isEqual(tx, _.omit(_tx, 'Signers')))) {
         throw new Error(
@@ -972,8 +972,8 @@ export class brtService implements OnDestroy {
         });
 
         const signedTx = _.assign({}, tx, {Signers: signers});
-        const signedTransaction = this.electron.remote.getGlobal('vars').cscBinaryCodec.encode(signedTx);
-        const id = this.electron.remote.getGlobal('vars').cscHashes.computeBinaryTransactionHash(signedTransaction);
+        const signedTransaction = this.electron.remote.getGlobal('vars').brtBinaryCodec.encode(signedTx);
+        const id = this.electron.remote.getGlobal('vars').brtHashes.computeBinaryTransactionHash(signedTransaction);
         return {signedTransaction, id};
     }
 
@@ -990,7 +990,7 @@ export class brtService implements OnDestroy {
     }
     
     verifyMessage(msg: string, signature: string, publicKey: string): boolean {
-        return this.electron.remote.getGlobal('vars').cscKeypairs.verifyMessage(this.convertStringToHex(msg), signature, publicKey);
+        return this.electron.remote.getGlobal('vars').brtKeypairs.verifyMessage(this.convertStringToHex(msg), signature, publicKey);
     } 
   
 

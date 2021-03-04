@@ -7,7 +7,7 @@ import { AppConstants } from '../../../domain/app-constants';
 import { Menu as ElectronMenu, MenuItem as ElectronMenuItem } from "electron";
 import { ElectronService } from '../../../providers/electron.service';
 import { SelectItem, MenuItem } from 'primeng/primeng';
-import { CSCUtil } from '../../../domain/csc-util';
+import { BRTUtil } from '../../../domain/brt-util';
 // import { brtKeypairs as keypairs } from 'brt-libjs';
 import { QRCodeModule } from 'angular2-qrcode';
 
@@ -128,7 +128,7 @@ export class PaperwalletComponent implements OnInit {
             <head>
               <title>Paper Wallet</title>
               <style>
-                .csc-logo{
+                .brt-logo{
                     width: 100px;
                     float: left;
                     position: relative;
@@ -152,7 +152,7 @@ export class PaperwalletComponent implements OnInit {
               </style>
             </head>
             <body onload="window.print()" onfocus="window.close()">
-            <p><img src="https://brt.org/wp-content/uploads/2018/02/Chip_Red-3.svg" alt="brt" class="csc-logo" /></p>
+            <p><img src="https://brt.org/wp-content/uploads/2018/02/Chip_Red-3.svg" alt="brt" class="brt-logo" /></p>
             <p></p>
             <h1 align="center">brt Paper Wallet</h1>
             <p></p>

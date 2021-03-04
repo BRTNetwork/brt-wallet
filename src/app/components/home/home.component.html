@@ -3,10 +3,10 @@
         <mat-sidenav-container class="home-sidenav-container">
             <mat-sidenav mode="side" opened="true" disableClose="true">
                 <div class="app-nav">
-                    <img src="../../../assets/brand/brt-logo.png" alt="brt" class="csc-logo"/>
+                    <img src="../../../assets/brand/brt-logo.png" alt="brt" class="brt-logo"/>
                     <div class="ui-g menu-balance">
                         <div class="ui-g-12 menu-text amount-label">Balance:</div>
-                        <div class="ui-g-12 amount-value"> {{walletBalance | cscAmount : true : true}}</div>
+                        <div class="ui-g-12 amount-value"> {{walletBalance | brtAmount : true : true}}</div>
                     </div>
                     <div class="menu-nav">
                         <mat-list style="padding-top: 20px;">
@@ -117,7 +117,7 @@
 </div>
 <p-dialog class="dialog-header" [(visible)]="showPrivateKeyImportDialog" [width]="450" [height]="350" [closable]="true"
           [modal]="true" appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Import private keys</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Import private keys</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-1"></div>
         <div class="ui-g-10">Enter the password for your wallet.</div>
@@ -161,7 +161,7 @@
 
 <p-dialog class="dialog-header" [(visible)]="showSettingsDialog" [width]="640" [height]="400" [closable]="true"
           [modal]="true" appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Settings</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Settings</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-1"></div>
         <div class="ui-g-10">
@@ -171,7 +171,7 @@
                 <div class="ui-g-4">Wallet UUID</div>
                 <div class="ui-g-8 bold-value">{{currentWalletObject['walletUUID']}}</div>
                 <div class="ui-g-4">Wallet Creationdate</div>
-                <div class="ui-g-8 bold-value">{{currentWalletObject['creationDate'] | cscDate : 'yyyy-MM-dd HH:mm:ss'}}</div>
+                <div class="ui-g-8 bold-value">{{currentWalletObject['creationDate'] | brtDate : 'yyyy-MM-dd HH:mm:ss'}}</div>
                 <div class="ui-g-4">Fiat value currency</div>
                 <div class="ui-g-8 bold-value">
                     <p-dropdown
@@ -203,7 +203,7 @@
 </p-dialog>
 <p-dialog class="dialog-header" [(visible)]="showServerInfoDialog" [width]="640" [height]="500" [closable]="true"
           [modal]="true" appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Server Information</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Server Information</span></p-header>
     <div class="ui-g">
         <div class="ui-g-6">Server</div>
         <div class="ui-g-6 bold-value">{{currentServer?.server_id}}</div>
@@ -222,21 +222,21 @@
         <div class="ui-g-6">Last Ledger Sequence</div>
         <div class="ui-g-6 bold-value">{{serverState?.validated_ledger?.seq}}</div>
         <div class="ui-g-6">Last Closing Time</div>
-        <div class="ui-g-6 bold-value">{{serverState?.validated_ledger?.close_time | cscDate: 'HH:mm:ss'}}</div>
+        <div class="ui-g-6 bold-value">{{serverState?.validated_ledger?.close_time | brtDate: 'HH:mm:ss'}}</div>
         <div class="ui-g-6">Close Duration (msec)</div>
         <div class="ui-g-6 bold-value">{{serverState?.last_close?.converge_time}}</div>
         <div class="ui-g-6">Last Close Proposers</div>
         <div class="ui-g-6 bold-value">{{serverState?.last_close?.proposers}}</div>
         <div class="ui-g-6">Current Fee</div>
-        <div class="ui-g-6 bold-value">{{serverState?.validated_ledger?.base_fee | cscAmount}}</div>
+        <div class="ui-g-6 bold-value">{{serverState?.validated_ledger?.base_fee | brtAmount}}</div>
         <div class="ui-g-6">Current Account Reserve</div>
-        <div class="ui-g-6 bold-value">{{serverState?.validated_ledger?.reserve_base | cscAmount}}</div>
+        <div class="ui-g-6 bold-value">{{serverState?.validated_ledger?.reserve_base | brtAmount}}</div>
     </div>
 </p-dialog>
 
 <p-dialog [(visible)]="showPasswordDialog" [width]="450" [height]="225" [closable]="true" [modal]="true"
           appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>{{passwordDialogHeader}}</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>{{passwordDialogHeader}}</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-1"></div>
         <div class="ui-g-10">
@@ -274,7 +274,7 @@
 
 <p-dialog [(visible)]="showSignMessageDialog" [width]="725" [height]="500" [closable]="true" [modal]="true"
           appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Sign Message</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Sign Message</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-12">
             <p>Please select the account you want to sign the message with.
@@ -320,7 +320,7 @@
 
 <p-dialog [(visible)]="showVerifyMessageDialog" [width]="720" [height]="500" [closable]="true" [modal]="true"
           appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Verify Message</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Verify Message</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-12">
             <p>Please enter the message, public key and signature you want to verify.</p>
@@ -360,7 +360,7 @@
         [modal]="true"
         appendTo="body">
 
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Enable Multisigning</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Enable Multisigning</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-12">
             <p>Please select the account for which you want to enable multisigning.</p>
@@ -494,7 +494,7 @@
         appendTo="body">
 
 
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Compose Transaction</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Compose Transaction</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-12">
             <p>Add all signatures by pasting each one in the field and press "Add signature".</p>
@@ -557,7 +557,7 @@
         appendTo="body">
 
 
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Sign Multisignature Transaction</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Sign Multisignature Transaction</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-12">
             <p>Paste the transaction you received to sign. Then select your account to sign it with and generate the signature.</p>
@@ -613,7 +613,7 @@
 <p-dialog [(visible)]="showTransactionSignature" [width]="450" [height]="450" [closable]="true"
           [modal]="true" appendTo="body">
     <p-header>
-        <i class="icon csc-dialog-icon icon-chip"></i>
+        <i class="icon brt-dialog-icon icon-chip"></i>
         Multisigning Transaction Signature
     </p-header>
 

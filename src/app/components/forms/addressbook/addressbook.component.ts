@@ -7,7 +7,7 @@ import { AppConstants } from '../../../domain/app-constants';
 import { Menu as ElectronMenu, MenuItem as ElectronMenuItem } from "electron"; 
 import { ElectronService } from '../../../providers/electron.service';
 import { SelectItem, MenuItem } from 'primeng/primeng';
-import { CSCUtil } from '../../../domain/csc-util';
+import { BRTUtil } from '../../../domain/brt-util';
 
 @Component({
   selector: 'app-addressbook',
@@ -96,7 +96,7 @@ export class AddressbookComponent implements OnInit {
   }
 
   onAccountIDChange(event){
-    let valid:boolean = CSCUtil.validateAccountID(event);
+    let valid:boolean = BRTUtil.validateAccountID(event);
     this.logger.debug("### Address book - accountID: " + event + " valid: " + valid);
     this.invalidAccountID = !valid;
   }

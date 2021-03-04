@@ -1,9 +1,9 @@
 import Big from 'big.js';
 import * as bigInt from 'big-integer';
 
-import { Amount, Memo, brtdAmount, brtMemo, CSCURI }  from './csc-types';
+import { Amount, Memo, brtdAmount, brtMemo, BRTURI }  from './brt-types';
 
-export class CSCUtil {
+export class BRTUtil {
 
     static brtToUnixTimestamp(rpepoch: number): number {
         return (rpepoch + 0x386D4380) * 1000
@@ -39,15 +39,15 @@ export class CSCUtil {
         
     }
 
-    static cscToDrops(csc: string): string {
-        let csc_drops = (new Big(csc)).times(100000000.0);
-        return csc_drops.toString();
+    static brtToDrops(brt: string): string {
+        let brt_drops = (new Big(brt)).times(100000000.0);
+        return brt_drops.toString();
     }
 
     static tobrtdAmount(amount: Amount): brtdAmount {
-        if (amount.currency === 'CSC') {
-            let csc_drops = this.cscToDrops(amount.value);
-            return csc_drops;
+        if (amount.currency === 'BRT') {
+            let brt_drops = this.brtToDrops(amount.value);
+            return brt_drops;
         }
         let default_object: brtdAmount = {
             currency: amount.currency,
@@ -208,7 +208,7 @@ export class CSCUtil {
         return "brt:" + address + "?label=" + encodeURI("Swap Deposit");
     }
 
-    static generateCSCQRCodeURI(input: CSCURI){
+    static generateBRTQRCodeURI(input: BRTURI){
         let uri = "https://brt.org/send?to=" + input.address;
         if(input.amount){
             uri = uri + "&amount=" + input.amount;

@@ -772,7 +772,7 @@
   ],
   "height": 1024,
   "metadata": {
-    "name": "csc"
+    "name": "brt"
   },
   "preferences": {
     "showGlyphs": true,
@@ -783,7 +783,7 @@
     "fontPref": {
       "prefix": "icon-",
       "metadata": {
-        "fontFamily": "csc",
+        "fontFamily": "brt",
         "majorVersion": 1,
         "minorVersion": 0
       },

@@ -1,17 +1,17 @@
 @font-face {
-  font-family: 'csc';
-  src:  url('fonts/csc.eot?c1mx89');
-  src:  url('fonts/csc.eot?c1mx89#iefix') format('embedded-opentype'),
-    url('fonts/csc.ttf?c1mx89') format('truetype'),
-    url('fonts/csc.woff?c1mx89') format('woff'),
-    url('fonts/csc.svg?c1mx89#csc') format('svg');
+  font-family: 'brt';
+  src:  url('fonts/brt.eot?c1mx89');
+  src:  url('fonts/brt.eot?c1mx89#iefix') format('embedded-opentype'),
+    url('fonts/brt.ttf?c1mx89') format('truetype'),
+    url('fonts/brt.woff?c1mx89') format('woff'),
+    url('fonts/brt.svg?c1mx89#brt') format('svg');
   font-weight: normal;
   font-style: normal;
 }
 
 [class^="icon-"], [class*=" icon-"] {
   /* use !important to prevent issues with browser extensions that change fonts */
-  font-family: 'csc' !important;
+  font-family: 'brt' !important;
   speak: none;
   font-style: normal;
   font-weight: normal;

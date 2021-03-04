@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { LokiAccount, LokiKey, LokiAddress } from '../../../domain/lokijs';
-import { CSCUtil } from '../../../domain/csc-util';
+import { BRTUtil } from '../../../domain/brt-util';
 import { LocalStorage, SessionStorage, LocalStorageService } from "ngx-store";
 import { brtService } from '../../../providers/brt.service';
 import { WalletService } from '../../../providers/wallet.service';
@@ -37,7 +37,7 @@ export class ReceiveCoinsComponent implements OnInit {
   selectedReceiveRow: LokiAccount;
   receive_context_menu: ElectronMenu;
   showReceiveQRCodeDialog: boolean = false;
-  cscReceiveURI: string = "";
+  brtReceiveURI: string = "";
   sendAmount:string;
   destinationTag: number;
   label: string;
@@ -106,7 +106,7 @@ export class ReceiveCoinsComponent implements OnInit {
   }
 
   convertCscTimestamp(inputTime) {
-    return CSCUtil.brtToUnixTimestamp(inputTime);
+    return BRTUtil.brtToUnixTimestamp(inputTime);
   }
 
   showReceiveContextMenu(event){
@@ -141,7 +141,7 @@ export class ReceiveCoinsComponent implements OnInit {
   showReceiveQRCode(){
     if(this.selectedReceiveRow){
       this.logger.debug("showReceiveQRCode: " + JSON.stringify(this.selectedReceiveRow));
-      this.cscReceiveURI = CSCUtil.generateCSCQRCodeURI({ address: this.selectedReceiveRow.accountID });
+      this.brtReceiveURI = BRTUtil.generateBRTQRCodeURI({ address: this.selectedReceiveRow.accountID });
       this.showReceiveQRCodeDialog = true;
     }
   }
@@ -255,7 +255,7 @@ export class ReceiveCoinsComponent implements OnInit {
     if(this.label && this.label.length > 0){
       uriObject['label'] = this.label;
     }
-    this.cscReceiveURI = CSCUtil.generateCSCQRCodeURI(uriObject);
+    this.brtReceiveURI = BRTUtil.generateBRTQRCodeURI(uriObject);
   }
 
   selectPrivateKeysExportLocation() {

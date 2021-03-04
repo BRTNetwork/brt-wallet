@@ -1,0 +1,21 @@
+// BRT Icon Font CSS
+// --------------------------
+// BRT CSS for Ionic's BRT <brt-icon> element
+// brticons-icons.scss has the icons and their unicode characters
+@charset "UTF-8";
+
+$brticons-font-path: $font-path !default;
+
+@font-face {
+  font-family: "brt";
+  src:url("#{$brticons-font-path}/brt.eot");
+  src:url("#{$brticons-font-path}/brt.eot?#iefix") format("embedded-opentype"),
+    url("#{$brticons-font-path}/brt.woff") format("woff"),
+    url("#{$brticons-font-path}/brt.ttf") format("truetype"),
+    url("#{$brticons-font-path}/brt.svg#brt") format("svg");
+  font-weight: normal;
+  font-style: normal;
+
+}
+
+@import "brticons-icons";

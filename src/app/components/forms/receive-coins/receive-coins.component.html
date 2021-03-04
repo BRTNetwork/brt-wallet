@@ -12,7 +12,7 @@
                 <ng-template let-data="rowData" pTemplate="body">
                     <span class="text-small">
                         <p class="item-p"><span class="item-label">account: </span><span class="item-value"> {{ data.accountID }}</span></p>
-                        <p class="item-p"><span class="item-label">balance: </span><span class="item-value"> {{data.balance | cscAmount : true : true}}</span></p>
+                        <p class="item-p"><span class="item-label">balance: </span><span class="item-value"> {{data.balance | brtAmount : true : true}}</span></p>
                     </span>
                 </ng-template>
             </p-column>
@@ -20,7 +20,7 @@
             <!--
             <p-column field="balance" header="Balance" [style]="{'width':'90px'}">
                 <ng-template let-data="rowData" pTemplate="body">
-                    <span>{{data.balance | cscAmount}}</span>
+                    <span>{{data.balance | brtAmount}}</span>
                 </ng-template>
             </p-column>
             -->
@@ -41,7 +41,7 @@
 </div>
 <p-dialog [(visible)]="showCreateAccountDialog" [width]="450" [height]="350" [closable]="true" 
     [modal]="true" appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Create new account</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Create new account</span></p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-1"></div>
         <div class="ui-g-10">
@@ -90,10 +90,10 @@
 </p-dialog>
 
 <p-dialog [(visible)]="showReceiveQRCodeDialog" [width]="350" [height]="500" [closable]="true" [modal]="true" appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Receive brt</span></p-header>
+    <p-header><span><i class="icon brt-dialog-icon icon-chip"></i>Receive brt</span></p-header>
     <div style="text-align: center;">{{selectedReceiveRow?.accountID}}</div>
     <div class="qrcode">
-        <qr-code [value]="cscReceiveURI" size="250" level="L"></qr-code>
+        <qr-code [value]="brtReceiveURI" size="250" level="L"></qr-code>
     </div>
     <div class="qrcode">
         <div class="ui-inputgroup">

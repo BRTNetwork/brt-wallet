@@ -59,7 +59,7 @@ export type LaxLaxAmount = {
     counterparty ? : string
 }
 
-// A currency-counterparty pair, or just currency if it's CSC
+// A currency-counterparty pair, or just currency if it's BRT
 export type Issue = {
     currency: string,
     counterparty ? : string
@@ -136,7 +136,7 @@ export type Prepare = {
     }
 }
 
-export type CSCURI = {
+export type BRTURI = {
     address: string, 
     amount?: string, 
     destinationTag?: number, 

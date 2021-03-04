@@ -1,4 +1,4 @@
-import { Memo } from './csc-types';
+import { Memo } from './brt-types';
 import { AppConstants } from '../domain/app-constants';
 
 export interface LokiMeta {
@@ -57,7 +57,7 @@ export interface LokiAccountSettings {
     passwordSpent?: boolean,
     requireDestinationTag?: boolean,
     requireAuthorization?: boolean,
-    disallowIncomingCSC?: boolean,
+    disallowIncomingBRT?: boolean,
     disableMasterKey?: boolean,
     enableTransactionIDTracking?: boolean,
     noFreeze?: boolean,

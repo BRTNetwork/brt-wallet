@@ -5,7 +5,7 @@ import { Subject } from 'rxjs/Subject';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { ElectronService } from './electron.service';
 import { AppConstants } from '../domain/app-constants';
-import { WalletSettings } from 'app/domain/csc-types';
+import { WalletSettings } from 'app/domain/brt-types';
 import { LocalStorageService } from 'ngx-store';
 
 // var notifier = require('node-notifier');

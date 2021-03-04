@@ -16,12 +16,12 @@ import { MenuItem as PrimeMenuItem, Message, ContextMenu } from 'primeng/primeng
 import { SelectItem, Dropdown } from 'primeng/primeng';
 import { MatListModule, MatSidenavModule } from '@angular/material';
 import { AppConstants } from '../../domain/app-constants';
-import { CSCUtil } from '../../domain/csc-util';
-import { CSCCrypto } from '../../domain/csc-crypto';
+import { BRTUtil } from '../../domain/brt-util';
+import { BRTCrypto } from '../../domain/brt-crypto';
 import { LedgerStreamMessages, ServerStateMessage } from '../../domain/websocket-types';
 import { setTimeout } from 'timers';
 import { LokiKey } from '../../domain/lokijs';
-import { WalletSettings } from 'app/domain/csc-types';
+import { WalletSettings } from 'app/domain/brt-types';
 import * as LokiTypes from '../../domain/lokijs';
 import Big from 'big.js';
 import { NotificationService } from '../../providers/notification.service';
@@ -746,7 +746,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         { title: 'Select Wallet Backup File',
           defaultPath: this.electron.remote.app.getPath("documents"),
           filters: [
-            { name: 'CSC Wallet Backups', extensions: ['backup'] }
+            { name: 'BRT Wallet Backups', extensions: ['backup'] }
           ],
           properties: ['openFile']
         }, (result) => {
@@ -771,7 +771,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         { title: 'Select Wallet',
           defaultPath: this.electron.remote.app.getPath("documents"),
           filters: [
-            { name: 'CSC Wallet', extensions: ['db'] }
+            { name: 'BRT Wallet', extensions: ['db'] }
           ],
           properties: ['openFile']
         }, (result) => {
@@ -803,11 +803,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   doBalanceUpdate() {
     this.walletBalance = this.walletService.getWalletBalance() ? this.walletService.getWalletBalance() : "0";
     this.logger.debug("### HOME - Wallet Balance: " + this.walletBalance);
-    this.balance = CSCUtil.dropsToCsc(this.walletBalance);
-    let balanceCSC = new Big(this.balance);
+    this.balance = BRTUtil.dropsToCsc(this.walletBalance);
+    let balanceBRT = new Big(this.balance);
     if(this.marketService.coinMarketInfo != null && this.marketService.coinMarketInfo.price_fiat !== undefined){
-      this.logger.debug("### CSC Price: " + this.marketService.cscPrice + " BTC: " + this.marketService.btcPrice + " Fiat: " + this.marketService.coinMarketInfo.price_fiat);
-      let fiatValue = balanceCSC.times(new Big(this.marketService.coinMarketInfo.price_fiat)).toString();
+      this.logger.debug("### BRT Price: " + this.marketService.brtPrice + " BTC: " + this.marketService.btcPrice + " Fiat: " + this.marketService.coinMarketInfo.price_fiat);
+      let fiatValue = balanceBRT.times(new Big(this.marketService.coinMarketInfo.price_fiat)).toString();
       this.fiat_balance = this.currencyPipe.transform(fiatValue, this.marketService.coinMarketInfo.selected_fiat, "symbol", "1.2-2");
     }
   }
@@ -825,7 +825,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     let walletHash = this.walletService.generateWalletPasswordHash(this.importFileObject['name'], this.walletPassword);
     let newWallet =
         { "walletUUID": this.importFileObject['name'],
-          "importedDate": CSCUtil.iso8601TobrtTime(new Date().toISOString()),
+          "importedDate": BRTUtil.iso8601TobrtTime(new Date().toISOString()),
           "location": this.importFileObject['dir'],
           "hash": walletHash
         };
@@ -972,7 +972,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.logger.debug("### HOME Backup DB ###");
     let dbDump = this.walletService.getWalletDump();
     // create a filename
-    let filename = this.datePipe.transform(Date.now(), "yyyy-MM-dd-HH-mm-ss") + "-csc-wallet.backup";
+    let filename = this.datePipe.transform(Date.now(), "yyyy-MM-dd-HH-mm-ss") + "-brt-wallet.backup";
     let backupFilePath = path.join(this.backupPath, filename);
     // Write the JSON array to the file 
     fs.writeFileSync(backupFilePath, dbDump);
@@ -1018,7 +1018,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       let key:LokiKey = this.walletService.getKey(this.selectedAccount);
       let secret = this.walletService.getDecryptSecret(this.walletPassword, key);
       this.logger.debug("### Secret: " + secret);
-      let signResult = this.electron.remote.getGlobal("vars").cscKeypairs.signMessage(this.msgToSign, secret);
+      let signResult = this.electron.remote.getGlobal("vars").brtKeypairs.signMessage(this.msgToSign, secret);
       this.logger.debug("### HOME Sign Result: " + JSON.stringify(signResult));
       this.signPubKey = signResult.public_key;
       this.signSignature = signResult.signature;
@@ -1282,13 +1282,13 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   getAccountSettingsForSignature(){
-    const multisignTx = this.electron.remote.getGlobal('vars').cscBinaryCodec.decode(this.multisignTxSignatureToSign.trim().toUpperCase());
+    const multisignTx = this.electron.remote.getGlobal('vars').brtBinaryCodec.decode(this.multisignTxSignatureToSign.trim().toUpperCase());
     this.brtService.getSettings(multisignTx.Account);
   }
 
   updateSignersSelection() {
     this.logger.debug('### HOME Multisign update select with avaialble signing accounts matching the signers list of the signature ###');
-    const multisignTx = this.electron.remote.getGlobal('vars').cscBinaryCodec.decode(this.multisignTxSignatureToSign.trim().toUpperCase());
+    const multisignTx = this.electron.remote.getGlobal('vars').brtBinaryCodec.decode(this.multisignTxSignatureToSign.trim().toUpperCase());
 
     const accountSettings = this.brtService.accountSettings.find(account => {
       return (account.accountID === multisignTx.Account)
@@ -1307,7 +1307,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   viewSignedMutlisignTranscation() {
     const key: LokiKey = this.walletService.getKey(this.selectedSignerAccount);
     const secret = this.walletService.getDecryptSecret(this.walletPassword, key);
-    const multisignTx = this.electron.remote.getGlobal('vars').cscBinaryCodec.decode(this.multisignTxSignatureToSign.trim().toUpperCase());
+    const multisignTx = this.electron.remote.getGlobal('vars').brtBinaryCodec.decode(this.multisignTxSignatureToSign.trim().toUpperCase());
 
     delete multisignTx.TxnSignature;
     delete multisignTx.SigningPubKey;

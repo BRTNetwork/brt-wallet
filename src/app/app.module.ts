@@ -30,8 +30,8 @@ import { WebStorageModule,
 
 import { DatePipe, DecimalPipe,
          CurrencyPipe }             from '@angular/common';
-import { CSCDatePipe, 
-         CSCAmountPipe,
+import { BRTDatePipe, 
+         BRTAmountPipe,
          ToNumberPipe }             from './app-pipes.module';
 
 import { AppComponent }             from './app.component';
@@ -73,7 +73,7 @@ import { MatListModule, MatSidenavModule, MatTooltipModule,
 @NgModule({
   declarations: [
     AppComponent,
-    CSCDatePipe, CSCAmountPipe,ToNumberPipe,
+    BRTDatePipe, BRTAmountPipe,ToNumberPipe,
     HomeComponent,
     WalletSetupComponent,
     SetupStep1Component, SetupStep2Component, 
@@ -113,7 +113,7 @@ import { MatListModule, MatSidenavModule, MatTooltipModule,
   providers: [
     Logger, Options,FormBuilder,
     DatePipe, DecimalPipe, CurrencyPipe,
-    CSCDatePipe, CSCAmountPipe, ToNumberPipe,
+    BRTDatePipe, BRTAmountPipe, ToNumberPipe,
     HttpClient,
     ElectronService,
     LogService,

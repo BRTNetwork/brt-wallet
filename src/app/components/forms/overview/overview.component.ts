@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { brtService } from '../../../providers/brt.service';
 import { WalletService } from '../../../providers/wallet.service';
-import { CSCUtil } from '../../../domain/csc-util';
+import { BRTUtil } from '../../../domain/brt-util';
 import { LedgerStreamMessages, ServerStateMessage } from '../../../domain/websocket-types';
 import { LokiTransaction } from '../../../domain/lokijs';
 import { LogService } from '../../../providers/log.service';
@@ -70,7 +70,7 @@ export class OverviewComponent implements OnInit {
   }
 
   convertCscTimestamp(inputTime) {
-    return CSCUtil.brtToUnixTimestamp(inputTime);
+    return BRTUtil.brtToUnixTimestamp(inputTime);
   }
 
   getTXAccount(rowData){

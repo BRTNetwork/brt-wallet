@@ -4,8 +4,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { WalletService } from '../../providers/wallet.service';
 import { ElectronService } from '../../providers/electron.service';
 import { SelectItem } from 'primeng/primeng';
-import { CSCUtil } from '../../domain/csc-util';
-import { CSCCrypto } from '../../domain/csc-crypto';
+import { BRTUtil } from '../../domain/brt-util';
+import { BRTCrypto } from '../../domain/brt-crypto';
 import { AppConstants } from '../../domain/app-constants';
 import { LogService } from '../../providers/log.service';
 import { MessageService } from 'primeng/components/common/messageservice';
@@ -90,7 +90,7 @@ export class RecoverPasswordComponent implements OnInit {
                 this.logger.debug("### Mnemonic Response: " + result);
                 if (result.length > 0 && result != AppConstants.KEY_ERRORED){
                     try{
-                        let password = new CSCCrypto(recoveryArray).decrypt(result);
+                        let password = new BRTCrypto(recoveryArray).decrypt(result);
                         this.logger.debug("### Mnemonic Password: " + password);
                         this.electron.remote.dialog.showMessageBox(
                             { message: "Your wallet password is: " + password, 

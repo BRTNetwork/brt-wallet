@@ -1,19 +1,19 @@
 @charset "UTF-8";
 
 @font-face {
-  font-family: "csc";
-  src:url("csc.eot");
-  src:url("csc.eot?#iefix") format("embedded-opentype"),
-    url("csc.woff") format("woff"),
-    url("csc.ttf") format("truetype"),
-    url("csc.svg#csc") format("svg");
+  font-family: "brt";
+  src:url("brt.eot");
+  src:url("brt.eot?#iefix") format("embedded-opentype"),
+    url("brt.woff") format("woff"),
+    url("brt.ttf") format("truetype"),
+    url("brt.svg#brt") format("svg");
   font-weight: normal;
   font-style: normal;
 
 }
 
 [data-icon]:before {
-  font-family: "csc" !important;
+  font-family: "brt" !important;
   content: attr(data-icon);
   font-style: normal !important;
   font-weight: normal !important;
@@ -27,7 +27,7 @@
 
 [class^="icon-"]:before,
 [class*=" icon-"]:before {
-  font-family: "csc" !important;
+  font-family: "brt" !important;
   font-style: normal !important;
   font-weight: normal !important;
   font-variant: normal !important;
@@ -41,7 +41,7 @@
 .icon-contacts:before {
   content: "\61";
 }
-.icon-csc:before {
+.icon-brt:before {
   content: "\62";
 }
 .icon-deposit:before {

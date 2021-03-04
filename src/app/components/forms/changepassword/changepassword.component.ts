@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WalletService } from '../../../providers/wallet.service';
-import { CSCCrypto } from '../../../domain/csc-crypto';
+import { BRTCrypto } from '../../../domain/brt-crypto';
 import { Router, ActivatedRoute } from '@angular/router';
 import { LogService } from '../../../providers/log.service';
 
@@ -64,7 +64,7 @@ export class ChangepasswordComponent implements OnInit {
 
   finishStep2() {
     // toggle to step 3
-    this.newWalletMnemonic = CSCCrypto.getRandomMnemonic();
+    this.newWalletMnemonic = BRTCrypto.getRandomMnemonic();
     this.showPassphrase = true;
     this.showNewPassword = false;
     this.activeIndex += 1;
@@ -75,7 +75,7 @@ export class ChangepasswordComponent implements OnInit {
     // Finish change password
     this.nextButtonEnabled = true;
     // generate mnemonic hash with new password and new mnemonic recovery
-    this.mnemonicHash = new CSCCrypto(this.newWalletMnemonic).encrypt(this.newWalletPassword);
+    this.mnemonicHash = new BRTCrypto(this.newWalletMnemonic).encrypt(this.newWalletPassword);
     this.logger.debug("### ChangePasswordComponent - Mnemonic Recovery Hash Created: " + this.mnemonicHash);
     this.walletService.changePassword(this.currentWalletPassword, this.newWalletPassword, this.mnemonicHash);
     this.errorMessage = "Your Password has been changed Successfully.";

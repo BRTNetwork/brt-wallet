@@ -10,7 +10,7 @@ import { SelectItem } from 'primeng/components/common/selectitem';
 @Injectable()
 export class MarketService {
 
-    private coinmarketCapURLCSC = 'https://api.coinmarketcap.com/v1/ticker/brt/?convert=';
+    private coinmarketCapURLBRT = 'https://api.coinmarketcap.com/v1/ticker/brt/?convert=';
     private coinmarketCapURLBTC = 'https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=';
     private exchangesURL = 'https://api.brt.org/1.0.0/info/exchanges/all';
     public coinMarketInfo: CoinMarketCapType;
@@ -19,7 +19,7 @@ export class MarketService {
     public exchangeUpdates = new Subject<Array<ExchangesType>>();
     public coininfoUpdates = new Subject<CoinMarketCapType>();
     public btcPrice: number = 1;
-    public cscPrice: number = 0.00000001;
+    public brtPrice: number = 0.00000001;
     public fiatCurrency = 'USD';
 
     constructor(private logger: LogService,
@@ -70,7 +70,7 @@ export class MarketService {
         let options = {
             headers: new HttpHeaders().set('Content-Type', 'application/json')
         };
-        this.http.get(this.coinmarketCapURLCSC + this.fiatCurrency, options).subscribe(result => {
+        this.http.get(this.coinmarketCapURLBRT + this.fiatCurrency, options).subscribe(result => {
             this.logger.debug("### MarketService: " + JSON.stringify(result));
             let coinInfo = result[0];
             if (coinInfo) {
@@ -109,10 +109,10 @@ export class MarketService {
         this.http.get<Array<ExchangesType>>(this.exchangesURL, options).subscribe(result => {
             this.exchanges = result;
             // get max last price
-            this.cscPrice = 0.00000001;
+            this.brtPrice = 0.00000001;
             this.exchanges.forEach(exchange => {
-                if (exchange.last > this.cscPrice) {
-                    this.cscPrice = exchange.last;
+                if (exchange.last > this.brtPrice) {
+                    this.brtPrice = exchange.last;
                 }
             });
             this.exchangeUpdates.next(this.exchanges);

@@ -29,10 +29,10 @@ const globalTS:any = global;
 globalTS.vars = {};
 
 // put brt libs into globals
-globalTS.vars.cscKeypairs = brtKeypairs;
-globalTS.vars.cscAddresses = brtAddressCodec;
-globalTS.vars.cscHashes = brtHashes;
-globalTS.vars.cscBinaryCodec = brtBinaryCodec;
+globalTS.vars.brtKeypairs = brtKeypairs;
+globalTS.vars.brtAddresses = brtAddressCodec;
+globalTS.vars.brtHashes = brtHashes;
+globalTS.vars.brtBinaryCodec = brtBinaryCodec;
 
 // set property for exit dialog
 let showExitPrompt = true;
@@ -111,11 +111,11 @@ function appUpdater() {
 }
 
 // set the default userData directory
-const defaultCSCPath = path.join(app.getPath('home'), '.brt');
-if (!fs.existsSync(defaultCSCPath)){
-  fs.mkdirSync(defaultCSCPath);
+const defaultBRTPath = path.join(app.getPath('home'), '.brt');
+if (!fs.existsSync(defaultBRTPath)){
+  fs.mkdirSync(defaultBRTPath);
 }
-app.setPath('userData', defaultCSCPath);
+app.setPath('userData', defaultBRTPath);
 
 // configure loggging 
 const winston = require('winston');

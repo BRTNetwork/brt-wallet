@@ -58,7 +58,7 @@ export class ImportpaperwalletComponent implements OnInit {
       this.errorMessage = "";
       this.showDialogFooter = false;
       try {        
-        this.keypair = this.electron.remote.getGlobal("vars").cscKeypairs.deriveKeypair(this.privateKey.trim());
+        this.keypair = this.electron.remote.getGlobal("vars").brtKeypairs.deriveKeypair(this.privateKey.trim());
       }
       catch(e) {
         this.errorMessage = "Invalid Private Key";
@@ -66,7 +66,7 @@ export class ImportpaperwalletComponent implements OnInit {
         this.showDialogFooter = true;
         return;
       }
-      this.address = this.electron.remote.getGlobal("vars").cscKeypairs.deriveAddress(this.keypair.publicKey);
+      this.address = this.electron.remote.getGlobal("vars").brtKeypairs.deriveAddress(this.keypair.publicKey);
       this.allAccounts = this.walletService.getAllAccounts();
       for(let account of this.allAccounts){
         if(account.accountID === this.address){

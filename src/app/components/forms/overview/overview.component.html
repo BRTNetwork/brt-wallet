@@ -3,13 +3,13 @@
         <p-panel header="Wallet" [style]="{'height':'100%'}">
             <mat-list>
                 <mat-list-item class="item-header">Balance</mat-list-item>
-                <mat-list-item class="item-value">{{balance | cscAmount: true}}</mat-list-item>
+                <mat-list-item class="item-value">{{balance | brtAmount: true}}</mat-list-item>
                 <mat-list-item class="item-header">Estimated Fiat Value</mat-list-item>
                 <mat-list-item class="item-value">{{fiat_balance}}</mat-list-item>
                 <mat-list-item class="item-header">Transactions</mat-list-item>
                 <mat-list-item class="item-value">{{transaction_count}}</mat-list-item>
                 <mat-list-item class="item-header">Last Transaction</mat-list-item>
-                <mat-list-item class="item-value">{{last_transaction | cscDate : 'yyyy-MM-dd HH:mm:ss'}}</mat-list-item>
+                <mat-list-item class="item-value">{{last_transaction | brtDate : 'yyyy-MM-dd HH:mm:ss'}}</mat-list-item>
                 <mat-list-item class="item-value"></mat-list-item>
             </mat-list>
         </p-panel>
@@ -21,10 +21,10 @@
                 <div class="ui-g-8">Available Ledgers</div><div class="ui-g-4 bold-value">{{serverState.complete_ledgers}}</div>
                 <div class="ui-g-8">Server Latency (ms)</div><div class="ui-g-4 bold-value">{{serverState.io_latency_ms}}</div>
                 <div class="ui-g-8">Connected Peers</div><div class="ui-g-4 bold-value">{{serverState.peers}}</div>
-                <div class="ui-g-8">Last Closing Time</div><div class="ui-g-4 bold-value">{{serverState.validated_ledger.close_time | cscDate: 'HH:mm:ss'}}</div>
+                <div class="ui-g-8">Last Closing Time</div><div class="ui-g-4 bold-value">{{serverState.validated_ledger.close_time | brtDate: 'HH:mm:ss'}}</div>
                 <div class="ui-g-8">Close Duration (ms)</div><div class="ui-g-4 bold-value">{{serverState.last_close.converge_time}}</div>
                 <div class="ui-g-8">Last Close Proposers</div><div class="ui-g-4 bold-value">{{serverState.last_close.proposers}}</div>
-                <div class="ui-g-8">Current Fee</div><div class="ui-g-4 bold-value">{{serverState.validated_ledger.base_fee | cscAmount}}</div>
+                <div class="ui-g-8">Current Fee</div><div class="ui-g-4 bold-value">{{serverState.validated_ledger.base_fee | brtAmount}}</div>
             </div>
         </p-panel>
     </div>
@@ -56,7 +56,7 @@
         <p-column expander="true" styleClass="col-icon" [style]="{'width':'25px'}"></p-column>
         <p-column field="timestamp" header="Time" [style]="{'width':'125px'}">
             <ng-template let-col let-case="rowData" pTemplate="body">
-                <span>{{case[col.field] | cscDate : 'yyyy-MM-dd HH:mm:ss'}}</span>
+                <span>{{case[col.field] | brtDate : 'yyyy-MM-dd HH:mm:ss'}}</span>
             </ng-template>
         </p-column>
         <p-column header="Account" [style]="{'width':'200px'}">
@@ -66,7 +66,7 @@
         </p-column>
         <p-column field="amount" header="Amount" [style]="{'width':'75px'}">
             <ng-template let-data="rowData" pTemplate="body">
-                    <span #amountColText>{{ getTXTextColor(amountColText,data) }}{{data.amount | cscAmount}}</span>
+                    <span #amountColText>{{ getTXTextColor(amountColText,data) }}{{data.amount | brtAmount}}</span>
             </ng-template>
         </p-column>
         <p-column field="inLedger" header="Ledger" [style]="{'width':'75px'}"></p-column>
@@ -97,7 +97,7 @@
                             </div>
                             <div class="ui-grid-row">
                                 <div class="ui-grid-col-2 label item-label">Amount: </div>
-                                <div class="ui-grid-col-10 item-value">{{data.amount | cscAmount}}</div>
+                                <div class="ui-grid-col-10 item-value">{{data.amount | brtAmount}}</div>
                             </div>
                             <div class="ui-grid-row">
                                 <div class="ui-grid-col-2 label item-label">Description: </div>

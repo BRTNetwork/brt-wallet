@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 import { Logger } from "angular2-logger/core";
-import { Payment, PaymentFlags, Instructions, Prepare, Amount } from './csc-types';
-import { CSCUtil } from './csc-util';
+import { Payment, PaymentFlags, Instructions, Prepare, Amount } from './brt-types';
+import { BRTUtil } from './brt-util';
 import * as _ from "lodash";
 
 @Injectable()
-export class CSC {
+export class BRT {
 
     constructor(private logger: Logger) {}
 
-    isCSCToCSCPayment(payment: Payment): boolean {
+    isBRTToBRTPayment(payment: Payment): boolean {
         let sourceCurrency = _.get(payment, 'source.maxAmount.currency', _.get(payment, 'source.amount.currency'))
         let destinationCurrency = _.get(payment, 'destination.amount.currency',  _.get(payment, 'destination.minAmount.currency'))
-        return sourceCurrency === 'CSC' && destinationCurrency === 'CSC';
+        return sourceCurrency === 'BRT' && destinationCurrency === 'BRT';
     }
     
     isIOUWithoutCounterparty(amount: Amount): boolean {
-        return amount && amount.currency !== 'CSC' && amount.counterparty === undefined;
+        return amount && amount.currency !== 'BRT' && amount.counterparty === undefined;
     }
     
     applyAnyCounterpartyEncoding(payment: Payment): void {
@@ -31,9 +31,9 @@ export class CSC {
     }
 
     createMaximalAmount(amount: Amount): Amount {
-        const maxCSCValue = '40000000000'
+        const maxBRTValue = '40000000000'
         const maxIOUValue = '9999999999999999e80'
-        const maxValue = amount.currency === 'CSC' ? maxCSCValue : maxIOUValue
+        const maxValue = amount.currency === 'BRT' ? maxBRTValue : maxIOUValue
         return _.assign({}, amount, { value: maxValue })
     }
     //
@@ -42,13 +42,13 @@ export class CSC {
     //     this.applyAnyCounterpartyEncoding(payment)
     //
     //     if (address !== payment.source.address) {
-    //         this.logger.error("### CSC: address must match payment.source.address");
+    //         this.logger.error("### BRT: address must match payment.source.address");
     //         return;
     //     }
     //
     //     if ((payment.source.maxAmount && payment.destination.minAmount) ||
     //         (payment.source.amount && payment.destination.amount)) {
-    //             this.logger.error("### CSC: payment must specify either (source.maxAmount " +
+    //             this.logger.error("### BRT: payment must specify either (source.maxAmount " +
     //             "and destination.amount) or (source.amount and destination.minAmount)");
     //             return;
     //     }
@@ -59,7 +59,7 @@ export class CSC {
     //     // send the whole source amount, so we set the destination amount to the
     //     // maximum possible amount. otherwise it's possible that the destination
     //     // cap could be hit before the source cap.
-    //     let amount = payment.destination.minAmount && !this.isCSCToCSCPayment(payment) ?
+    //     let amount = payment.destination.minAmount && !this.isBRTToBRTPayment(payment) ?
     //         this.createMaximalAmount(payment.destination.minAmount) :
     //         (payment.destination.amount || payment.destination.minAmount)
     //
@@ -68,7 +68,7 @@ export class CSC {
     //         TransactionType: 'Payment',
     //         Account: payment.source.address,
     //         Destination: payment.destination.address,
-    //         Amount: CSCUtil.tobrtdAmount(amount),
+    //         Amount: BRTUtil.tobrtdAmount(amount),
     //         Flags: 0
     //     }
     //
@@ -82,7 +82,7 @@ export class CSC {
     //         txJSON['DestinationTag'] = payment.destination.tag;
     //     }
     //     if (payment.memos !== undefined) {
-    //         txJSON['Memos'] = _.map(payment.memos, CSCUtil.encodeMemo);
+    //         txJSON['Memos'] = _.map(payment.memos, BRTUtil.encodeMemo);
     //     }
     //     if (payment.noDirectbrt === true) {
     //         txJSON['Flags'] |= paymentFlags.NobrtDirect;
@@ -99,25 +99,25 @@ export class CSC {
     //     // Transaction Fee
     //     txJSON['Fee'] = 1000000;
     //
-    //     // Future use of non CSC payments
-    //     // if (!this.isCSCToCSCPayment(payment)) {
-    //     //     // Don't set SendMax for CSC->CSC payment
+    //     // Future use of non BRT payments
+    //     // if (!this.isBRTToBRTPayment(payment)) {
+    //     //     // Don't set SendMax for BRT->BRT payment
     //     //     if (payment.allowPartialPayment === true ||
     //     //         payment.destination.minAmount !== undefined) {
     //     //         txJSON['Flags'] |= paymentFlags.PartialPayment;
     //     //     }
     //
-    //     //     txJSON['SendMax'] = CSCUtil.tobrtdAmount(payment.source.maxAmount || payment.source.amount);
+    //     //     txJSON['SendMax'] = BRTUtil.tobrtdAmount(payment.source.maxAmount || payment.source.amount);
     //
     //     //     if (payment.destination.minAmount !== undefined) {
-    //     //         txJSON['DeliverMin'] = CSCUtil.tobrtdAmount(payment.destination.minAmount);
+    //     //         txJSON['DeliverMin'] = BRTUtil.tobrtdAmount(payment.destination.minAmount);
     //     //     }
     //
     //     //     if (payment.paths !== undefined) {
     //     //         txJSON['Paths'] = JSON.parse(payment.paths);
     //     //     }
     //     // } else if (payment.allowPartialPayment === true) {
-    //     //     this.logger.error("### CSC: CSC to CSC payments cannot be partial payments");
+    //     //     this.logger.error("### BRT: BRT to BRT payments cannot be partial payments");
     //     // }
     //     return txJSON;
     // }

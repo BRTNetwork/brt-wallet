@@ -5,7 +5,7 @@ import { MessageService } from 'primeng/components/common/messageservice';
 import { WalletService } from '../../../providers/wallet.service';
 import { SwapService } from '../../../providers/swap.service';
 import { ElectronService } from '../../../providers/electron.service';
-import { CSCUtil } from '../../../domain/csc-util';
+import { BRTUtil } from '../../../domain/brt-util';
 import { LokiSwap } from '../../../domain/lokijs';
 import { environment } from '../../../../environments';
 import { Menu as ElectronMenu, MenuItem as ElectronMenuItem } from 'electron';
@@ -115,8 +115,8 @@ export class CoinSwapComponent implements OnInit {
       let nowTimestamp = Date.now();
       let weekAgoTimestamp = nowTimestamp - 604800000;
       let dayAgoTimestamp = nowTimestamp - 86400000;
-      // let pastWeekSwaps = this.walletService.getSwapsFromTimestamp(CSCUtil.unixTobrtTimestamp(weekAgoTimestamp));
-      let pastDaySwaps = this.walletService.getSwapsFromTimestamp(CSCUtil.unixTobrtTimestamp(dayAgoTimestamp));
+      // let pastWeekSwaps = this.walletService.getSwapsFromTimestamp(BRTUtil.unixTobrtTimestamp(weekAgoTimestamp));
+      let pastDaySwaps = this.walletService.getSwapsFromTimestamp(BRTUtil.unixTobrtTimestamp(dayAgoTimestamp));
       this.logger.debug("### Coin Swap - Past Day Swaps Count: " + pastDaySwaps.length);
       if(pastDaySwaps.length >= 1){
         this.messageService.add({severity:'error', summary:'Create New Swap', detail:'A maximum of 1 swap per day is allowed!'});
@@ -137,7 +137,7 @@ export class CoinSwapComponent implements OnInit {
   }
 
   convertCscTimestamp(inputTime) {
-    return CSCUtil.brtToUnixTimestamp(inputTime);
+    return BRTUtil.brtToUnixTimestamp(inputTime);
   }
 
   getDepositAmount(deposit){
@@ -210,7 +210,7 @@ export class CoinSwapComponent implements OnInit {
   showDepositQRCode(){
     if(this.selectedSwap){
       this.logger.debug("showDepositQRCode: " + JSON.stringify(this.selectedSwap));
-      this.cxxDepositURI = CSCUtil.generateCXXQRCodeURI(this.selectedSwap.depositAddress);
+      this.cxxDepositURI = BRTUtil.generateCXXQRCodeURI(this.selectedSwap.depositAddress);
       this.showDepositQRCodeDialog = true;
     }
   }
