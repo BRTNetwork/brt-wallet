@@ -6,10 +6,10 @@ const path = require('path')
 const appVersion = require('./package.json').version;
 
 var debianOptions = {
-  src: 'app-builds/casinocoin-wallet-linux-x64/',
+  src: 'app-builds/brt-wallet-linux-x64/',
   dest: 'release-builds/',
-  icon: 'src/assets/brand/casinocoin-icon-256x256.png',
-  homepage: 'http://www.casinocoin.org', 
+  icon: 'src/assets/brand/brt-icon-256x256.png',
+  homepage: 'http://brt.network', 
   arch: 'amd64'
 }
 
@@ -26,10 +26,10 @@ debianInstaller(debianOptions, function (err) {
 
 
 var redhatOptions = {
-  src: 'app-builds/casinocoin-wallet-linux-x64/',
+  src: 'app-builds/brt-wallet-linux-x64/',
   dest: 'release-builds/',
-  icon: 'src/assets/brand/casinocoin-icon-256x256.png',
-  homepage: 'http://www.casinocoin.org',
+  icon: 'src/assets/brand/brt-icon-256x256.png',
+  homepage: 'http://brt.network',
   arch: 'x86_64'
 }
 

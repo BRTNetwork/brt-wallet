@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { CasinocoinService } from '../../../providers/casinocoin.service';
+import { brtService } from '../../../providers/brt.service';
 import { WalletService } from '../../../providers/wallet.service';
 import { CSCUtil } from '../../../domain/csc-util';
 import { LedgerStreamMessages, ServerStateMessage } from '../../../domain/websocket-types';
@@ -24,15 +24,15 @@ export class OverviewComponent implements OnInit {
   last_transaction:number;
 
   constructor(private logger: LogService,
-              private casinocoinService: CasinocoinService,
+              private brtService: brtService,
               private walletService: WalletService) { 
     this.logger.debug("### INIT Overview ###");
   }
 
   ngOnInit() {
     this.logger.debug("### Overview ngOnInit() ###");
-    this.ledgers = this.casinocoinService.ledgers;
-    this.casinocoinService.serverStateSubject.subscribe( state => {
+    this.ledgers = this.brtService.ledgers;
+    this.brtService.serverStateSubject.subscribe( state => {
       this.serverState = state;
     });
     this.walletService.openWalletSubject.subscribe( result => {
@@ -47,7 +47,7 @@ export class OverviewComponent implements OnInit {
         this.fiat_balance = "0.00";
         this.transactions = this.walletService.getAllTransactions();
         // subcribe to transaction updates
-        this.casinocoinService.transactionSubject.subscribe( tx => {
+        this.brtService.transactionSubject.subscribe( tx => {
           this.logger.debug("### Overview TX Update: " + JSON.stringify(tx));
           let updateTxIndex = this.transactions.findIndex( item => item.txID == tx.txID);
           if( updateTxIndex >= 0 ){
@@ -70,7 +70,7 @@ export class OverviewComponent implements OnInit {
   }
 
   convertCscTimestamp(inputTime) {
-    return CSCUtil.casinocoinToUnixTimestamp(inputTime);
+    return CSCUtil.brtToUnixTimestamp(inputTime);
   }
 
   getTXAccount(rowData){

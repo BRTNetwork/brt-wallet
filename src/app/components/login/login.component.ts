@@ -11,7 +11,7 @@ import { LogService } from '../../providers/log.service';
 import { MessageService } from 'primeng/components/common/messageservice';
 import { AppComponent } from 'app/app.component';
 import { setTimeout } from 'timers';
-import { CasinocoinService } from '../../providers/casinocoin.service';
+import { brtService } from '../../providers/brt.service';
  
 @Component({
     moduleId: module.id,
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
         private datePipe: DatePipe,
         private localStorageService: LocalStorageService,
         private sessionStorageService: SessionStorageService,
-        private casinocoinService: CasinocoinService
+        private brtService: brtService
     ) { 
     }
  
@@ -66,9 +66,9 @@ export class LoginComponent implements OnInit {
         for(let i=0; i< this.availableWallets.length; i++){
             this.logger.debug("Wallet: " + JSON.stringify(this.availableWallets[i]));
             let walletLabel = this.availableWallets[i]['walletUUID'].substring(0,12);
-            let walletCreationDate = new Date(CSCUtil.casinocoinToUnixTimestamp(this.availableWallets[i]['creationDate']));
+            let walletCreationDate = new Date(CSCUtil.brtToUnixTimestamp(this.availableWallets[i]['creationDate']));
             if(this.availableWallets[i]['importedDate']){
-                let walletImportDate = new Date(CSCUtil.casinocoinToUnixTimestamp(this.availableWallets[i]['importedDate']));
+                let walletImportDate = new Date(CSCUtil.brtToUnixTimestamp(this.availableWallets[i]['importedDate']));
                 walletLabel = walletLabel + "... [Imported: " + this.datePipe.transform(walletImportDate, "yyyy-MM-dd") + "]";
             } else {
                 walletLabel = walletLabel + "... [Created: " + this.datePipe.transform(walletCreationDate, "yyyy-MM-dd") + "]";
@@ -149,7 +149,7 @@ export class LoginComponent implements OnInit {
         this.logger.debug("### Login -> Quit")
         // quit the wallet
         this.walletService.closeWallet();
-        this.casinocoinService.disconnect();
+        this.brtService.disconnect();
         this.sessionStorageService.remove(AppConstants.KEY_CURRENT_WALLET);
         this.dialog_visible = false;
         this.electron.remote.getGlobal("vars").exitFromRenderer = true;

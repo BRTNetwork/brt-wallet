@@ -53,7 +53,7 @@ export class CSC {
     //             return;
     //     }
     //
-    //     // when using destination.minAmount, casinocoind still requires that we set
+    //     // when using destination.minAmount, brtd still requires that we set
     //     // a destination amount in addition to DeliverMin. the destination amount
     //     // is interpreted as the maximum amount to send. we want to be sure to
     //     // send the whole source amount, so we set the destination amount to the
@@ -68,7 +68,7 @@ export class CSC {
     //         TransactionType: 'Payment',
     //         Account: payment.source.address,
     //         Destination: payment.destination.address,
-    //         Amount: CSCUtil.toCasinocoindAmount(amount),
+    //         Amount: CSCUtil.tobrtdAmount(amount),
     //         Flags: 0
     //     }
     //
@@ -84,8 +84,8 @@ export class CSC {
     //     if (payment.memos !== undefined) {
     //         txJSON['Memos'] = _.map(payment.memos, CSCUtil.encodeMemo);
     //     }
-    //     if (payment.noDirectCasinocoin === true) {
-    //         txJSON['Flags'] |= paymentFlags.NoCasinocoinDirect;
+    //     if (payment.noDirectbrt === true) {
+    //         txJSON['Flags'] |= paymentFlags.NobrtDirect;
     //     }
     //     if (payment.limitQuality === true) {
     //         txJSON['Flags'] |= paymentFlags.LimitQuality;
@@ -107,10 +107,10 @@ export class CSC {
     //     //         txJSON['Flags'] |= paymentFlags.PartialPayment;
     //     //     }
     //
-    //     //     txJSON['SendMax'] = CSCUtil.toCasinocoindAmount(payment.source.maxAmount || payment.source.amount);
+    //     //     txJSON['SendMax'] = CSCUtil.tobrtdAmount(payment.source.maxAmount || payment.source.amount);
     //
     //     //     if (payment.destination.minAmount !== undefined) {
-    //     //         txJSON['DeliverMin'] = CSCUtil.toCasinocoindAmount(payment.destination.minAmount);
+    //     //         txJSON['DeliverMin'] = CSCUtil.tobrtdAmount(payment.destination.minAmount);
     //     //     }
     //
     //     //     if (payment.paths !== undefined) {

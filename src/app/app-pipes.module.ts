@@ -12,7 +12,7 @@ export class CSCDatePipe implements PipeTransform {
     constructor(private datePipe: DatePipe){}
 
     transform(value: number, format: string): string {
-        let unixTimestamp = CSCUtil.casinocoinToUnixTimestamp(value);
+        let unixTimestamp = CSCUtil.brtToUnixTimestamp(value);
         return this.datePipe.transform(unixTimestamp, format);
     }
 }

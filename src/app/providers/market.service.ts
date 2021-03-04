@@ -10,9 +10,9 @@ import { SelectItem } from 'primeng/components/common/selectitem';
 @Injectable()
 export class MarketService {
 
-    private coinmarketCapURLCSC = 'https://api.coinmarketcap.com/v1/ticker/casinocoin/?convert=';
+    private coinmarketCapURLCSC = 'https://api.coinmarketcap.com/v1/ticker/brt/?convert=';
     private coinmarketCapURLBTC = 'https://api.coinmarketcap.com/v1/ticker/bitcoin/?convert=';
-    private exchangesURL = 'https://api.casinocoin.org/1.0.0/info/exchanges/all';
+    private exchangesURL = 'https://api.brt.org/1.0.0/info/exchanges/all';
     public coinMarketInfo: CoinMarketCapType;
     public exchanges: Array<ExchangesType>;
     private checkInterval: any;

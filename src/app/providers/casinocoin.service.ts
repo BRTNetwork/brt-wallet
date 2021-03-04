@@ -13,18 +13,18 @@ import { LedgerStreamMessages, ServerStateMessage,
 import { LogService } from './log.service';
 import { LokiKey, LokiAccount, LokiTransaction, LokiTxStatus, LokiAccountSettings, LokiSignedTransaction } from '../domain/lokijs';
 import { AppConstants } from '../domain/app-constants';
-import { CasinocoinTxObject, PrepareTxPayment } from '../domain/csc-types';
+import { brtTxObject, PrepareTxPayment } from '../domain/csc-types';
 import { CSCUtil } from '../domain/csc-util';
 import { NotificationService } from './notification.service';
 import { ElectronService } from './electron.service';
 import Big from 'big.js';
 import BigNumber from 'bignumber.js'
 import {utils} from 'protractor';
-import * as CasinocoinAddressCodec from 'casinocoin-libjs-address-codec/src/index';
+import * as brtAddressCodec from 'brt-libjs-address-codec/src/index';
 const crypto = require('crypto');
 
 @Injectable()
-export class CasinocoinService implements OnDestroy {
+export class brtService implements OnDestroy {
 
     private defaultMinimalFee = 100000;
 
@@ -45,7 +45,7 @@ export class CasinocoinService implements OnDestroy {
     public transactions: Array<LokiTransaction> = [];
     public transactionSubject = new Subject<LokiTransaction>();
     public lastTransactionHash: string = "";
-    public casinocoinConnectedSubject = new BehaviorSubject<boolean>(false);
+    public brtConnectedSubject = new BehaviorSubject<boolean>(false);
     public fullAccountRefresh = false;
     public accountRefreshCount = 0;
 
@@ -56,22 +56,22 @@ export class CasinocoinService implements OnDestroy {
                 private decimalPipe: DecimalPipe,
                 private localStorageService: LocalStorageService,
                 private electron: ElectronService ) {
-        logger.debug("### INIT  CasinocoinService ###");
+        logger.debug("### INIT  brtService ###");
 
         this.initServerState();
     }
 
     ngOnDestroy() {
-        this.logger.debug("### CasinocoinService onDestroy ###");
+        this.logger.debug("### brtService onDestroy ###");
         if(this.socketSubscription != undefined){
             this.socketSubscription.unsubscribe();
         }
     }
 
     connect(): Observable<any> {
-        this.logger.debug("### CasinocoinService Connect() - isConnected: " + this.isConnected);
+        this.logger.debug("### brtService Connect() - isConnected: " + this.isConnected);
         let connectToProduction: boolean = this.localStorageService.get(AppConstants.KEY_PRODUCTION_NETWORK);
-        this.logger.debug("### CasinocoinService Connect() - Connect To Production?: " + connectToProduction);
+        this.logger.debug("### brtService Connect() - Connect To Production?: " + connectToProduction);
         let connectSubject;
         if(!this.isConnected){
             connectSubject = new BehaviorSubject<string>(AppConstants.KEY_INIT);
@@ -83,15 +83,15 @@ export class CasinocoinService implements OnDestroy {
             // check if the server is found, otherwise wait till it is
             const serverFoundSubscription = this.wsService.isServerFindComplete$.subscribe(serverFound => {
                 if(serverFound && !this.makingConnectionStarted){
-                    this.logger.debug("### CasinocoinService serverFound - Wait for websocket connected");
+                    this.logger.debug("### brtService serverFound - Wait for websocket connected");
                     // check if websocket is open, otherwise wait till it is
                     this.connectedSubscription = this.wsService.isConnected$.subscribe(connected => {
-                        this.logger.debug("### CasinocoinService connected: " + connected + " isConnected: " + this.isConnected + " disconnectStarted: " + this.disconnectStarted);
+                        this.logger.debug("### brtService connected: " + connected + " isConnected: " + this.isConnected + " disconnectStarted: " + this.disconnectStarted);
                         if(!connected && !this.isConnected){
                             if(this.disconnectStarted){
                                 // disconnect complete
                                 this.disconnectStarted = false;
-                                this.casinocoinConnectedSubject.next(false);
+                                this.brtConnectedSubject.next(false);
                                 // check if we need to reconnect?
                                 if(this.reconnectOnDisconnect){
                                     this.connect();
@@ -104,7 +104,7 @@ export class CasinocoinService implements OnDestroy {
                         } else if(connected && !this.isConnected){
                             this.isConnected = true;
                             this.reconnectOnDisconnect = false;
-                            this.casinocoinConnectedSubject.next(true);
+                            this.brtConnectedSubject.next(true);
                             // inform listeners we are connected
                             connectSubject.next(AppConstants.KEY_CONNECTED);
                             // get the current server state
@@ -121,7 +121,7 @@ export class CasinocoinService implements OnDestroy {
                                     this.walletService.getAllKeys().forEach(element => {
                                         subscribeAccounts.push(element.accountID);
                                     });
-                                    this.logger.debug("### CasinocoinService Accounts: " + JSON.stringify(subscribeAccounts));
+                                    this.logger.debug("### brtService Accounts: " + JSON.stringify(subscribeAccounts));
                                     this.subscribeToAccountsStream(subscribeAccounts);
                                     // update all accounts from the network
                                     this.fullAccountRefresh = true;
@@ -131,18 +131,18 @@ export class CasinocoinService implements OnDestroy {
                                 }
                             });
                         } else if(!connected && this.isConnected) {
-                            this.logger.debug("### CasinocoinService Connect Closed !! - isConnected: " + connected);
+                            this.logger.debug("### brtService Connect Closed !! - isConnected: " + connected);
                             // inform listeners we are disconnected
                             connectSubject.next(AppConstants.KEY_DISCONNECTED);
                             this.isConnected = false;
-                            this.casinocoinConnectedSubject.next(false);
+                            this.brtConnectedSubject.next(false);
                             // reconnect if requested
                             if(this.reconnectOnDisconnect){
                                 this.connect();
                             }
                         } else if(!connected){
                             connectSubject.next(AppConstants.KEY_DISCONNECTED);
-                            this.casinocoinConnectedSubject.next(false);
+                            this.brtConnectedSubject.next(false);
                         }
                     });
                 }
@@ -155,7 +155,7 @@ export class CasinocoinService implements OnDestroy {
     }
 
     disconnect(){
-        this.logger.debug("### CasinocoinService - disconnect");
+        this.logger.debug("### brtService - disconnect");
         // let disconnectSubject = new Subject<string>();
         this.disconnectStarted = true;
         // disconnect socket
@@ -175,7 +175,7 @@ export class CasinocoinService implements OnDestroy {
     }
 
     reconnect(){
-        this.logger.debug("### CasinocoinService - reconnect");
+        this.logger.debug("### brtService - reconnect");
         this.reconnectOnDisconnect = true;
         this.disconnect();
     }
@@ -212,12 +212,12 @@ export class CasinocoinService implements OnDestroy {
 
     subscribeToMessages() {
         // subscribe to incomming messages
-        this.logger.debug("### CasinocoinService - subscribeToMessages");
+        this.logger.debug("### brtService - subscribeToMessages");
         this.socketSubscription = this.wsService.websocketConnection.messages.subscribe((message: any) => {
             let incommingMessage = JSON.parse(message);
-            // this.logger.debug('### CasinocoinService received message from server: ', JSON.stringify(incommingMessage));
+            // this.logger.debug('### brtService received message from server: ', JSON.stringify(incommingMessage));
             if(incommingMessage['type'] == 'ledgerClosed'){
-                this.logger.debug("### CasinocoinService - ledgerClosed: " + JSON.stringify(incommingMessage));
+                this.logger.debug("### brtService - ledgerClosed: " + JSON.stringify(incommingMessage));
                 this.addLedger(incommingMessage);
                 // get the new server state
                 this.getServerState();
@@ -227,7 +227,7 @@ export class CasinocoinService implements OnDestroy {
                         this.walletService.getUnvalidatedTransactions().forEach( tx => {
                             if(! (tx.txID == this.lastTransactionHash)){
                                 if(incommingMessage.ledger_index <= tx.lastLedgerSequence){
-                                    this.logger.debug("### CasinocoinService - check TX: " + JSON.stringify(tx));
+                                    this.logger.debug("### brtService - check TX: " + JSON.stringify(tx));
                                     // get the tx to check its status
                                     this.getTransaction(tx.txID);    
                                 }
@@ -238,11 +238,11 @@ export class CasinocoinService implements OnDestroy {
             } else if(incommingMessage['type'] == 'serverStatus'){
                 this.logger.debug("server state: " + incommingMessage['server_status']);
                 if(incommingMessage['server_status'] != 'full'){
-                    this.logger.debug("### CasinocoinService - server_status: " + incommingMessage['server_status'] + " -> Reconnect !!!");
+                    this.logger.debug("### brtService - server_status: " + incommingMessage['server_status'] + " -> Reconnect !!!");
                     this.reconnect();
                 }
             } else if(incommingMessage['type'] == 'transaction'){
-                this.logger.debug("### CasinocoinService - Incoming TX: " + JSON.stringify(incommingMessage));
+                this.logger.debug("### brtService - Incoming TX: " + JSON.stringify(incommingMessage));
                 let msg_tx = incommingMessage['transaction'];
                 if(msg_tx.TransactionType === "Payment"){
                     this.handlePayment(incommingMessage);
@@ -250,11 +250,11 @@ export class CasinocoinService implements OnDestroy {
                     this.handleCRNRound(msg_tx, incommingMessage['meta']);
                 }
             }  else if((incommingMessage['type'] == 'response') && incommingMessage.status === 'success'){
-                // this.logger.debug('### CasinocoinService received message from server: ', JSON.stringify(incommingMessage));
+                // this.logger.debug('### brtService received message from server: ', JSON.stringify(incommingMessage));
                 // we received a response on a request
                 if(incommingMessage['id'] == 'ping'){
                     // we received a pong
-                    this.logger.debug("### CasinocoinService - Pong");
+                    this.logger.debug("### brtService - Pong");
                 } else if(incommingMessage['id'] == 'server_state'){
                     // we received a server_state
                     this.serverStateSubject.next(incommingMessage.result.state);
@@ -304,7 +304,7 @@ export class CasinocoinService implements OnDestroy {
                     this.accountSettingsSubject.next(accountSettings);
                 } else if (incommingMessage['id'].startsWith('getAccountInfo')){
                     // we received account info
-                    this.logger.debug("### CasinocoinService - getAccountInfo: " + JSON.stringify(incommingMessage.result));
+                    this.logger.debug("### brtService - getAccountInfo: " + JSON.stringify(incommingMessage.result));
                     let account_result = incommingMessage.result.account_data;
                     // get the account from the wallet
                     let walletAccount: LokiAccount = this.walletService.getAccount(account_result.Account);
@@ -334,7 +334,7 @@ export class CasinocoinService implements OnDestroy {
                     this.walletService.updateAccount(walletAccount);
                     // update accounts array
                     this.accounts = this.walletService.getAllAccounts();
-                    this.logger.debug("### CasinocoinService - getAccountInfo - walletAccount: " + JSON.stringify(walletAccount));
+                    this.logger.debug("### brtService - getAccountInfo - walletAccount: " + JSON.stringify(walletAccount));
                     // notify change
                     this.accountSubject.next(walletAccount);
                     // get account transactions from database to check sequence and total
@@ -351,17 +351,17 @@ export class CasinocoinService implements OnDestroy {
                             }
                         }
                     });
-                    this.logger.debug("### CasinocoinService - Account TX - OUT: " + outgoingCount + 
+                    this.logger.debug("### brtService - Account TX - OUT: " + outgoingCount + 
                                         " TOTAL: " + dbAccountTransactions.length + 
                                         " Sequence: " + account_result.Sequence +
                                         " Last DB Sequence: " + lastSequence + 
                                         " Get Ledgers From: " + lastTxLedgerIndex);
                     // the account transaction total from the database to check if we are missing transactions
                     let accountTxBalance = this.walletService.getAccountTXBalance(walletAccount.accountID);
-                    this.logger.debug("### CasinocoinService - Account DB TX Balance: " + walletAccount.accountID + " => " + accountTxBalance);
-                    this.logger.debug("### CasinocoinService - Account Online TX Balance: " + walletAccount.accountID + " => " + walletAccount.balance);
+                    this.logger.debug("### brtService - Account DB TX Balance: " + walletAccount.accountID + " => " + accountTxBalance);
+                    this.logger.debug("### brtService - Account Online TX Balance: " + walletAccount.accountID + " => " + walletAccount.balance);
                     if(incommingMessage['id'] == 'getAccountInfoRefresh'){
-                        this.logger.debug("### CasinocoinService - Refresh Tx");
+                        this.logger.debug("### brtService - Refresh Tx");
                         if(walletAccount.balance !== accountTxBalance){
                             // we are missing transactions or have still unvalidated transactions for this account so check all
                             this.getAccountTx(walletAccount.accountID, lastTxLedgerIndex);
@@ -369,10 +369,10 @@ export class CasinocoinService implements OnDestroy {
                             this.accountRefreshCount --;
                         }
                     } else {
-                        this.logger.debug("### CasinocoinService - AccountInfo without Refresh Tx");
+                        this.logger.debug("### brtService - AccountInfo without Refresh Tx");
                     }
                 } else if(incommingMessage['id'] == 'ValidatedLedgers'){
-                    this.logger.debug("### CasinocoinService - Validated Ledger: " + JSON.stringify(incommingMessage.result));
+                    this.logger.debug("### brtService - Validated Ledger: " + JSON.stringify(incommingMessage.result));
                     if(!this.ledgersLoaded){
                         // get the last 10 ledgers
                         let startIndex = incommingMessage.result.ledger_index - 10;
@@ -383,10 +383,10 @@ export class CasinocoinService implements OnDestroy {
                         this.ledgersLoaded = true;   
                     }
                 } else if(incommingMessage['id'] == 'AccountUpdates'){
-                    this.logger.debug("### CasinocoinService - Account Update: " + JSON.stringify(incommingMessage.result));
+                    this.logger.debug("### brtService - Account Update: " + JSON.stringify(incommingMessage.result));
                     this.logger.debug("Account: " + JSON.stringify(incommingMessage.result));
                 } else if(incommingMessage['id'] == 'submitTx'){
-                    this.logger.debug("### CasinocoinService - TX Submitted: " + JSON.stringify(incommingMessage));
+                    this.logger.debug("### brtService - TX Submitted: " + JSON.stringify(incommingMessage));
                     if(incommingMessage.result.engine_result == "tesSUCCESS"){
                         let msg_tx = incommingMessage.result.tx_json;
                         this.lastTransactionHash = msg_tx.hash;
@@ -410,7 +410,7 @@ export class CasinocoinService implements OnDestroy {
                             lastLedgerSequence: msg_tx.LastLedgerSequence,
                             sequence: msg_tx.Sequence,
                             signingPubKey: msg_tx.SigningPubKey,
-                            timestamp: CSCUtil.casinocoinTimeNow(),
+                            timestamp: CSCUtil.brtTimeNow(),
                             transactionType: msg_tx.TransactionType,
                             txID: msg_tx.hash,
                             txnSignature: msg_tx.TxnSignature,
@@ -445,13 +445,13 @@ export class CasinocoinService implements OnDestroy {
                             });
                     }
                 } else if(incommingMessage['id'] == 'getTransaction'){
-                    this.logger.debug("### CasinocoinService - Transaction: " + JSON.stringify(incommingMessage.result));
+                    this.logger.debug("### brtService - Transaction: " + JSON.stringify(incommingMessage.result));
                     // get the tx from the database
                     let tx:LokiTransaction = this.walletService.getTransaction(incommingMessage.result.hash);
                     if(tx == null) {
-                        this.logger.debug("### CasinocoinService DB Transactions does not Exist !");
+                        this.logger.debug("### brtService DB Transactions does not Exist !");
                     } else {
-                        this.logger.debug("### CasinocoinService DB TX: " + JSON.stringify(tx));
+                        this.logger.debug("### brtService DB TX: " + JSON.stringify(tx));
                     }
                     let notifyUser = ((tx.validated == false) && (incommingMessage.result.validated == true));
                     if(notifyUser){
@@ -489,16 +489,16 @@ export class CasinocoinService implements OnDestroy {
                                     ' coins to your own address ' + tx.destination});
                         }
                     }
-                    this.logger.debug("### CasinocoinService - updated TX: " + JSON.stringify(tx));
+                    this.logger.debug("### brtService - updated TX: " + JSON.stringify(tx));
                 } else if(incommingMessage['id'] == 'getAccountTx'){
                     let accountTxArray: Array<any> = incommingMessage.result.transactions;
-                    this.logger.debug("### CasinocoinService - getAccountTx message TX Count: " + accountTxArray.length);
-                    this.logger.debug("### CasinocoinService - getAccountTx Full Refresh: " + this.fullAccountRefresh);
+                    this.logger.debug("### brtService - getAccountTx message TX Count: " + accountTxArray.length);
+                    this.logger.debug("### brtService - getAccountTx Full Refresh: " + this.fullAccountRefresh);
                     // Check all transactions against DB
                     accountTxArray.forEach(element => {
                         // check the TransactionType
                         if(element.tx.TransactionType == 'Payment'){
-                            this.logger.debug("### CasinocoinService - Payment Tx: " + element.tx.hash);
+                            this.logger.debug("### brtService - Payment Tx: " + element.tx.hash);
                             let tx = { 
                                 validated: element.validated,
                                 ledger_index: element.tx.ledger_index,
@@ -508,7 +508,7 @@ export class CasinocoinService implements OnDestroy {
                             };
                             this.handlePayment(tx);
                         } else if(element.tx.TransactionType == 'SetCRNRound'){
-                            this.logger.debug("### CasinocoinService - SetCRNRound Tx: " + element.tx.hash);
+                            this.logger.debug("### brtService - SetCRNRound Tx: " + element.tx.hash);
                             this.handleCRNRound(element.tx, element.meta);
                         }
                     });
@@ -516,21 +516,21 @@ export class CasinocoinService implements OnDestroy {
                     this.electron.ipcRenderer.send("action", "refresh-balance");
                     // if we received a marker then there is more so get next batch
                     if(incommingMessage.result.marker){
-                        this.logger.debug("### CasinocoinService - getAccountTx - Get Next Batch");
+                        this.logger.debug("### brtService - getAccountTx - Get Next Batch");
                         this.getAccountTx(incommingMessage.result.account, -1, incommingMessage.result.marker);
                     } else {
                         // we are done
-                        this.logger.debug("### CasinocoinService - getAccountTx - FINISHED");
+                        this.logger.debug("### brtService - getAccountTx - FINISHED");
                         this.accountRefreshCount --;
-                        this.logger.debug("### CasinocoinService - getAccountTx - FINISHED - accountRefreshCount: " + this.accountRefreshCount);
+                        this.logger.debug("### brtService - getAccountTx - FINISHED - accountRefreshCount: " + this.accountRefreshCount);
                         if (this.accountRefreshCount <= 0) {
-                            this.logger.debug("### CasinocoinService - getAccountTx - FINISHED - set refresh finished");
+                            this.logger.debug("### brtService - getAccountTx - FINISHED - set refresh finished");
                             this.fullAccountRefresh = false;
                         }
                     }
                 }
             } else if(incommingMessage.status === 'error'){
-                this.logger.debug("### CasinocoinService - Error Received: " + JSON.stringify(incommingMessage));
+                this.logger.debug("### brtService - Error Received: " + JSON.stringify(incommingMessage));
 
             } else { 
                 this.logger.debug("unmapped message: " + JSON.stringify(incommingMessage));
@@ -612,7 +612,7 @@ export class CasinocoinService implements OnDestroy {
         }
         // check if we have a marker to start from
         if(startMarker){
-            this.logger.debug("### CasinocoinService - getAccountTx - addMarker: " + JSON.stringify(startMarker));
+            this.logger.debug("### brtService - getAccountTx - addMarker: " + JSON.stringify(startMarker));
             accountTxRequest['marker'] = startMarker; 
         }
         this.sendCommand(accountTxRequest);
@@ -685,12 +685,12 @@ export class CasinocoinService implements OnDestroy {
         });
     }
 
-    createPaymentTx(input: PrepareTxPayment): CasinocoinTxObject {
+    createPaymentTx(input: PrepareTxPayment): brtTxObject {
         // we allow the transaction to be included in the next 10 ledgers
         let lastLedgerForTx = this.ledgers[0].ledger_index + 10;
         // get account sequence
         let txWalletAccount:LokiAccount = this.walletService.getAccount(input.source);
-        let txJSON: CasinocoinTxObject = {
+        let txJSON: brtTxObject = {
             TransactionType: 'Payment',
             Account: input.source,
             Destination: input.destination,
@@ -721,7 +721,7 @@ export class CasinocoinService implements OnDestroy {
         return txJSON;
     }
 
-    signTx(tx: CasinocoinTxObject, password: string): string{
+    signTx(tx: brtTxObject, password: string): string{
         let accountKey: LokiKey = this.walletService.getKey(tx.Account);
         let privateKey = this.walletService.getDecryptPrivateKey(password, accountKey);
         if(privateKey != AppConstants.KEY_ERRORED){
@@ -781,7 +781,7 @@ export class CasinocoinService implements OnDestroy {
     }
 
     addTxToWallet(tx, validated, inLedger): LokiTransaction {
-        this.logger.debug("### CasinocoinService - addTxToWallet");
+        this.logger.debug("### brtService - addTxToWallet");
         let txDirection:string;
         if(this.walletService.isAccountMine(tx.Destination)){
             txDirection = AppConstants.KEY_WALLET_TX_IN;
@@ -834,7 +834,7 @@ export class CasinocoinService implements OnDestroy {
     }
 
     handlePayment(tx) {
-        this.logger.debug("### CasinocoinService - handlePayment: " + JSON.stringify(tx));
+        this.logger.debug("### brtService - handlePayment: " + JSON.stringify(tx));
         // check if we already have the TX
         let dbTX: LokiTransaction = this.walletService.getTransaction(tx.transaction.hash);
         if(dbTX == null){
@@ -888,15 +888,15 @@ export class CasinocoinService implements OnDestroy {
     handleCRNRound(tx, meta) {
         // check if we already have the TX
         let dbTX: LokiTransaction = this.walletService.getTransaction(tx.hash);
-        // this.logger.debug("### CasinocoinService - handleCRNRound tx: " + JSON.stringify(tx) + " meta: " + JSON.stringify(meta));
-        // this.logger.debug("### CasinocoinService - handleCRNRound dbTX: " + JSON.stringify(dbTX));
+        // this.logger.debug("### brtService - handleCRNRound tx: " + JSON.stringify(tx) + " meta: " + JSON.stringify(meta));
+        // this.logger.debug("### brtService - handleCRNRound dbTX: " + JSON.stringify(dbTX));
         if(dbTX == null){
             // check if the destination account is ours
             meta['AffectedNodes'].forEach(node => {
                 if(node.ModifiedNode !== undefined && node.ModifiedNode.LedgerEntryType === "AccountRoot"){
-                    this.logger.debug("### CasinocoinService - handleCRNRound node: " + JSON.stringify(node));
+                    this.logger.debug("### brtService - handleCRNRound node: " + JSON.stringify(node));
                     if(this.walletService.isAccountMine(node.ModifiedNode.FinalFields.Account)){
-                        this.logger.debug("### CasinocoinService - Account is mine: " + node.ModifiedNode.FinalFields.Account);
+                        this.logger.debug("### brtService - Account is mine: " + node.ModifiedNode.FinalFields.Account);
                         // calculate amount
                         let txAmount: Big = new Big(node.ModifiedNode.FinalFields.Balance);
                         txAmount = txAmount.minus(node.ModifiedNode.PreviousFields.Balance);
@@ -923,7 +923,7 @@ export class CasinocoinService implements OnDestroy {
                         }
                         // insert into the wallet
                         this.walletService.addTransaction(dbTX);
-                        this.logger.debug("### CasinocoinService - dbTX: " + JSON.stringify(dbTX));
+                        this.logger.debug("### brtService - dbTX: " + JSON.stringify(dbTX));
                         // notify tx change
                         this.transactionSubject.next(dbTX);
                         // update accounts
@@ -935,10 +935,10 @@ export class CasinocoinService implements OnDestroy {
                                     ' coins for CRN Ledger Round ' + dbTX.lastLedgerSequence});
                         }
                     } else {
-                        this.logger.debug("### CasinocoinService - Account NOT mine: " + node.ModifiedNode.FinalFields.Account);
+                        this.logger.debug("### brtService - Account NOT mine: " + node.ModifiedNode.FinalFields.Account);
                     }
                 } else {
-                    this.logger.debug("### CasinocoinService - node.ModifiedNode undefined");
+                    this.logger.debug("### brtService - node.ModifiedNode undefined");
                 }
             });
         } else {
@@ -966,8 +966,8 @@ export class CasinocoinService implements OnDestroy {
         accumulator.concat(_tx.Signers || []), []);
 
         const signers = unsortedSigners.sort((a, b) => {
-            const hexA = new BigNumber((Buffer.from( CasinocoinAddressCodec.decodeAddress(a.Signer.Account))).toString('hex'), 16);
-            const hexB = new BigNumber((Buffer.from( CasinocoinAddressCodec.decodeAddress(b.Signer.Account))).toString('hex'), 16);
+            const hexA = new BigNumber((Buffer.from( brtAddressCodec.decodeAddress(a.Signer.Account))).toString('hex'), 16);
+            const hexB = new BigNumber((Buffer.from( brtAddressCodec.decodeAddress(b.Signer.Account))).toString('hex'), 16);
             return hexA.comparedTo(hexB);
         });
 

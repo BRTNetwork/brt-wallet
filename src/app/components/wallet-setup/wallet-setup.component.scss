@@ -1,7 +1,7 @@
 @import "src/assets/variables";
 
 .icon-color-csc {
-    color: $casinocoinRed;
+    color: $brtRed;
 }
 
 .ui-dialog .ui-dialog-content {
@@ -28,7 +28,7 @@
 }
  
 .ui-steps.steps-custom .ui-steps-item .ui-steps-number {
-    background-color: $casinocoinRed;
+    background-color: $brtRed;
     color: #FFFFFF;
     display: inline-block;
     width: 30px;
@@ -42,36 +42,36 @@
 }
 
 .ui-state-highlight {
-    border-color: $casinocoinRedDarker;
-    background: $casinocoinRed;
+    border-color: $brtRedDarker;
+    background: $brtRed;
     color: #FFFFFF;
 }
 
 .ui-widget-header .ui-button, .ui-widget-content .ui-button, .ui-widget.ui-button, .ui-button {
-    border: $casinocoinRed;
-    background: $casinocoinRed;
+    border: $brtRed;
+    background: $brtRed;
 }
 
 .ui-widget-header .ui-button:enabled:active, .ui-widget-content .ui-button:enabled:active, .ui-widget.ui-button:enabled:active, .ui-button:enabled:active {
-    border: $casinocoinRedLighter;
-    background: $casinocoinRedDarker;
+    border: $brtRedLighter;
+    background: $brtRedDarker;
 }
 
 .ui-widget-header .ui-button:enabled:hover, .ui-widget-header .ui-button:focus, .ui-widget-content .ui-button:enabled:hover, .ui-widget-content .ui-button:focus, 
 .ui-widget.ui-button:enabled:hover, .ui-widget.ui-button:focus, .ui-button:enabled:hover, .ui-button:focus {
-    border: $casinocoinRedLighter;
-    background: $casinocoinRedDarker;
+    border: $brtRedLighter;
+    background: $brtRedDarker;
 }
 
 .ui-chkbox-box.ui-state-active, .ui-radiobutton-box.ui-state-active {
-    border: $casinocoinRedDarker;
-    background: $casinocoinRed;
+    border: $brtRedDarker;
+    background: $brtRed;
 }
 
 .ui-chkbox-box.ui-state-focus, .ui-radiobutton-box.ui-state-focus {
-    box-shadow: 0px 0px 5px $casinocoinRedLighter;
+    box-shadow: 0px 0px 5px $brtRedLighter;
 }
 
 .ui-chkbox-box.ui-state-focus.ui-state-active {
-    background: $casinocoinRed;
+    background: $brtRed;
 }

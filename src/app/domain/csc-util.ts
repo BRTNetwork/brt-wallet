@@ -1,28 +1,28 @@
 import Big from 'big.js';
 import * as bigInt from 'big-integer';
 
-import { Amount, Memo, CasinocoindAmount, CasinocoinMemo, CSCURI }  from './csc-types';
+import { Amount, Memo, brtdAmount, brtMemo, CSCURI }  from './csc-types';
 
 export class CSCUtil {
 
-    static casinocoinToUnixTimestamp(rpepoch: number): number {
+    static brtToUnixTimestamp(rpepoch: number): number {
         return (rpepoch + 0x386D4380) * 1000
     }
     
-    static unixToCasinocoinTimestamp(timestamp: number): number {
+    static unixTobrtTimestamp(timestamp: number): number {
         return Math.round(timestamp / 1000) - 0x386D4380
     }
     
-    static casinocoinTimeToISO8601(casinocoinTime: number): string {
-        return new Date(this.casinocoinToUnixTimestamp(casinocoinTime)).toISOString()
+    static brtTimeToISO8601(brtTime: number): string {
+        return new Date(this.brtToUnixTimestamp(brtTime)).toISOString()
     }
     
-    static iso8601ToCasinocoinTime(iso8601: string): number {
-        return this.unixToCasinocoinTimestamp(Date.parse(iso8601))
+    static iso8601TobrtTime(iso8601: string): number {
+        return this.unixTobrtTimestamp(Date.parse(iso8601))
     }
 
-    static casinocoinTimeNow(): number {
-        return this.unixToCasinocoinTimestamp(Date.now());
+    static brtTimeNow(): number {
+        return this.unixTobrtTimestamp(Date.now());
     }
 
     static dropsToCsc(drops: string): string {
@@ -44,12 +44,12 @@ export class CSCUtil {
         return csc_drops.toString();
     }
 
-    static toCasinocoindAmount(amount: Amount): CasinocoindAmount {
+    static tobrtdAmount(amount: Amount): brtdAmount {
         if (amount.currency === 'CSC') {
             let csc_drops = this.cscToDrops(amount.value);
             return csc_drops;
         }
-        let default_object: CasinocoindAmount = {
+        let default_object: brtdAmount = {
             currency: amount.currency,
             issuer: amount.counterparty ? amount.counterparty :  undefined,
             value: amount.value
@@ -57,7 +57,7 @@ export class CSCUtil {
         return default_object;
     }
 
-    static decodeMemos(memos: Array<CasinocoinMemo>) : Array<Memo> {
+    static decodeMemos(memos: Array<brtMemo>) : Array<Memo> {
         function removeUndefined(obj: Object): Object {
             // return _.omit(obj, _.isUndefined)
             Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key]);
@@ -82,7 +82,7 @@ export class CSCUtil {
         });
     }
 
-    static encodeMemo(inputMemo: Memo): CasinocoinMemo {
+    static encodeMemo(inputMemo: Memo): brtMemo {
         function removeUndefined(obj: Object): Object {
             // return _.omit(obj, _.isUndefined)
             Object.keys(obj).forEach(key => obj[key] === undefined && delete obj[key]);
@@ -145,7 +145,7 @@ export class CSCUtil {
     }
 
     static validateAccountID(accountID: string): boolean {
-        // prepare position lookup table with casinocoin alphabet
+        // prepare position lookup table with brt alphabet
         var vals = 'cpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2brdeCg65jkm8oFqi1tuvAxyz';
         // check if address starts with lowercase 'c'
         if(!accountID.startsWith('c')){
@@ -205,11 +205,11 @@ export class CSCUtil {
     }
 
     static generateCXXQRCodeURI(address: string){
-        return "casinocoin:" + address + "?label=" + encodeURI("Swap Deposit");
+        return "brt:" + address + "?label=" + encodeURI("Swap Deposit");
     }
 
     static generateCSCQRCodeURI(input: CSCURI){
-        let uri = "https://casinocoin.org/send?to=" + input.address;
+        let uri = "https://brt.org/send?to=" + input.address;
         if(input.amount){
             uri = uri + "&amount=" + input.amount;
         }

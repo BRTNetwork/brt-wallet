@@ -5,19 +5,19 @@ import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
 
-// import casinocoin libraries from electron
-import * as CasinocoinKeypairs from 'casinocoin-libjs-keypairs/distrib/npm/index';
-import * as CasinocoinHashes from 'casinocoin-libjs-hashes';
-import * as CasinocoinBinaryCodec from 'casinocoin-libjs-binary-codec';
-import * as CasinocoinAddressCodec from 'casinocoin-libjs-address-codec/src/index';
+// import brt libraries from electron
+import * as brtKeypairs from 'brt-libjs-keypairs/distrib/npm/index';
+import * as brtHashes from 'brt-libjs-hashes';
+import * as brtBinaryCodec from 'brt-libjs-binary-codec';
+import * as brtAddressCodec from 'brt-libjs-address-codec/src/index';
 
 // this is required to check if the app is running in development mode. 
 import * as isDev from 'electron-is-dev';
 import * as notifier from 'electron-notification-desktop';
 
 // set app id
-app.setAppUserModelId("com.squirrel.casinocoin-wallet.casinocoin-wallet");
-app.setAsDefaultProtocolClient("casinocoin");
+app.setAppUserModelId("com.squirrel.brt-wallet.brt-wallet");
+app.setAsDefaultProtocolClient("brt");
 
 let win, serve, debug;
 const args = process.argv.slice(1);
@@ -28,11 +28,11 @@ const platform = os.platform() + '_' + os.arch();
 const globalTS:any = global;
 globalTS.vars = {};
 
-// put casinocoin libs into globals
-globalTS.vars.cscKeypairs = CasinocoinKeypairs;
-globalTS.vars.cscAddresses = CasinocoinAddressCodec;
-globalTS.vars.cscHashes = CasinocoinHashes;
-globalTS.vars.cscBinaryCodec = CasinocoinBinaryCodec;
+// put brt libs into globals
+globalTS.vars.cscKeypairs = brtKeypairs;
+globalTS.vars.cscAddresses = brtAddressCodec;
+globalTS.vars.cscHashes = brtHashes;
+globalTS.vars.cscBinaryCodec = brtBinaryCodec;
 
 // set property for exit dialog
 let showExitPrompt = true;
@@ -41,7 +41,7 @@ globalTS.vars.exitFromRenderer = false;
 globalTS.vars.exitFromLogin = false;
 
 // define auto update url
-let updaterFeedURL = 'https://download.casinocoin.org/update/' + platform + '/' + version;
+let updaterFeedURL = 'https://download.brt.org/update/' + platform + '/' + version;
 if(version.indexOf("beta") !== -1){
 	updaterFeedURL = updaterFeedURL + '/' + 'beta';
 }
@@ -111,7 +111,7 @@ function appUpdater() {
 }
 
 // set the default userData directory
-const defaultCSCPath = path.join(app.getPath('home'), '.casinocoin');
+const defaultCSCPath = path.join(app.getPath('home'), '.brt');
 if (!fs.existsSync(defaultCSCPath)){
   fs.mkdirSync(defaultCSCPath);
 }
@@ -219,12 +219,12 @@ function createWindow() {
     const notification = new Notification({
       title: arg.title,
       body: arg.body,
-      icon: path.join(__dirname, 'assets/brand/casinocoin-icon-256x256.png')
+      icon: path.join(__dirname, 'assets/brand/brt-icon-256x256.png')
     });
     notification.show();
     // const notification = notifier.notify(arg.title, {
     //   message: arg.body,
-    //   icon: path.join(__dirname, 'assets/brand/casinocoin-icon-256x256.png'),
+    //   icon: path.join(__dirname, 'assets/brand/brt-icon-256x256.png'),
     //   duration: 4
     // });
     
@@ -309,7 +309,7 @@ function createWindow() {
 
   // Create the Application's main menu
   const template : Electron.MenuItemConstructorOptions[] = [{
-    label: 'CasinoCoin Wallet',
+    label: 'brt Wallet',
     submenu: [
       {
         label: 'Cut',

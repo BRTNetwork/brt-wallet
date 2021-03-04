@@ -21,47 +21,47 @@ export class SupportComponent implements OnInit {
 
   openFAQ(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://casinocoin.org/faq/");
+    this.electronService.remote.shell.openExternal("https://brt.org/faq/");
   }
 
   openReddit(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://www.reddit.com/r/casinocoin/");
+    this.electronService.remote.shell.openExternal("https://www.reddit.com/r/brt/");
   }
 
   openDiscord(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("http://casinocoin.chat/");
+    this.electronService.remote.shell.openExternal("http://brt.chat/");
   }
 
   openWebsite(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://casinocoin.org");
+    this.electronService.remote.shell.openExternal("https://brt.org");
   }
 
   openGithub(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://github.com/casinocoin/casinocoin-wallet/issues");
+    this.electronService.remote.shell.openExternal("https://github.com/BRTNetwork/brt-wallet/issues");
   }
 
   openContactForm(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://casinocoin.org/contact");
+    this.electronService.remote.shell.openExternal("https://brt.org/contact");
   }
 
   openEmail(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("mailto:support@casinocoin.org");
+    this.electronService.remote.shell.openExternal("mailto:support@brt.org");
   }
 
   openFacebook(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://www.facebook.com/CasinoCoin/");
+    this.electronService.remote.shell.openExternal("https://www.facebook.com/brt/");
   }
 
   openTwitter(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://twitter.com/CasinoCoin");
+    this.electronService.remote.shell.openExternal("https://twitter.com/brt");
   }
 
   openBitcoinTalk() {

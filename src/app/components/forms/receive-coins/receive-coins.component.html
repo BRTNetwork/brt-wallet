@@ -90,7 +90,7 @@
 </p-dialog>
 
 <p-dialog [(visible)]="showReceiveQRCodeDialog" [width]="350" [height]="500" [closable]="true" [modal]="true" appendTo="body">
-    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Receive CasinoCoin</span></p-header>
+    <p-header><span><i class="icon csc-dialog-icon icon-chip"></i>Receive brt</span></p-header>
     <div style="text-align: center;">{{selectedReceiveRow?.accountID}}</div>
     <div class="qrcode">
         <qr-code [value]="cscReceiveURI" size="250" level="L"></qr-code>

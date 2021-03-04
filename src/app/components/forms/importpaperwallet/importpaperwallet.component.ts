@@ -5,8 +5,8 @@ import { ElectronService } from '../../../providers/electron.service';
 import { WalletService } from '../../../providers/wallet.service';
 import { LogService } from '../../../providers/log.service';
 import { AppConstants } from '../../../domain/app-constants';
-// import { CasinocoinKeypairs as keypairs } from 'casinocoin-libjs';
-// import { CasinocoinKeypairs } from 'casinocoin-libjs';
+// import { brtKeypairs as keypairs } from 'brt-libjs';
+// import { brtKeypairs } from 'brt-libjs';
 
 @Component({
   selector: 'app-importpaperwallet',
@@ -79,7 +79,7 @@ export class ImportpaperwalletComponent implements OnInit {
         }
       }
 
-      //let newKeyPair:LokiKey = this.casinocoinService.generateNewKeyPair();
+      //let newKeyPair:LokiKey = this.brtService.generateNewKeyPair();
       let newKeyPair: LokiKey = { 
         privateKey: "", 
         publicKey: "", 

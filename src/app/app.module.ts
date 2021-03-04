@@ -13,7 +13,7 @@ import { AppRoutingModule }         from './app-routing.module';
 import { ElectronService }          from './providers/electron.service';
 import { LogService }               from './providers/log.service';
 import { WalletService }            from './providers/wallet.service';
-import { CasinocoinService }        from './providers/casinocoin.service';
+import { brtService }        from './providers/brt.service';
 import { WebsocketService }         from './providers/websocket.service';
 import { SwapService }              from './providers/swap.service';
 import { NotificationService }      from './providers/notification.service';
@@ -120,7 +120,7 @@ import { MatListModule, MatSidenavModule, MatTooltipModule,
     AuthGuard,
     WebsocketService,
     WalletService,
-    CasinocoinService,
+    brtService,
     SwapService,
     MessageService,
     NotificationService,

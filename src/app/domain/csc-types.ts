@@ -12,7 +12,7 @@ export type PrepareTxPayment = {
     destinationTag?: BigInteger;
 }
 
-export type CasinocoinTxObject = {
+export type brtTxObject = {
     TransactionType: string;
     Account: string;
     Destination: string;
@@ -22,14 +22,14 @@ export type CasinocoinTxObject = {
     Sequence: number;
     LastLedgerSequence : number;
     InvoiceID?: string;
-    Memos?: Array<CasinocoinMemo>;
+    Memos?: Array<brtMemo>;
     SourceTag?: number;
     DestinationTag?: number;
     TxnSignature?: string;
     SigningPubKey?: string;
 }
 
-export type CasinocoinMemo = {
+export type brtMemo = {
     Memo: {
         MemoData?: string;
         MemoFormat?: string;
@@ -37,13 +37,13 @@ export type CasinocoinMemo = {
     }
 }
 
-export type CasinocoindAmountIOU = {
+export type brtdAmountIOU = {
     currency: string,
     value: string,
     issuer ? : string
 }
 
-export type CasinocoindAmount = string | CasinocoindAmountIOU
+export type brtdAmount = string | brtdAmountIOU
 
 
 export type Amount = {
@@ -92,7 +92,7 @@ export type Memo = {
 }
 
 export type PaymentFlags = {
-    NoCasinocoinDirect: 0x00010000,
+    NobrtDirect: 0x00010000,
     PartialPayment: 0x00020000,
     LimitQuality: 0x00040000
 }
@@ -109,12 +109,12 @@ export type Payment = {
     // liquidity or funds in the source_account account
     allowPartialPayment ? : boolean,
     // A boolean that can be set to true if paths are specified and the sender
-    // would like the Casinocoin Network to disregard any direct paths from
+    // would like the brt Network to disregard any direct paths from
     // the source_account to the destination_account. This may be used to take
     // advantage of an arbitrage opportunity or by gateways wishing to issue
     // balances from a hot wallet to a user who has mistakenly set a trustline
     // directly to the hot wallet
-    noDirectCasinocoin ? : boolean,
+    noDirectbrt ? : boolean,
     limitQuality ? : boolean
 }
 

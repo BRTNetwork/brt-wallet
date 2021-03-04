@@ -5,7 +5,7 @@ export const environment = {
   production: false,
   loglevel: Level.DEBUG,
   // swap_endpoint_url: "http://138.197.172.77:3000/swap",
-  swap_endpoint_url: "https://swap.casinocoin.org/swap",
-  insight_endpoint_url: "http://insight.casinocoin.info",
-  explorer_endpoint_url: "http://explorer.casinocoin.org"
+  swap_endpoint_url: "https://swap.brt.org/swap",
+  insight_endpoint_url: "http://insight.brt.info",
+  explorer_endpoint_url: "http://explorer.brt.org"
 };

@@ -62,7 +62,7 @@ export interface LokiAccountSettings {
     enableTransactionIDTracking?: boolean,
     noFreeze?: boolean,
     globalFreeze?: boolean,
-    defaultCasinocoin?: boolean,
+    defaultbrt?: boolean,
     emailHash?: string|null,
     messageKey?: string,
     domain?: string,

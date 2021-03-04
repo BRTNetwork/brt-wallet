@@ -1,15 +1,15 @@
-# casinocoin-wallet
+# brt-wallet
 
 # Introduction
 
-Casinocoin Desktop Wallet
+brt Desktop Wallet
 
 ## Getting Started
 
 Clone this repository locally :
 
 ``` bash
-git clone https://github.com/casinocoin/casinocoin-wallet.git
+git clone https://github.com/BRTNetwork/brt-wallet.git
 ```
 
 Install dependencies with npm :
@@ -33,7 +33,7 @@ npm install -g @angular/cli
 - **Wait till the app finished compiling**
 - **in a second terminal window** -> npm run electron:serve
 
-Voila! You can use your Casinocoin Wallet app in a local development environment with hot reload !
+Voila! You can use your brt Wallet app in a local development environment with hot reload !
 
 The application code is managed by `electron.ts`. The app runs with a simple Electron window and "Developer Tools" is open.  
 The Angular component contains an example of Electron and NodeJS native lib import. See [Use NodeJS Native libraries](#use-nodejs-native-libraries) charpter if you want to import other native libraries in your project.  

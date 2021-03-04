@@ -115,8 +115,8 @@ export class CoinSwapComponent implements OnInit {
       let nowTimestamp = Date.now();
       let weekAgoTimestamp = nowTimestamp - 604800000;
       let dayAgoTimestamp = nowTimestamp - 86400000;
-      // let pastWeekSwaps = this.walletService.getSwapsFromTimestamp(CSCUtil.unixToCasinocoinTimestamp(weekAgoTimestamp));
-      let pastDaySwaps = this.walletService.getSwapsFromTimestamp(CSCUtil.unixToCasinocoinTimestamp(dayAgoTimestamp));
+      // let pastWeekSwaps = this.walletService.getSwapsFromTimestamp(CSCUtil.unixTobrtTimestamp(weekAgoTimestamp));
+      let pastDaySwaps = this.walletService.getSwapsFromTimestamp(CSCUtil.unixTobrtTimestamp(dayAgoTimestamp));
       this.logger.debug("### Coin Swap - Past Day Swaps Count: " + pastDaySwaps.length);
       if(pastDaySwaps.length >= 1){
         this.messageService.add({severity:'error', summary:'Create New Swap', detail:'A maximum of 1 swap per day is allowed!'});
@@ -137,7 +137,7 @@ export class CoinSwapComponent implements OnInit {
   }
 
   convertCscTimestamp(inputTime) {
-    return CSCUtil.casinocoinToUnixTimestamp(inputTime);
+    return CSCUtil.brtToUnixTimestamp(inputTime);
   }
 
   getDepositAmount(deposit){

@@ -3,7 +3,7 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { InputText, DataTable, LazyLoadEvent } from 'primeng/primeng';
 import { LogService } from '../../../providers/log.service';
 import { SelectItem, Dropdown, MenuItem, Message } from 'primeng/primeng';
-import { CasinocoinService } from '../../../providers/casinocoin.service';
+import { brtService } from '../../../providers/brt.service';
 import { WalletService } from '../../../providers/wallet.service';
 import { LedgerStreamMessages } from '../../../domain/websocket-types';
 import { CSCUtil } from '../../../domain/csc-util';
@@ -50,7 +50,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
   uiChangeSubject = new BehaviorSubject<string>(AppConstants.KEY_INIT);
   
   constructor(private logger:LogService, 
-              private casinocoinService: CasinocoinService,
+              private brtService: brtService,
               private walletService: WalletService,
               private electronService: ElectronService,
               private router: Router,
@@ -112,13 +112,13 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
           }
         });
         // subscribe to account updates
-        this.casinocoinService.accountSubject.subscribe( account => {
+        this.brtService.accountSubject.subscribe( account => {
           this.logger.debug("### TransactionsComponent Account Updated");
           this.doBalanceUpdate();
           this.dtTX.paginate();
         });
         // subscribe to transaction updates
-        this.casinocoinService.transactionSubject.subscribe( tx => {
+        this.brtService.transactionSubject.subscribe( tx => {
           this.logger.debug("### TransactionsComponent TX Update: " + JSON.stringify(tx));
           let updateTxIndex = this.transactions.findIndex( item => item.txID == tx.txID);
           if( updateTxIndex >= 0 ){
@@ -143,7 +143,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
       }
     });
     // get network ledgers
-    this.ledgers = this.casinocoinService.ledgers;
+    this.ledgers = this.brtService.ledgers;
   }
 
   ngAfterViewInit(){
@@ -273,7 +273,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
   }
 
   convertCscTimestamp(inputTime) {
-    return CSCUtil.casinocoinToUnixTimestamp(inputTime);
+    return CSCUtil.brtToUnixTimestamp(inputTime);
   }
 
   showTxContextMenu(event){
@@ -326,12 +326,12 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
         }
         this.walletService.updateAccount(account);
         // notify account change
-        this.casinocoinService.accountSubject.next(account);
+        this.brtService.accountSubject.next(account);
     });
     // loop over all accounts and get their transactions
     refreshAccounts.forEach(account => {
         this.logger.debug("### Refresh Account: " + account.accountID);
-        this.casinocoinService.getAccountTx(account.accountID, 1);
+        this.brtService.getAccountTx(account.accountID, 1);
     });
   }
 }

@@ -51,8 +51,8 @@ export class NotificationService {
             this.electronService.ipcRenderer.send('push-notification', msg);
         }
         /*let notificationOptions: NotificationOptions = {
-            tag: "CasinoCoin",
-            icon: path.join(__dirname, 'assets/brand/casinocoin-icon-256x256.png'),
+            tag: "brt",
+            icon: path.join(__dirname, 'assets/brand/brt-icon-256x256.png'),
             body: msg.body
         }
         let notification = new Notification(msg.title, notificationOptions);*/

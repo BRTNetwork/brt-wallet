@@ -9,9 +9,9 @@ import { CSCUtil } from '../../domain/csc-util';
 import * as LokiTypes from '../../domain/lokijs';
 import { MenuItem, MessagesModule, Message } from 'primeng/primeng';
 import { UUID } from 'angular2-uuid';
-// import { CasinocoinAPI } from 'casinocoin-libjs';
+// import { brtAPI } from 'brt-libjs';
 import { WalletService } from '../../providers/wallet.service';
-import { CasinocoinService } from '../../providers/casinocoin.service';
+import { brtService } from '../../providers/brt.service';
 import { WebsocketService } from '../../providers/websocket.service';
 import { CSCCrypto } from '../../domain/csc-crypto';
 import { setTimeout } from 'timers';
@@ -77,10 +77,10 @@ export class WalletSetupComponent implements OnInit {
 
   private walletHash: string;
 
-  // Create an offline CasinocoinAPI
-  // Server connection will be done via native WebSockets instead of casinocoin libjs
-  // cscAPI = new CasinocoinAPI({ server: 'ws://158.69.59.142:7007' });
-  // cscAPI = new CasinocoinAPI();
+  // Create an offline brtAPI
+  // Server connection will be done via native WebSockets instead of brt libjs
+  // cscAPI = new brtAPI({ server: 'ws://158.69.59.142:7007' });
+  // cscAPI = new brtAPI();
 
   @ViewChild('cancelButton') cancelButton;
   @ViewChild('previousButton') previousButton;
@@ -93,19 +93,19 @@ export class WalletSetupComponent implements OnInit {
                private localStorageService: LocalStorageService,
                private sessionStorageService: SessionStorageService,
                private walletService: WalletService,
-               private casinocoinService: CasinocoinService,
+               private brtService: brtService,
                private websocketService: WebsocketService,
                private datePipe: DatePipe ) { }
 
   ngOnInit() {
     this.logger.debug("### WalletSetup INIT ###")
     let userHome = this.electron.remote.app.getPath("home");
-    this.walletLocation = path.join(userHome, '.casinocoin');
+    this.walletLocation = path.join(userHome, '.brt');
     this.backupLocation = this.electron.remote.app.getPath("documents");
     // check if connect to network -> disconnect first
-    if(this.casinocoinService.casinocoinConnectedSubject.getValue()){
+    if(this.brtService.brtConnectedSubject.getValue()){
       this.logger.debug("### WalletSetup Disconnect from network");
-      this.casinocoinService.disconnect();
+      this.brtService.disconnect();
     }
 
     // set default network to LIVE
@@ -290,7 +290,7 @@ export class WalletSetupComponent implements OnInit {
         this.walletCreated = true;
         this.logger.debug("### WalletSetup - Create new Account");
         // generate new account key pair
-        let newKeyPair:LokiTypes.LokiKey = this.casinocoinService.generateNewKeyPair();
+        let newKeyPair:LokiTypes.LokiKey = this.brtService.generateNewKeyPair();
         if (newKeyPair.accountID.length > 0){
           this.walletService.addKey(newKeyPair);
           // create new account
@@ -332,10 +332,10 @@ export class WalletSetupComponent implements OnInit {
   finishSetup() {
     // Close dialog and wallet setup and go to Home screen
     this.logger.debug("Setup Finished");
-    this.logger.debug("Current Timestamp CSC: " + CSCUtil.unixToCasinocoinTimestamp(Date.now()));
+    this.logger.debug("Current Timestamp CSC: " + CSCUtil.unixTobrtTimestamp(Date.now()));
     let newAvailableWallet = 
       { "walletUUID": this.walletUUID, 
-        "creationDate": CSCUtil.iso8601ToCasinocoinTime(new Date().toISOString()),
+        "creationDate": CSCUtil.iso8601TobrtTime(new Date().toISOString()),
         "location": this.walletLocation,
         "hash": this.walletHash,
         "network" : (this.walletTestNetwork ? "TEST" : "LIVE")

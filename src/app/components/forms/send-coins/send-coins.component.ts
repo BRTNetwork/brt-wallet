@@ -3,7 +3,7 @@ import {Validators, FormControl, FormGroup, FormBuilder} from '@angular/forms';
 import {LogService} from '../../../providers/log.service';
 import {SelectItem, Dropdown, MenuItem, Message} from 'primeng/primeng';
 import {MessageService} from 'primeng/components/common/messageservice';
-import {CasinocoinService} from '../../../providers/casinocoin.service';
+import {brtService} from '../../../providers/brt.service';
 import {WalletService} from '../../../providers/wallet.service';
 
 import {ElectronService} from '../../../providers/electron.service';
@@ -12,7 +12,7 @@ import {CSCUtil} from '../../../domain/csc-util';
 import {AppConstants} from '../../../domain/app-constants';
 import * as bigInt from 'big-integer';
 import Big from 'big.js';
-import {CasinocoinTxObject, PrepareTxPayment} from '../../../domain/csc-types';
+import {brtTxObject, PrepareTxPayment} from '../../../domain/csc-types';
 import {CSCAmountPipe} from '../../../app-pipes.module';
 import {LokiKey} from '../../../domain/lokijs';
 
@@ -45,7 +45,7 @@ export class SendCoinsComponent implements OnInit {
   signersSignatures: Array<string> = [];
   selectedAddress: string;
   recipient: string = '';
-  txObject: CasinocoinTxObject;
+  txObject: brtTxObject;
   description: string = '';
   invoiceID: string;
   destinationTag: number;
@@ -77,7 +77,7 @@ export class SendCoinsComponent implements OnInit {
   error_message: string = "";
 
   constructor(private logger:LogService, 
-              private casinocoinService: CasinocoinService,
+              private brtService: brtService,
               private walletService: WalletService,
               private messageService: MessageService,
               private electronService: ElectronService,
@@ -100,7 +100,7 @@ export class SendCoinsComponent implements OnInit {
       }
     });
     // subscribe to connected messages
-    this.casinocoinService.casinocoinConnectedSubject.subscribe(connected => {
+    this.brtService.brtConnectedSubject.subscribe(connected => {
       if(connected){
         this.isConnected = true;
         this.connected_tooltip = "";
@@ -110,7 +110,7 @@ export class SendCoinsComponent implements OnInit {
       }
     });
     // set the default fee and account reserve
-    this.casinocoinService.serverStateSubject.subscribe(serverState => {
+    this.brtService.serverStateSubject.subscribe(serverState => {
       this.logger.debug("### SendCoins - serverState: " + JSON.stringify(serverState));
       if(serverState.server_state == 'full'){
         if(serverState.validated_ledger != null && serverState.validated_ledger.base_fee != null){
@@ -127,11 +127,11 @@ export class SendCoinsComponent implements OnInit {
     });
 
     // subscribe to account updates
-    this.casinocoinService.accountSubject.subscribe( account => {
+    this.brtService.accountSubject.subscribe( account => {
       this.doBalanceUpdate();
     });
 
-    this.casinocoinService.accountSettingsSubject.subscribe(settings => {
+    this.brtService.accountSettingsSubject.subscribe(settings => {
       this.logger.debug("### SendCoins - New Account Settings: " + JSON.stringify(settings));
       this.loadSettings(settings);
     });
@@ -142,7 +142,7 @@ export class SendCoinsComponent implements OnInit {
         'destinationTag': new FormControl('', this.validators.isValidDestinationTag),
         'amount': new FormControl('', Validators.required)
     });
-    // this.casinocoinService.ledgerSubject.subscribe( ledger => {
+    // this.brtService.ledgerSubject.subscribe( ledger => {
     //   this.logger.debug("### SendCoins - ledger: " + JSON.stringify(ledger));
     //   this.fees = CSCUtil.dropsToCsc(ledger.fee_base.toString());
     //   this.minimalFee = this.fees;
@@ -269,14 +269,14 @@ export class SendCoinsComponent implements OnInit {
         if(this.invoiceID && this.invoiceID.length > 0){
           preparePayment.invoiceID = CSCUtil.encodeInvoiceID(this.invoiceID);
         }
-        let txObject = this.casinocoinService.createPaymentTx(preparePayment);
+        let txObject = this.brtService.createPaymentTx(preparePayment);
         this.logger.debug("### Sign: " + JSON.stringify(txObject));
-        let txBlob:string = this.casinocoinService.signTx(txObject, this.walletPassword);
+        let txBlob:string = this.brtService.signTx(txObject, this.walletPassword);
         if(txBlob == AppConstants.KEY_ERRORED){
           // probably a wrong password!
           this.messageService.add({severity:'error', summary:'Transaction Signing', detail:'There was an error signing the transactions. Verify your password.'});
         } else {
-          this.casinocoinService.submitTx(txBlob);
+          this.brtService.submitTx(txBlob);
           // reset form and dialog fields
           this.selectedAccount = "";
           this.selectedAddress = "";
@@ -407,7 +407,7 @@ export class SendCoinsComponent implements OnInit {
   }
 
   getAccountInfo() {
-    this.casinocoinService.getSettings(this.selectedAccount);
+    this.brtService.getSettings(this.selectedAccount);
   }
 
   sendAllCoins() {
@@ -434,7 +434,7 @@ export class SendCoinsComponent implements OnInit {
     const key: LokiKey = this.walletService.getKey(this.selectedAccount);
     const secret = this.walletService.getDecryptSecret(this.walletPassword, key);
     this.showPasswordDialogForMultisig = false;
-    const signedTransaction = this.casinocoinService.sign(JSON.stringify(this.txObject), secret);
+    const signedTransaction = this.brtService.sign(JSON.stringify(this.txObject), secret);
     this.multiSignTxSignature = signedTransaction.signedTransaction;
     this.showMultisignTxDialog = true;
     return false;
@@ -462,7 +462,7 @@ export class SendCoinsComponent implements OnInit {
     }
 
 
-    this.txObject = this.casinocoinService.createPaymentTx(this.payment);
+    this.txObject = this.brtService.createPaymentTx(this.payment);
     this.logger.debug('### Sign: ' + JSON.stringify( this.txObject));
     this.initPasswordCheck();
     this.showPasswordDialogForMultisig = true;

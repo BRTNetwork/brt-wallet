@@ -4,7 +4,7 @@ const appVersion = require('./package.json').version;
 const argv = require('minimist')(process.argv.slice(1));
 const arch = argv.arch || 'ia32';
 
-const iconUrlPath = "https://raw.githubusercontent.com/casinocoin/CasinoCoin-Assets/master/v4/casinocoin-icon-256x256.png";
+const iconUrlPath = "https://raw.githubusercontent.com/BRTNetwork/brt-Assets/master/v4/brt-icon-256x256.png";
 
 getInstallerConfig(arch)
   .then(createWindowsInstaller)
@@ -20,14 +20,14 @@ function getInstallerConfig (arch) {
   const outPath = path.join(rootPath, 'release-builds');
 
   return Promise.resolve({
-    appDirectory: path.join(appPath, 'casinocoin-wallet-win32-' + arch + '/'),
-    authors: 'CasinoCoin Foundation',
+    appDirectory: path.join(appPath, 'brt-wallet-win32-' + arch + '/'),
+    authors: 'brt Foundation',
     noMsi: true,
     noDelta: true,
     outputDirectory: path.join(outPath, 'windows-'+arch),
-    exe: 'casinocoin-wallet.exe',
-    setupExe: 'casinocoin-wallet-'+arch+'-'+appVersion+'.exe',
-    setupIcon: path.join(rootPath, 'src', 'assets', 'brand', 'casinocoin-icon-256x256.ico'),
+    exe: 'brt-wallet.exe',
+    setupExe: 'brt-wallet-'+arch+'-'+appVersion+'.exe',
+    setupIcon: path.join(rootPath, 'src', 'assets', 'brand', 'brt-icon-256x256.ico'),
     iconUrl: iconUrlPath,
     loadingGif: path.join(rootPath, 'src', 'assets', 'brand', 'setup.gif'),
     // certificateFile: 'C:/Users/a.jochems/Documents/Crypto Service/Comodo/code-signing-cert.p12',

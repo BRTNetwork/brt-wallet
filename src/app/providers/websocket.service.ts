@@ -15,14 +15,14 @@ import { Connection } from 'rxjs-websockets';
 export class WebsocketService {
 
     private TEST_SERVERS: Array<ServerDefinition> = [
-        { server_id: 'wst01.casinocoin.org', server_url: 'ws://wst01.casinocoin.org:7007/', response_time: -1 },
-        { server_id: 'wst02.casinocoin.org', server_url: 'ws://wst02.casinocoin.org:7007/', response_time: -1 }
+        { server_id: 'wst01.brt.org', server_url: 'ws://wst01.brt.org:7007/', response_time: -1 },
+        { server_id: 'wst02.brt.org', server_url: 'ws://wst02.brt.org:7007/', response_time: -1 }
     ];
     private PROD_SERVERS: Array<ServerDefinition> = [
-        { server_id: 'ws01.casinocoin.org', server_url: 'wss://ws01.casinocoin.org:4443/', response_time: -1 },
-        { server_id: 'ws02.casinocoin.org', server_url: 'wss://ws02.casinocoin.org:4443/', response_time: -1 },
-        { server_id: 'ws03.casinocoin.org', server_url: 'wss://ws03.casinocoin.org:4443/', response_time: -1 },
-        { server_id: 'ws04.casinocoin.org', server_url: 'wss://ws04.casinocoin.org:4443/', response_time: -1 }
+        { server_id: 'ws01.brt.org', server_url: 'wss://ws01.brt.org:4443/', response_time: -1 },
+        { server_id: 'ws02.brt.org', server_url: 'wss://ws02.brt.org:4443/', response_time: -1 },
+        { server_id: 'ws03.brt.org', server_url: 'wss://ws03.brt.org:4443/', response_time: -1 },
+        { server_id: 'ws04.brt.org', server_url: 'wss://ws04.brt.org:4443/', response_time: -1 }
     ];
 
     private currentServerFound: boolean = false;

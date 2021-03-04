@@ -1,7 +1,7 @@
 @import "src/assets/variables";
 
 ::ng-deep .ui-widget-header {
-    color: $casinocoinRed;
+    color: $brtRed;
     font-weight: bolder;
 }
 
@@ -24,11 +24,11 @@
 }
 
 .tx_type_color_red {
-    background-color: $casinocoinRed;
+    background-color: $brtRed;
 }
 
 .tx_type_color_green {
-    background-color: $casinocoinGreen;
+    background-color: $brtGreen;
 }
 
 .panel-group-height {
@@ -36,9 +36,9 @@
 }
 
 ::ng-deep .color_red {
-    color: $casinocoinRed;
+    color: $brtRed;
 }
 
 ::ng-deep .color_green {
-    color: $casinocoinGreen;
+    color: $brtGreen;
 }

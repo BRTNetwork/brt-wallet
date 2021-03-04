@@ -8,7 +8,7 @@ import { SessionStorage, LocalStorageService, SessionStorageService } from 'ngx-
 import { ElectronService } from '../../providers/electron.service';
 import { LogService } from '../../providers/log.service';
 import { Menu as ElectronMenu, MenuItem as ElectronMenuItem } from 'electron';
-import { CasinocoinService } from '../../providers/casinocoin.service';
+import { brtService } from '../../providers/brt.service';
 import { ServerDefinition } from '../../domain/websocket-types';
 import { WalletService } from '../../providers/wallet.service';
 import { MarketService } from '../../providers/market.service';
@@ -28,7 +28,7 @@ import { NotificationService } from '../../providers/notification.service';
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-import * as CasinocoinAddressCodec from 'casinocoin-libjs-address-codec';
+import * as brtAddressCodec from 'brt-libjs-address-codec';
 
 @Component({
   selector: 'app-home',
@@ -111,7 +111,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   serverState: ServerStateMessage;
   currentServer: ServerDefinition;
-  casinocoinConnectionSubject: Observable<any>;
+  brtConnectionSubject: Observable<any>;
   uiChangeSubject = new BehaviorSubject<string>(AppConstants.KEY_INIT);
 
   balance:string;;
@@ -122,7 +122,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   footer_visible: boolean = false;
   error_message: string = "";
-  passwordDialogHeader: string = "CasinoCoin Wallet Password";
+  passwordDialogHeader: string = "brt Wallet Password";
 
   backupPath: string;
   lastMenuEvent: string = "";
@@ -173,7 +173,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
                private router: Router,
                private electron: ElectronService,
                private walletService: WalletService,
-               private casinocoinService: CasinocoinService ,
+               private brtService: brtService ,
                private localStorageService: LocalStorageService,
                private sessionStorageService: SessionStorageService,
                private marketService: MarketService,
@@ -221,7 +221,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     let walletIndex = availableWallets.findIndex( item => item['walletUUID'] == this.currentWallet);
     this.currentWalletObject = availableWallets[walletIndex];
     // get server state
-    let serverStateSubject = this.casinocoinService.serverStateSubject;
+    let serverStateSubject = this.brtService.serverStateSubject;
     serverStateSubject.subscribe( state => {
       this.serverState = state;
       this.logger.debug("### HOME Server State: " + JSON.stringify(this.serverState));
@@ -446,8 +446,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.logger.debug("### HOME transactions navResult: " + navResult);
       if(navResult){
         this.navigationSucceeded = true;
-        // connect to casinocoin network
-        this.doConnectToCasinocoinNetwork();
+        // connect to brt network
+        this.doConnectTobrtNetwork();
       } else {
         this.navigationSucceeded = false;
       }
@@ -495,28 +495,28 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   ngOnDestroy(){
     this.logger.debug("### HOME ngOnDestroy() ###");
-    if(this.isConnected && this.casinocoinService != undefined){
-      this.casinocoinService.disconnect();
+    if(this.isConnected && this.brtService != undefined){
+      this.brtService.disconnect();
     }
   }
 
-  doConnectToCasinocoinNetwork(){
-    this.logger.debug("### HOME doConnectToCasinocoinNetwork() ###");
-    // Connect to the casinocoin network
-    this.casinocoinService.connect().subscribe(connected => {
-      // this.casinocoinService.casinocoinConnectedSubject.subscribe( connected => {
+  doConnectTobrtNetwork(){
+    this.logger.debug("### HOME doConnectTobrtNetwork() ###");
+    // Connect to the brt network
+    this.brtService.connect().subscribe(connected => {
+      // this.brtService.brtConnectedSubject.subscribe( connected => {
         if (connected == AppConstants.KEY_CONNECTED){
           this.logger.debug("### HOME Connected ###");
           // subscribe to transaction updates
-          this.casinocoinService.transactionSubject.subscribe( tx => {
+          this.brtService.transactionSubject.subscribe( tx => {
             this.doTransacionUpdate();
           });
           // subscribe to account updates
-          this.casinocoinService.accountSubject.subscribe( account => {
+          this.brtService.accountSubject.subscribe( account => {
             this.doBalanceUpdate();
           });
 
-          this.casinocoinService.accountSettingsSubject.subscribe( settings => {
+          this.brtService.accountSettingsSubject.subscribe( settings => {
             if (this.showSignTransactionDialog){
               this.updateSignersSelection();
             }
@@ -539,7 +539,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.connectionColorClass = "connected-color";
       this.connected_tooltip = "Connected";
       this.setConnectedMenuItem(true);
-      this.currentServer = this.casinocoinService.getCurrentServer();
+      this.currentServer = this.brtService.getCurrentServer();
   }
 
   setWalletUIDisconnected(){
@@ -575,18 +575,18 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   onConnect(){
     this.logger.debug("### HOME Connect ###");
     this.manualDisconnect = false;
-    this.casinocoinService.connect();
-    // this.connectToCasinocoinNetwork();
+    this.brtService.connect();
+    // this.connectTobrtNetwork();
   }
 
   onDisconnect(){
     this.logger.debug("### HOME Disconnect ###");
     this.manualDisconnect = true;
-    this.casinocoinService.disconnect();
+    this.brtService.disconnect();
   }
 
   onServerInfo() {
-    this.currentServer = this.casinocoinService.getCurrentServer();
+    this.currentServer = this.brtService.getCurrentServer();
     this.showServerInfoDialog = true;
   }
 
@@ -666,7 +666,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
         this.walletService.importPrivateKey(importKey.secret, this.walletPassword);
       });
       // refresh accounts
-      this.casinocoinService.checkAllAccounts();
+      this.brtService.checkAllAccounts();
       this.showPrivateKeyImportDialog = false;
       this.importKeys = [];
       this.walletPassword = "";
@@ -825,7 +825,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     let walletHash = this.walletService.generateWalletPasswordHash(this.importFileObject['name'], this.walletPassword);
     let newWallet =
         { "walletUUID": this.importFileObject['name'],
-          "importedDate": CSCUtil.iso8601ToCasinocoinTime(new Date().toISOString()),
+          "importedDate": CSCUtil.iso8601TobrtTime(new Date().toISOString()),
           "location": this.importFileObject['dir'],
           "hash": walletHash
         };
@@ -839,7 +839,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   createWallet(){
     this.walletService.closeWallet();
-    this.casinocoinService.disconnect();
+    this.brtService.disconnect();
     this.sessionStorageService.remove(AppConstants.KEY_CURRENT_WALLET);
     this.walletService.openWalletSubject.next(AppConstants.KEY_INIT);
     this.sessionStorageService.set(AppConstants.KEY_CREATE_WALLET_RUNNING, true);
@@ -848,7 +848,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   closeWallet(){
     this.walletService.closeWallet();
-    this.casinocoinService.disconnect();
+    this.brtService.disconnect();
     this.sessionStorageService.remove(AppConstants.KEY_CURRENT_WALLET);
     this.router.navigate(['login']);
     // this.electron.remote.getCurrentWindow().reload();
@@ -1039,7 +1039,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       this.notificationService.addMessage({title: 'Message Verification', body: 'Invalid parameters for message signature verification.'});
       this.verificationFinished = false;
     } else {
-      this.verificationResult = this.casinocoinService.verifyMessage(this.msgToVerify, this.verifySignature, this.verifyPubKey);
+      this.verificationResult = this.brtService.verifyMessage(this.msgToVerify, this.verifySignature, this.verifyPubKey);
       this.verificationFinished = true;
       this.logger.debug('### HOME Verify Result: ' + this.verificationResult);
     }
@@ -1048,11 +1048,11 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   signAndSubmit(txData) {
     const key: LokiKey = this.walletService.getKey(this.ms_setting_account);
     const secret = this.walletService.getDecryptSecret(this.walletPassword, key);
-    const signedTx = this.casinocoinService.sign(JSON.stringify(txData), secret);
+    const signedTx = this.brtService.sign(JSON.stringify(txData), secret);
     if (typeof signedTx.signedTransaction === 'undefined') {
       return false;
     }
-    this.casinocoinService.submitTx(signedTx.signedTransaction)
+    this.brtService.submitTx(signedTx.signedTransaction)
   }
 
   /**
@@ -1075,10 +1075,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       TransactionType: 'SignerListSet',
       Account: this.ms_setting_account,
       Sequence: this.ms_setting_sequence,
-      Fee: this.casinocoinService.serverStateSubject.getValue().validated_ledger.base_fee + '',
+      Fee: this.brtService.serverStateSubject.getValue().validated_ledger.base_fee + '',
       SignerQuorum: this.ms_setting_quorum,
       SignerEntries: this.ms_setting_signers.filter(signer => {
-        return signer.weight > 0 && CasinocoinAddressCodec.isValidAccountID(signer.signer)
+        return signer.weight > 0 && brtAddressCodec.isValidAccountID(signer.signer)
       }).map(signer => {
         return {
           SignerEntry: {
@@ -1093,8 +1093,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   updateMultisignAccountDetails() {
     this.ms_setting_sequence =  this.walletService.getAccount(this.ms_setting_account).lastSequence;
     // update account settings
-    this.casinocoinService.getSettings(this.ms_setting_account);
-    this.casinocoinService.accountSettingsSubject.subscribe( settings => {
+    this.brtService.getSettings(this.ms_setting_account);
+    this.brtService.accountSettingsSubject.subscribe( settings => {
       this.logger.debug('### HOME updateMultisignAccountDetails: ' + JSON.stringify(settings));
       if (settings.hasOwnProperty('signerQuorum')) {
         this.ms_setting_quorum = settings.signerQuorum;
@@ -1134,7 +1134,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addSigner(signer, weight) {
-    if (CasinocoinAddressCodec.isValidAccountID(signer) === false) {
+    if (brtAddressCodec.isValidAccountID(signer) === false) {
       this.electron.remote.dialog.showMessageBox(
         { message: "You entered an invalid AccountID, it can not be added as a signer.",
           buttons: ["OK"]
@@ -1249,7 +1249,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       TransactionType: 'AccountSet',
       SetFlag: 4,
       Account: this.ms_setting_account,
-      Fee: this.casinocoinService.serverStateSubject.getValue().validated_ledger.base_fee + '',
+      Fee: this.brtService.serverStateSubject.getValue().validated_ledger.base_fee + '',
       Sequence: this.ms_setting_sequence + 1
       // Fee: 1000000 + ''
     };
@@ -1274,8 +1274,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.signerSignedTxSignatures.forEach( item => {
       signatureArray.push(item['signature']);
     })
-    const combinedTx = this.casinocoinService.combine(signatureArray);
-    this.casinocoinService.submitTx(combinedTx.signedTransaction);
+    const combinedTx = this.brtService.combine(signatureArray);
+    this.brtService.submitTx(combinedTx.signedTransaction);
     this.signerSignedTxSignatures = [];
     this.baseMultiSignedTx = '';
     this.showComposeTransactionDialog = false;
@@ -1283,14 +1283,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   getAccountSettingsForSignature(){
     const multisignTx = this.electron.remote.getGlobal('vars').cscBinaryCodec.decode(this.multisignTxSignatureToSign.trim().toUpperCase());
-    this.casinocoinService.getSettings(multisignTx.Account);
+    this.brtService.getSettings(multisignTx.Account);
   }
 
   updateSignersSelection() {
     this.logger.debug('### HOME Multisign update select with avaialble signing accounts matching the signers list of the signature ###');
     const multisignTx = this.electron.remote.getGlobal('vars').cscBinaryCodec.decode(this.multisignTxSignatureToSign.trim().toUpperCase());
 
-    const accountSettings = this.casinocoinService.accountSettings.find(account => {
+    const accountSettings = this.brtService.accountSettings.find(account => {
       return (account.accountID === multisignTx.Account)
     });
 
@@ -1312,7 +1312,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     delete multisignTx.TxnSignature;
     delete multisignTx.SigningPubKey;
 
-    const signedTx = this.casinocoinService.sign(JSON.stringify(multisignTx), secret, {
+    const signedTx = this.brtService.sign(JSON.stringify(multisignTx), secret, {
       signAs: this.selectedSignerAccount
     });
 

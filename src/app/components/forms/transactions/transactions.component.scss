@@ -58,28 +58,28 @@
 
 /** Odd and Even Selected Row Color ***/
 ::ng-deep .ui-datatable tbody > tr.ui-widget-content.ui-datatable-odd.ui-state-highlight {
-    background-color: $casinocoinGray;
+    background-color: $brtGray;
     color: #000000;
 }
 ::ng-deep .ui-datatable tbody > tr.ui-widget-content.ui-datatable-even.ui-state-highlight {
-    background-color: $casinocoinGray;
+    background-color: $brtGray;
     color: #000000;
 }
 
 ::ng-deep .color_red {
-    color: $casinocoinRed;
+    color: $brtRed;
 }
 
 ::ng-deep .color_green {
-    color: $casinocoinGreen;
+    color: $brtGreen;
 }
 
 ::ng-deep .color_orange {
-    color: $casinocoinOrange;
+    color: $brtOrange;
 }
 
 ::ng-deep .color_blue {
-    color: $casinocoinBlue;
+    color: $brtBlue;
 }
 
 ::ng-deep .hide-context-menu {

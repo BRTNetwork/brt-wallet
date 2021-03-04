@@ -1,22 +1,22 @@
 {
-  "name": "casinocoin-wallet",
+  "name": "brt-wallet",
   "version": "4.1.5",
-  "productName": "CasinoCoin Wallet",
-  "description": "CasinoCoin Desktop Wallet",
-  "homepage": "https://github.com/casinocoin/casinocoin-wallet",
+  "productName": "brt Wallet",
+  "description": "brt Desktop Wallet",
+  "homepage": "https://github.com/BRTNetwork/brt-wallet",
   "author": {
-    "name": "CasinoCoin Foundation",
-    "email": "info@casinocoin.org"
+    "name": "brt Foundation",
+    "email": "info@brt.org"
   },
   "keywords": [
-    "casinocoin",
+    "brt",
     "csc",
     "wallet"
   ],
   "main": "electron.js",
   "private": true,
   "build": {
-    "appId": "com.squirrel.casinocoin-wallet.casinocoin-wallet"
+    "appId": "com.squirrel.brt-wallet.brt-wallet"
   },
   "scripts": {
     "ng": "ng",
@@ -37,11 +37,11 @@
     "electron:windows32": "npm run build:prod && node package.js --asar --platform=win32 --arch=ia32",
     "electron:windows64": "npm run build:prod && node package.js --asar --platform=win32 --arch=x64",
     "electron:mac": "npm run build:prod && node package.js --asar --platform=darwin --arch=x64",
-    "electron:mac:sign": "electron-osx-sign ./app-builds/casinocoin-wallet-darwin-x64/casinocoin-wallet.app",
+    "electron:mac:sign": "electron-osx-sign ./app-builds/brt-wallet-darwin-x64/brt-wallet.app",
     "installer:windows32": "npm run electron:windows32 && node createWinInstaller.js --arch=ia32",
     "installer:windows64": "npm run electron:windows64 && node createWinInstaller.js --arch=x64",
     "installer:windows": "npm run installer:windows32 && npm run installer:windows64",
-    "installer:mac": "npm run electron:mac && npm run electron:mac:sign && electron-installer-zip ./app-builds/casinocoin-wallet-darwin-x64/casinocoin-wallet.app release-builds/casinocoin-wallet.zip && electron-installer-dmg ./app-builds/casinocoin-wallet-darwin-x64/casinocoin-wallet.app casinocoin-wallet --out=release-builds --overwrite --icon=./src/assets/icons/casinocoin.icns",
+    "installer:mac": "npm run electron:mac && npm run electron:mac:sign && electron-installer-zip ./app-builds/brt-wallet-darwin-x64/brt-wallet.app release-builds/brt-wallet.zip && electron-installer-dmg ./app-builds/brt-wallet-darwin-x64/brt-wallet.app brt-wallet --out=release-builds --overwrite --icon=./src/assets/icons/brt.icns",
     "installer:linux": "npm run electron:linux && node createLinuxInstaller.js",
     "test": "karma start ./karma.conf.js",
     "pree2e": "webdriver-manager update --standalone false --gecko false --quiet && npm run build",
@@ -66,7 +66,7 @@
     "big-integer": "^1.6.34",
     "big.js": "^5.0.3",
     "bufferutil": "^4.0.1",
-    "casinocoin-libjs": "^1.0.12",
+    "brt-libjs": "^1.0.12",
     "core-js": "2.4.1",
     "electron-is-dev": "^0.3.0",
     "electron-notification-desktop": "0.0.4",

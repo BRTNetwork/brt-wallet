@@ -26,22 +26,22 @@ $stateActiveBgColor: #d6d6d6;
 $stateActiveTextColor: #212121;
 
 //Highlight State
-$stateHighlightBorderColor: $casinocoinRedDarker;
-$stateHighlightBgColor: $casinocoinRed;
+$stateHighlightBorderColor: $brtRedDarker;
+$stateHighlightBgColor: $brtRed;
 $stateHighlightTextColor: #FFFFFF;
 
 //Focus State
-$stateFocusBorderColor: $casinocoinGray;
+$stateFocusBorderColor: $brtGray;
 $stateFocusBgColor: #eeeeee;
 $stateFocusTextColor: #212121;
 
 //Error State
 $stateErrorBorderColor: #f44336;
-$stateErrorBgColor: $casinocoinRedLighter;
-$stateErrorTextColor: $casinocoinRed;
+$stateErrorBgColor: $brtRedLighter;
+$stateErrorTextColor: $brtRed;
 
 //Hover State
-$stateHoverBorderColor: $casinocoinGray;
+$stateHoverBorderColor: $brtGray;
 $stateHoverBgColor: #eeeeee;
 $stateHoverTextColor: #212121;
 
@@ -90,12 +90,12 @@ $inputGroupTextColor: #222222;
 // }
 
 .ui-widget-header {
-    background: $casinocoinBlack;
+    background: $brtBlack;
     color: #ffffff;
 }
 
 .ui-widget-overlay {
-    background: $casinocoinGray;
+    background: $brtGray;
 }
 
 .ui-accordion {
@@ -156,15 +156,15 @@ $inputGroupTextColor: #222222;
 
 /* Spinner */
 .ui-spinner:not(.ui-state-disabled) .ui-spinner-button:enabled:hover {
-    border: 1px solid $casinocoinRedLighter;
-    background: $casinocoinRedLighter;
+    border: 1px solid $brtRedLighter;
+    background: $brtRedLighter;
     outline: 0 none;
     color: #ffffff;
 }
 
 .ui-spinner:not(.ui-state-disabled) .ui-spinner-button:enabled:active {
-    border: 1px solid $casinocoinRedDarker;
-    background: $casinocoinRed;
+    border: 1px solid $brtRedDarker;
+    background: $brtRed;
     color: #ffffff;
 }
 
@@ -220,59 +220,59 @@ $inputGroupTextColor: #222222;
 .ui-widget-content .ui-button,
 .ui-widget.ui-button,
 .ui-button {
-	border: 1px solid $casinocoinRed;
+	border: 1px solid $brtRed;
 	color: #FFFFFF;
-	background: $casinocoinRed;
+	background: $brtRed;
     -webkit-transition: background-color .2s;
     -moz-transition: background-color .2s;
     transition: background-color .2s;
     
     &:enabled:hover,
     &:focus {
-        border: 1px solid $casinocoinRedLighter;
-    	background: $casinocoinRedLighter;
+        border: 1px solid $brtRedLighter;
+    	background: $brtRedLighter;
     	outline: 0 none;
         color: #ffffff;
     }
     
     &:enabled:active {
-        border: 1px solid $casinocoinRedDarker;
-    	background: $casinocoinRed;
+        border: 1px solid $brtRedDarker;
+    	background: $brtRed;
         color: #ffffff;
     }
 }
 
 .ui-fileupload-choose:not(.ui-state-disabled):hover,
 .ui-fileupload-choose.ui-state-focus {
-    border: 1px solid $casinocoinRedLighter;
-    background: $casinocoinRedLighter;
+    border: 1px solid $brtRedLighter;
+    background: $brtRedLighter;
     outline: 0 none;
     color: #ffffff;
 }
 
 .ui-fileupload-choose:not(.ui-state-disabled):active {
-    border: 1px solid $casinocoinRedDarker;
-    background: $casinocoinRed;
+    border: 1px solid $brtRedDarker;
+    background: $brtRed;
     color: #ffffff;
 }
 
 /* Checkbox and Radio */
 .ui-chkbox-box.ui-state-active,
 .ui-radiobutton-box.ui-state-active {
-    border: 1px solid $casinocoinRedDarker; 
-    background: $casinocoinRed; 
+    border: 1px solid $brtRedDarker; 
+    background: $brtRed; 
     color: #FFFFFF;
 }
 
 .ui-chkbox-box.ui-state-focus,
 .ui-radiobutton-box.ui-state-focus  {
-    -moz-box-shadow: 0px 0px 5px $casinocoinRedLighter;
-	-webkit-box-shadow: 0px 0px 5px $casinocoinRedLighter;
-	box-shadow: 0px 0px 5px $casinocoinRedLighter;
+    -moz-box-shadow: 0px 0px 5px $brtRedLighter;
+	-webkit-box-shadow: 0px 0px 5px $brtRedLighter;
+	box-shadow: 0px 0px 5px $brtRedLighter;
 }
 
 .ui-chkbox-box.ui-state-focus.ui-state-active {
-    background: $casinocoinRed; 
+    background: $brtRed; 
 }
 
 /* Inputs */
@@ -286,21 +286,21 @@ $inputGroupTextColor: #222222;
 
 .ui-inputtext.ui-state-focus,
 .ui-inputtext:focus {
-	-moz-box-shadow: 0px 0px 5px $casinocoinRedLighter;
-	-webkit-box-shadow: 0px 0px 5px $casinocoinRedLighter;
-	box-shadow: 0px 0px 5px $casinocoinRedLighter;
+	-moz-box-shadow: 0px 0px 5px $brtRedLighter;
+	-webkit-box-shadow: 0px 0px 5px $brtRedLighter;
+	box-shadow: 0px 0px 5px $brtRedLighter;
 }
 
 /* InputSwitch */
 .ui-inputswitch-on {
-	background: $casinocoinRed !important;
+	background: $brtRed !important;
 	color: #ffffff !important;
 }
 
 .ui-paginator .ui-paginator-page.ui-state-active {
-	background: $casinocoinRed;
+	background: $brtRed;
 	color: #ffffff;
-	border-color: $casinocoinRedDarker;
+	border-color: $brtRedDarker;
 }
 
 /* DataTable  */
@@ -320,7 +320,7 @@ $inputGroupTextColor: #222222;
         }
                 
         &.ui-state-active {
-            background: $casinocoinRed;
+            background: $brtRed;
             color: #ffffff;
         }
     }
@@ -401,15 +401,15 @@ $inputGroupTextColor: #222222;
 
 .ui-togglebutton.ui-button.ui-state-focus,
 .ui-selectbutton .ui-button.ui-state-focus.ui-state-active  {
-    -moz-box-shadow: 0px 0px 5px $casinocoinRedLighter;
-	-webkit-box-shadow: 0px 0px 5px $casinocoinRedLighter;
-	box-shadow: 0px 0px 5px $casinocoinRedLighter;
+    -moz-box-shadow: 0px 0px 5px $brtRedLighter;
+	-webkit-box-shadow: 0px 0px 5px $brtRedLighter;
+	box-shadow: 0px 0px 5px $brtRedLighter;
 }
 
 .ui-togglebutton.ui-button.ui-state-active,
 .ui-selectbutton .ui-button.ui-state-active {
-   border: 1px solid $casinocoinRedDarker; 
-   background: $casinocoinRed; 
+   border: 1px solid $brtRedDarker; 
+   background: $brtRed; 
    color: #FFFFFF;
 }
 
@@ -420,9 +420,9 @@ $inputGroupTextColor: #222222;
 }
 
 .ui-dropdown.ui-state-focus, .ui-multiselect.ui-state-focus {
-    -moz-box-shadow: 0px 0px 5px $casinocoinRedLighter;
-    -webkit-box-shadow: 0px 0px 5px $casinocoinRedLighter;
-    box-shadow: 0px 0px 5px $casinocoinRedLighter;
+    -moz-box-shadow: 0px 0px 5px $brtRedLighter;
+    -webkit-box-shadow: 0px 0px 5px $brtRedLighter;
+    box-shadow: 0px 0px 5px $brtRedLighter;
 }
 
 /* Growl */
@@ -508,8 +508,8 @@ $inputGroupTextColor: #222222;
 /* PanelMenu */
 .ui-panelmenu .ui-panelmenu-header.ui-state-active,
 .ui-panelmenu .ui-panelmenu-header.ui-state-active a {
-    border-color: $casinocoinRedDarker; 
-    background: $casinocoinRed; 
+    border-color: $brtRedDarker; 
+    background: $brtRed; 
     color: #FFFFFF;
 }
 
@@ -555,7 +555,7 @@ $inputGroupTextColor: #222222;
                 }
                 
                 &.ui-state-active {
-                    background-color: $casinocoinRed;
+                    background-color: $brtRed;
                     color: #ffffff;
                 }
             }
@@ -608,8 +608,8 @@ $inputGroupTextColor: #222222;
 .fc {
     .fc-button-group {
         .ui-state-active {
-            border: 1px solid $casinocoinRedDarker;
-            background: $casinocoinRed;
+            border: 1px solid $brtRedDarker;
+            background: $brtRed;
             color: #ffffff;
         }
     }

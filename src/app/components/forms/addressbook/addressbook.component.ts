@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { LokiAddress } from '../../../domain/lokijs';
-import { CasinocoinService } from '../../../providers/casinocoin.service';
+import { brtService } from '../../../providers/brt.service';
 import { WalletService } from '../../../providers/wallet.service';
 import { LogService } from '../../../providers/log.service';
 import { AppConstants } from '../../../domain/app-constants';
@@ -28,7 +28,7 @@ export class AddressbookComponent implements OnInit {
   invalidAccountID: boolean = true;
 
   constructor(private logger: LogService,
-              private casinocoinService: CasinocoinService,
+              private brtService: brtService,
               private walletService: WalletService,
               private electronService: ElectronService) { 
           this.logger.debug("### INIT Addressbook ###");

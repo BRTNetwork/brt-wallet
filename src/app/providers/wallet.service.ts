@@ -73,7 +73,7 @@ export class WalletService {
     }
     let userPath = this.electron.remote.app.getPath("home");
     if(walletLocation.length == 0){
-      walletLocation = path.join(userPath, '.casinocoin');
+      walletLocation = path.join(userPath, '.brt');
     }
     // check if path exists, else create
     this.logger.debug("### WalletService, check if wallet location exists");
@@ -104,10 +104,10 @@ export class WalletService {
           walletUUID: walletUUID,
           walletHash: this.generateWalletPasswordHash(walletUUID, walletSecret),
           mnemonicRecovery: mnemonicRecovery,
-          creationTimestamp: CSCUtil.unixToCasinocoinTimestamp(Date.now()),
-          updatedTimestamp: CSCUtil.unixToCasinocoinTimestamp(Date.now()),
+          creationTimestamp: CSCUtil.unixTobrtTimestamp(Date.now()),
+          updatedTimestamp: CSCUtil.unixTobrtTimestamp(Date.now()),
           location: walletLocation,
-          lastOpenedTimestamp: CSCUtil.unixToCasinocoinTimestamp(Date.now())
+          lastOpenedTimestamp: CSCUtil.unixTobrtTimestamp(Date.now())
         }
         this.dbMetadata.insert(initDBVersion);
       } else if(collection.name == "accounts")
@@ -126,7 +126,7 @@ export class WalletService {
     });
     
     let lokiFsAdapter = new lfsa();
-    // let idbAdapter = new LokiIndexedAdapter('casinocoin');
+    // let idbAdapter = new LokiIndexedAdapter('brt');
     let walletDB = new loki(dbPath, 
       { adapter: lokiFsAdapter,
         autoloadCallback: createCollections,
@@ -209,7 +209,7 @@ export class WalletService {
       });
   
       let lokiFsAdapter = new lfsa();
-      // let idbAdapter = new LokiIndexedAdapter('casinocoin');
+      // let idbAdapter = new LokiIndexedAdapter('brt');
       let walletDB = new loki(dbPath, 
         { adapter: lokiFsAdapter,
           autoloadCallback: openCollections,
@@ -348,7 +348,7 @@ export class WalletService {
       });
   
       let lokiFsAdapter = new lfsa();
-      // let idbAdapter = new LokiIndexedAdapter('casinocoin');
+      // let idbAdapter = new LokiIndexedAdapter('brt');
       let walletDB = new loki(dbPath, 
         { adapter: lokiFsAdapter,
           autoloadCallback: openCollections,
@@ -410,9 +410,9 @@ export class WalletService {
       walletHash: this.currentDBMetadata.walletHash,
       mnemonicRecovery: this.currentDBMetadata.mnemonicRecovery,
       creationTimestamp: this.currentDBMetadata.creationTimestamp,
-      updatedTimestamp: CSCUtil.unixToCasinocoinTimestamp(Date.now()),
+      updatedTimestamp: CSCUtil.unixTobrtTimestamp(Date.now()),
       location: this.currentDBMetadata.location,
-      lastOpenedTimestamp: CSCUtil.unixToCasinocoinTimestamp(Date.now())
+      lastOpenedTimestamp: CSCUtil.unixTobrtTimestamp(Date.now())
     }
     this.dbMetadata.insert(initDBVersion);
   }

@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { LokiAccount, LokiKey, LokiAddress } from '../../../domain/lokijs';
 import { CSCUtil } from '../../../domain/csc-util';
 import { LocalStorage, SessionStorage, LocalStorageService } from "ngx-store";
-import { CasinocoinService } from '../../../providers/casinocoin.service';
+import { brtService } from '../../../providers/brt.service';
 import { WalletService } from '../../../providers/wallet.service';
 import { LogService } from '../../../providers/log.service';
 import { AppConstants } from '../../../domain/app-constants';
@@ -45,7 +45,7 @@ export class ReceiveCoinsComponent implements OnInit {
   privateKeyExportLocation: string = "";
 
   constructor(private logger: LogService,
-              private casinocoinService: CasinocoinService,
+              private brtService: brtService,
               private walletService: WalletService,
               private datePipe: DatePipe,
               private electronService: ElectronService,
@@ -66,7 +66,7 @@ export class ReceiveCoinsComponent implements OnInit {
     });
 
     // subscribe to account updates
-    this.casinocoinService.accountSubject.subscribe( account => {
+    this.brtService.accountSubject.subscribe( account => {
       this.accounts = this.walletService.getAllAccounts();
     });
 
@@ -106,7 +106,7 @@ export class ReceiveCoinsComponent implements OnInit {
   }
 
   convertCscTimestamp(inputTime) {
-    return CSCUtil.casinocoinToUnixTimestamp(inputTime);
+    return CSCUtil.brtToUnixTimestamp(inputTime);
   }
 
   showReceiveContextMenu(event){
@@ -188,7 +188,7 @@ export class ReceiveCoinsComponent implements OnInit {
     } else {
       this.create_icon = "fa fa-refresh fa-spin";
       // generate new key pair offline
-      let newKeyPair:LokiKey = this.casinocoinService.generateNewKeyPair();
+      let newKeyPair:LokiKey = this.brtService.generateNewKeyPair();
       let accountLabel = "";
       if (newKeyPair.accountID.length > 0){
         // add keypair to database
