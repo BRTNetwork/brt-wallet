@@ -152,7 +152,7 @@ export class PaperwalletComponent implements OnInit {
               </style>
             </head>
             <body onload="window.print()" onfocus="window.close()">
-            <p><img src="https://brt.org/wp-content/uploads/2018/02/Chip_Red-3.svg" alt="brt" class="brt-logo" /></p>
+            <p><img src="https://brt.network/wp-content/uploads/2018/02/Chip_Red-3.svg" alt="brt" class="brt-logo" /></p>
             <p></p>
             <h1 align="center">brt Paper Wallet</h1>
             <p></p>

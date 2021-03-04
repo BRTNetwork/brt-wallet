@@ -209,7 +209,7 @@ export class BRTUtil {
     }
 
     static generateBRTQRCodeURI(input: BRTURI){
-        let uri = "https://brt.org/send?to=" + input.address;
+        let uri = "https://brt.network/send?to=" + input.address;
         if(input.amount){
             uri = uri + "&amount=" + input.amount;
         }

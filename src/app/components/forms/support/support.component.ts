@@ -21,7 +21,7 @@ export class SupportComponent implements OnInit {
 
   openFAQ(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://brt.org/faq/");
+    this.electronService.remote.shell.openExternal("https://brt.network/faq/");
   }
 
   openReddit(){
@@ -36,7 +36,7 @@ export class SupportComponent implements OnInit {
 
   openWebsite(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://brt.org");
+    this.electronService.remote.shell.openExternal("https://brt.network");
   }
 
   openGithub(){
@@ -46,7 +46,7 @@ export class SupportComponent implements OnInit {
 
   openContactForm(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://brt.org/contact");
+    this.electronService.remote.shell.openExternal("https://brt.network/contact");
   }
 
   openEmail(){
