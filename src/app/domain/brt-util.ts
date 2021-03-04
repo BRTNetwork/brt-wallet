@@ -146,9 +146,9 @@ export class BRTUtil {
 
     static validateAccountID(accountID: string): boolean {
         // prepare position lookup table with brt alphabet
-        var vals = 'cpshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2brdeCg65jkm8oFqi1tuvAxyz';
-        // check if address starts with lowercase 'c'
-        if(!accountID.startsWith('c')){
+        var vals = 'brtshnaf39wBUDNEGHJKLM4PQRST7VWXYZ2pcdeCg65jkm8oFqi1uvAxyz';
+        // check if address starts with lowercase 'b'
+        if(!accountID.startsWith('b')){
             return false;
         }
         // decode the the address
