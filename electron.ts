@@ -172,7 +172,7 @@ function createWindow() {
     minWidth: minimalWidth,
     height: minimalHeight,
     minHeight: minimalHeight,
-    icon: __dirname + '/favicon.ico',
+    icon: __dirname + '/favicon.svg',
     show: false,
     darkTheme: true,
     webPreferences: {

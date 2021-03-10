@@ -117,7 +117,7 @@ export class PaperwalletComponent implements OnInit {
     print(): void {
         const BrowserWindow = this.electronService.remote.BrowserWindow;;
         let printContents = this.winRef.nativeWindow.document.getElementById('printsection').innerHTML;
-        let win = new BrowserWindow({ width: 800, height: 700, icon: __dirname + '/favicon.ico' });
+        let win = new BrowserWindow({ width: 800, height: 700, icon: __dirname + '/favicon.svg' });
         win.on('closed', () => {
             win = null;
         });

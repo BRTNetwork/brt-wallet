@@ -937,8 +937,8 @@ p-togglebutton.ng-dirty.ng-invalid .ui-button {
 
 /* Progressbar */
 .ui-progressbar .ui-progressbar-value {
-  border: 1px solid #3f94e9;
-  background: #8ec5fc;
+  border: 1px solid #007564;
+  background: #00dbba;
 }
 
 .ui-progressbar .ui-progressbar-label {
@@ -969,6 +969,7 @@ p-togglebutton.ng-dirty.ng-invalid .ui-button {
 .ui-widget-content .ui-button,
 .ui-widget.ui-button,
 .ui-button {
+  cursor: pointer;
   border: 1px solid #00a88f;
   color: #FFFFFF;
   background: #00a88f;

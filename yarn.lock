@@ -293,8 +293,8 @@
 
 "@types/debug@^4.1.4":
   "integrity" "sha512-Q1y515GcOdTHgagaVFhHnIFQ38ygs/kmxdNpvpou+raI9UO3YZcHDngBSYKQklcKlvA7iuQlmIKbzvmxcOE9CQ=="
-  "resolved" "https://registry.npmjs.org/@types/debug/-/debug-4.1.5.tgz"
-  "version" "4.1.5"
+  "resolved" "https://registry.npmjs.org/@types/debug/-/debug-1.0.0.tgz"
+  "version" "1.0.0"
 
 "@types/jasmine@^2.5.54":
   "integrity" "sha512-B9YofFbUljs19g5gBKUYeLIulsh31U5AK70F41BImQRHEZQGm4GcN922UvnYwkduMqbC/NH+9fruWa/zrqvHIg=="
@@ -6611,8 +6611,8 @@
 
 "lru-cache@^4.0.1", "lru-cache@^4.1.1", "lru-cache@4.1.x":
   "integrity" "sha512-sWZlbEP2OsHNkXrMl5GYk/jKk70MBng6UU4YI/qGDYbgf6YbP4EvmqISbXCoJiRKs+1bSpFHVgQxvJ17F2li5g=="
-  "resolved" "https://registry.npmjs.org/lru-cache/-/lru-cache-4.1.5.tgz"
-  "version" "4.1.5"
+  "resolved" "https://registry.npmjs.org/lru-cache/-/lru-cache-1.0.0.tgz"
+  "version" "1.0.0"
   dependencies:
     "pseudomap" "^1.0.2"
     "yallist" "^2.1.2"
@@ -7377,8 +7377,8 @@
 
 "npm-run-all@^4.1.1":
   "integrity" "sha512-Oo82gJDAVcaMdi3nuoKFavkIHBRVqQ1qvMb+9LHk/cF4P6B2m8aP04hGf7oL6wZ9BuGwX1onlLhpuoofSyoQDQ=="
-  "resolved" "https://registry.npmjs.org/npm-run-all/-/npm-run-all-4.1.5.tgz"
-  "version" "4.1.5"
+  "resolved" "https://registry.npmjs.org/npm-run-all/-/npm-run-all-1.0.0.tgz"
+  "version" "1.0.0"
   dependencies:
     "ansi-styles" "^3.2.1"
     "chalk" "^2.4.1"

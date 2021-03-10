@@ -62,7 +62,7 @@ if(scripts.length > 0){
   plugins.push(new GlobCopyWebpackPlugin({
     "patterns": [
       "assets",
-      "favicon.ico"
+      "favicon.svg"
     ],
     "globOptions": {
       "cwd": process.cwd() + "/src",
