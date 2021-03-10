@@ -2,10 +2,10 @@
 
 $base-height: 60px;
 
-.container { 
-	display:table; 
-	width:100%; 
-	height:100%;  
+.container {
+	display:table;
+	width:100%;
+	height:100%;
 }
 
 ::ng-deep .home-sidenav {
@@ -52,7 +52,7 @@ $base-height: 60px;
 
 .btn.focus, .btn:focus {
   outline: 0;
-  box-shadow: 0 0 0 2px $brtRedLighter;
+  box-shadow: 0 0 0 2px $bgColorLighter;
 }
 
 .btn {
@@ -70,18 +70,18 @@ $base-height: 60px;
 }
 
 .fullwidth {
-  width: 100%; 
+  width: 100%;
   padding-left: 5px;
   padding-top: 2px;
   padding-bottom: 2px;
 }
 
 .connected-color {
-  color: $brtGreen;
+  color: $brandColor;
 }
 
 .disconnected-color {
-  color: $brtRed;
+  color: $bgColor;
 }
 
 .amount-label {
@@ -103,7 +103,7 @@ $base-height: 60px;
 .app-nav {
   width: 240px;
   height: 100%;
-  background: $brtRed;
+  background: $bgColor;
   background-image: url('../../../assets/brand/navbar-bg.jpg');
   background-repeat: no-repeat;
   background-position: bottom;
@@ -135,7 +135,7 @@ $base-height: 60px;
 
 /*
 .menu-nav mat-list-item:hover {
-  background-color: $brtRedDarker;
+  background-color: $bgColorDarker;
   background-repeat: no-repeat;
   background-position: right;
   position: sticky;
@@ -186,18 +186,18 @@ $base-height: 60px;
 }
 
 ::ng-deep .footer-error {
-  color: $brtRed;
+  color: $bgColor;
   font-weight: bolder;
 }
 
 ::ng-deep .mat-list-address-item {
-  color: $brtRed !important;
+  color: $bgColor !important;
   font-size: smaller;
 }
 
 ::ng-deep .mat-list-address {
   flex-grow: 1;
-  border: 1px solid $brtRed;
+  border: 1px solid $bgColor;
   overflow: auto;
   height: 90px;
 }
@@ -207,21 +207,21 @@ $base-height: 60px;
 }
 
 ::ng-deep .ui-button.sign-button {
-  background-color: $brtGreen;
-  border-color: $brtGreen; 
+  background-color: $brandColor;
+  border-color: $brandColor;
 }
 
 ::ng-deep .ui-button:focus.sign-button, .ui-button:enabled:hover.sign-button {
-  background-color: $brtGreenLighter;
-  border-color: $brtGreenLighter; 
+  background-color: $brandColorLighter;
+  border-color: $brandColorLighter;
 }
 
 ::ng-deep .verify-true {
-  color: $brtGreen;
+  color: $brandColor;
   font-size: 150%;
 }
 
 ::ng-deep .verify-false {
-  color: $brtRed;
+  color: $bgColor;
   font-size: 150%;
 }

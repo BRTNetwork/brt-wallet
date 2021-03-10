@@ -14,7 +14,7 @@
 
 ::ng-deep .text-small-top {
     font-size: small;
-    vertical-align: top; 
+    vertical-align: top;
 }
 
 ::ng-deep .text-small-bottom {
@@ -46,7 +46,7 @@
 }
 
 /** Remove the border from the dataTable **/
-::ng-deep .ui-datatable.borderless .ui-datatable-data >tr >td { 
+::ng-deep .ui-datatable.borderless .ui-datatable-data >tr >td {
     border-style: hidden;
     border-radius: 3px;
 }
@@ -67,11 +67,11 @@
 }
 
 ::ng-deep .color_red {
-    color: $brtRed;
+    color: $bgColor;
 }
 
 ::ng-deep .color_green {
-    color: $brtGreen;
+    color: $brandColor;
 }
 
 ::ng-deep .color_orange {

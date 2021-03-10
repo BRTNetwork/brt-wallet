@@ -48,8 +48,8 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
   viewInitComplete: boolean = false;
   initialBatchLoaded: boolean = false;
   uiChangeSubject = new BehaviorSubject<string>(AppConstants.KEY_INIT);
-  
-  constructor(private logger:LogService, 
+
+  constructor(private logger:LogService,
               private brtService: brtService,
               private walletService: WalletService,
               private electronService: ElectronService,
@@ -60,20 +60,20 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
     this.logger.debug("### Transactions ngOnInit() ###");
     // define Transaction Context menu
     let tx_context_menu_template = [
-      { label: 'Copy From Address', 
-        click(menuItem, browserWindow, event) { 
+      { label: 'Copy From Address',
+        click(menuItem, browserWindow, event) {
           browserWindow.webContents.send('tx-context-menu-event', 'copy-from'); }
       },
-      { label: 'Copy To Address', 
-        click(menuItem, browserWindow, event) { 
+      { label: 'Copy To Address',
+        click(menuItem, browserWindow, event) {
            browserWindow.webContents.send('tx-context-menu-event', 'copy-to'); }
       },
-      { label: 'Copy Transaction ID', 
-         click(menuItem, browserWindow, event) { 
+      { label: 'Copy Transaction ID',
+         click(menuItem, browserWindow, event) {
              browserWindow.webContents.send('tx-context-menu-event', 'copy-txid'); }
       },
-      { label: 'Show in Block Explorer', 
-          click(menuItem, browserWindow, event) { 
+      { label: 'Show in Block Explorer',
+          click(menuItem, browserWindow, event) {
               browserWindow.webContents.send('tx-context-menu-event', 'show-explorer'); }
       }
     ];
@@ -96,7 +96,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
         this.showTransactionDetails();
       } else {
         this.logger.debug("### Context menu not implemented: " + arg);
-      }        
+      }
     });
     // get transactions from wallet
     this.walletService.openWalletSubject.subscribe( result => {
@@ -149,7 +149,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(){
     this.logger.debug("### Transactions - ngAfterViewInit() ###");
     this.viewInitComplete = true;
-    
+
     // this.doBalanceUpdate();
     // this.dtTX.paginate();
 
@@ -167,7 +167,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
         this.logger.debug("### Transactions - Refresh Wallet");
         this.executeWalletRefresh();
       }
-      else 
+      else
         this.logger.debug("### Transactions - Refresh Wallet IS FALSE");
     });
 
@@ -200,7 +200,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
   getTXTextColor(cell, rowData){
     if(rowData.direction == AppConstants.KEY_WALLET_TX_OUT){
       // outgoing tx
-      cell.parentNode.parentNode.style.color = "#bf0a0a";
+      cell.parentNode.parentNode.style.color = "#2a454e";
     } else if(rowData.direction == AppConstants.KEY_WALLET_TX_IN){
       // incomming tx
       cell.parentNode.parentNode.style.color = "#119022";
@@ -240,7 +240,7 @@ export class TransactionsComponent implements OnInit, AfterViewInit {
     if(tx.validated){
       return "Transaction validated and final.";
     } else if((this.ledgers[0] != undefined) && (tx.lastLedgerSequence > this.ledgers[0].ledger_index)){
-      return "Transaction not yet validated. Waiting to be included until ledger " + tx.lastLedgerSequence + 
+      return "Transaction not yet validated. Waiting to be included until ledger " + tx.lastLedgerSequence +
               " (current ledger: "+this.ledgers[0].ledger_index+ ").";
     } else {
       return "Transaction cancelled.";

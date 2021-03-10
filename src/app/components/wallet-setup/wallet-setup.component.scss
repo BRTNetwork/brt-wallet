@@ -1,7 +1,7 @@
 @import "src/assets/variables";
 
 .icon-color-brt {
-    color: $brtRed;
+    color: $bgColor;
 }
 
 .ui-dialog .ui-dialog-content {
@@ -21,14 +21,14 @@
 .ui-steps.steps-custom {
     margin-bottom: 30px;
 }
- 
+
 .ui-steps.steps-custom .ui-steps-item .ui-menuitem-link {
     height: 10px;
     padding: 0 1em;
 }
- 
+
 .ui-steps.steps-custom .ui-steps-item .ui-steps-number {
-    background-color: $brtRed;
+    background-color: $bgColor;
     color: #FFFFFF;
     display: inline-block;
     width: 30px;
@@ -42,36 +42,36 @@
 }
 
 .ui-state-highlight {
-    border-color: $brtRedDarker;
-    background: $brtRed;
+    border-color: $bgColorDarker;
+    background: $bgColor;
     color: #FFFFFF;
 }
 
 .ui-widget-header .ui-button, .ui-widget-content .ui-button, .ui-widget.ui-button, .ui-button {
-    border: $brtRed;
-    background: $brtRed;
+    border: $bgColor;
+    background: $bgColor;
 }
 
 .ui-widget-header .ui-button:enabled:active, .ui-widget-content .ui-button:enabled:active, .ui-widget.ui-button:enabled:active, .ui-button:enabled:active {
-    border: $brtRedLighter;
-    background: $brtRedDarker;
+    border: $bgColorLighter;
+    background: $bgColorDarker;
 }
 
-.ui-widget-header .ui-button:enabled:hover, .ui-widget-header .ui-button:focus, .ui-widget-content .ui-button:enabled:hover, .ui-widget-content .ui-button:focus, 
+.ui-widget-header .ui-button:enabled:hover, .ui-widget-header .ui-button:focus, .ui-widget-content .ui-button:enabled:hover, .ui-widget-content .ui-button:focus,
 .ui-widget.ui-button:enabled:hover, .ui-widget.ui-button:focus, .ui-button:enabled:hover, .ui-button:focus {
-    border: $brtRedLighter;
-    background: $brtRedDarker;
+    border: $bgColorLighter;
+    background: $bgColorDarker;
 }
 
 .ui-chkbox-box.ui-state-active, .ui-radiobutton-box.ui-state-active {
-    border: $brtRedDarker;
-    background: $brtRed;
+    border: $bgColorDarker;
+    background: $bgColor;
 }
 
 .ui-chkbox-box.ui-state-focus, .ui-radiobutton-box.ui-state-focus {
-    box-shadow: 0px 0px 5px $brtRedLighter;
+    box-shadow: 0px 0px 5px $bgColorLighter;
 }
 
 .ui-chkbox-box.ui-state-focus.ui-state-active {
-    background: $brtRed;
+    background: $bgColor;
 }

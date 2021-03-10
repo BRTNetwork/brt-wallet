@@ -1943,7 +1943,7 @@
   optionalDependencies:
     "fsevents" "^1.0.0"
 
-"chokidar@^2.0.3", "chokidar@^2.0.4", "chokidar@^2.1.8":
+"chokidar@^2.0.3", "chokidar@^2.0.4", "chokidar@^2.1.8", "chokidar@>=2.0.0 <4.0.0":
   "integrity" "sha512-ZmZUazfOzf0Nve7duiCKD23PFSCs4JPoYyccjUFF3aQkQadqBhfzhjkwBH2mNOG9cTBwhamM37EIsIkZw3nRgg=="
   "resolved" "https://registry.npmjs.org/chokidar/-/chokidar-2.1.8.tgz"
   "version" "2.1.8"
@@ -9451,6 +9451,13 @@
     "loader-utils" "^1.0.1"
     "lodash.tail" "^4.1.1"
     "pify" "^3.0.0"
+
+"sass@^1.32.8":
+  "integrity" "sha512-Sl6mIeGpzjIUZqvKnKETfMf0iDAswD9TNlv13A7aAF3XZlRPMq4VvJWBC2N2DXbp94MQVdNSFG6LfF/iOXrPHQ=="
+  "resolved" "https://registry.npmjs.org/sass/-/sass-1.32.8.tgz"
+  "version" "1.32.8"
+  dependencies:
+    "chokidar" ">=2.0.0 <4.0.0"
 
 "saucelabs@~1.3.0":
   "integrity" "sha1-0kDoAJ33+ocwbsRXimm6O1xCT+4="

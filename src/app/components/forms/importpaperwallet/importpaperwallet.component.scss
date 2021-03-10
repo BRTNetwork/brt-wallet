@@ -17,12 +17,12 @@
 }
 
 ::ng-deep .footer-error {
-    color: $brtRed;
+    color: $bgColor;
     font-weight: bolder;
 }
 
 ::ng-deep .qrcode {
-    width: 100%; 
+    width: 100%;
     padding: 5px;
     text-align: center;
 }
@@ -32,39 +32,39 @@
     padding-left: 5px;
 }
 
-.hidden { 
-	visibility: hidden; 
+.hidden {
+	visibility: hidden;
 }
-.displaynone { 
-	display: none !important; 
-}
-
-#mysecret[disabled] { 
-	border: none; 
+.displaynone {
+	display: none !important;
 }
 
-#myaddress:empty:before { 
-	content: ""; 
+#mysecret[disabled] {
+	border: none;
 }
 
-table:empty { 
-	display: none; 
+#myaddress:empty:before {
+	content: "";
 }
 
-td.centered { 
-	text-align: center; 
+table:empty {
+	display: none;
 }
 
-input[type="text"] { 
-	width: 240px; 
+td.centered {
+	text-align: center;
 }
 
-input[type="text"].wide { 
-	width: 280px; 
+input[type="text"] {
+	width: 240px;
 }
 
-input[type="text"].narrow { 
-	width: 120px; 
+input[type="text"].wide {
+	width: 280px;
+}
+
+input[type="text"].narrow {
+	width: 120px;
 }
 
 button:not(.offline) {
@@ -72,24 +72,24 @@ button:not(.offline) {
 	font-weight: bold;
 }
 
-.editflagbutton { 
-	width: 60px; 
+.editflagbutton {
+	width: 60px;
 }
 
-#sendbutton, .complexsendbutton, .cancelbutton { 
-	width: 72px; 
+#sendbutton, .complexsendbutton, .cancelbutton {
+	width: 72px;
 }
 
-#trustbutton { 
-	width: 84px; 
+#trustbutton {
+	width: 84px;
 }
 
-#startpathfindingbutton, #rekeybutton { 
-	width: 100px; 
+#startpathfindingbutton, #rekeybutton {
+	width: 100px;
 }
 
-.tilde { 
-	width: 30px; 
+.tilde {
+	width: 30px;
 }
 
 .halfoffset {
@@ -97,8 +97,8 @@ button:not(.offline) {
 	top: 9px;
 }
 
-.pathsJSON div { 
-	display: none; 
+.pathsJSON div {
+	display: none;
 }
 
 .pathsJSON:hover div {
@@ -125,7 +125,7 @@ button:not(.offline) {
   background-image: url('../../../../assets/bgpaperwallet.jpg');
   background-repeat: no-repeat;
   background-attachment: fixed;
-  background-position: center; 
+  background-position: center;
 }
 
 // h1, strong {

@@ -9,13 +9,13 @@
 }
 
 ::ng-deep .footer-error {
-    color: $brtRed;
+    color: $bgColor;
     font-weight: bolder;
 }
 
 ::ng-deep .confirm-text {
     // font-weight: bolder;
-    color: $brtRed;
+    color: $bgColor;
 }
 
 input::-webkit-outer-spin-button,
