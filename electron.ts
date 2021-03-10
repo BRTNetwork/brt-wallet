@@ -312,7 +312,7 @@ function createWindow() {
 
   // Create the Application's main menu
   const template : Electron.MenuItemConstructorOptions[] = [{
-    label: 'brt Wallet',
+    label: 'BRT Wallet',
     submenu: [
       {
         label: 'Cut',

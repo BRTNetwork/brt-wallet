@@ -1,7 +1,7 @@
 <p-dialog [visible]="dialog_visible" [width]="600" [height]="400" [(closable)]="dialog_closeable" [modal]="true" (onHide)="onHideSetup()">
     <p-header>
         <i class="icon brt-dialog-icon icon-chip"></i>
-        brt Wallet Setup
+        BRT Wallet Setup
     </p-header>
     <div class="ui-g" style="max-height: 275px; min-height: 275px;">
         <!-- [@slideInOut]="step1State" -->
@@ -23,18 +23,18 @@
     </div>
     <div style="text-align: right;">
         <!-- Cancel Setup -->
-        <button pButton type="button" (click)="cancelSetup()" icon="fa-ban" iconPos="right" label="Cancel" 
+        <button pButton type="button" (click)="cancelSetup()" icon="fa-ban" iconPos="right" label="Cancel"
             *ngIf="enableCancelCreation && (activeIndex <= 5 || ((activeIndex == 6) && (!(walletCreated && accountCreated && keysEncrypted && keyBackupCompleted))))"
             style="width: 115px;" #cancelButton></button>
 
         <!-- Previous Step -->
-        <button pButton type="button" (click)="navigateToPreviousStep()" icon="fa-arrow-left" iconPos="left" label="Previous" 
+        <button pButton type="button" (click)="navigateToPreviousStep()" icon="fa-arrow-left" iconPos="left" label="Previous"
                 *ngIf="activeIndex > 1 && activeIndex < 6" style="width: 115px;" #previousButton></button>
 
         <!-- Next Step -->
-        <button pButton type="button" (click)="navigateToNextStep()" icon="fa-arrow-right" iconPos="right" label="Next" 
-                *ngIf="activeIndex < maxActiveIndex" 
-                [disabled]="((activeIndex == 2) && (!enableFinishDisclaimer)) || ((activeIndex == 3) && (!enableFinishPassword)) || ((activeIndex == 4) && (!recoveryAccepted))" 
+        <button pButton type="button" (click)="navigateToNextStep()" icon="fa-arrow-right" iconPos="right" label="Next"
+                *ngIf="activeIndex < maxActiveIndex"
+                [disabled]="((activeIndex == 2) && (!enableFinishDisclaimer)) || ((activeIndex == 3) && (!enableFinishPassword)) || ((activeIndex == 4) && (!recoveryAccepted))"
                 style="width: 115px;" #nextButton></button>
 
         <!-- Finish Setup -->

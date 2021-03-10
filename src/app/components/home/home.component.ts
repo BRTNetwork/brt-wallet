@@ -122,7 +122,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
 
   footer_visible: boolean = false;
   error_message: string = "";
-  passwordDialogHeader: string = "brt Wallet Password";
+  passwordDialogHeader: string = "BRT Wallet Password";
 
   backupPath: string;
   lastMenuEvent: string = "";

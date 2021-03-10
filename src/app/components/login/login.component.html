@@ -1,6 +1,6 @@
 <p-dialog [visible]="dialog_visible" [width]="500" [height]="325" [closable]="true" [modal]="true" (onHide)="onHideLogin()">
     <p-header><i class="icon brt-dialog-icon icon-chip" aria-hidden="true"></i>
-        Open brt Wallet
+        Open BRT Wallet
     </p-header>
     <div class="ui-g ui-fluid">
         <div class="ui-g-1"></div>
@@ -14,7 +14,7 @@
         <div class="ui-g-10">
             <div class="ui-inputgroup" #inputWallet>
                 <span class="ui-inputgroup-addon" style="box-sizing: content-box;"><i class="fa fa-suitcase"></i></span>
-                <p-dropdown [style]="{'width':'100%'}" [options]="wallets" [(ngModel)]="selectedWallet" 
+                <p-dropdown [style]="{'width':'100%'}" [options]="wallets" [(ngModel)]="selectedWallet"
                             placeholder="Select Wallet" appendTo="body" autofocus></p-dropdown>
             </div>
         </div>
@@ -25,7 +25,7 @@
         <div class="ui-g-10">
             <div class="ui-inputgroup" #inputPassword>
                 <span class="ui-inputgroup-addon" style="box-sizing: content-box;"><i class="icon icon-key"></i></span>
-                <input type="password" pInputText placeholder="Wallet Password" [(ngModel)]="walletPassword" (keyup.enter)="doOpenWallet()">         
+                <input type="password" pInputText placeholder="Wallet Password" [(ngModel)]="walletPassword" (keyup.enter)="doOpenWallet()">
             </div>
         </div>
         <div class="ui-g-1"></div>

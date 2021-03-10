@@ -21,7 +21,7 @@ function getInstallerConfig (arch) {
 
   return Promise.resolve({
     appDirectory: path.join(appPath, 'brt-wallet-win32-' + arch + '/'),
-    authors: 'brt Foundation',
+    authors: 'BRT Network',
     noMsi: true,
     noDelta: true,
     outputDirectory: path.join(outPath, 'windows-'+arch),
