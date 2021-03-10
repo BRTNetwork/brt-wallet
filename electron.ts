@@ -1,17 +1,17 @@
-import { app, BrowserWindow, screen, 
-         autoUpdater, ipcMain, dialog, 
+import { app, BrowserWindow, screen,
+         autoUpdater, ipcMain, dialog,
          Menu, MenuItem, powerMonitor, Notification } from 'electron';
 import * as path from 'path';
 import * as fs from 'fs';
 import * as os from 'os';
 
 // import brt libraries from electron
-import * as brtKeypairs from 'brt-libjs-keypairs/distrib/npm/index';
-import * as brtHashes from 'brt-libjs-hashes';
-import * as brtBinaryCodec from 'brt-libjs-binary-codec';
-import * as brtAddressCodec from 'brt-libjs-address-codec/src/index';
+import * as brtKeypairs from '@brtnetwork/brt-keypairs';
+import * as brtHashes from '@brtnetwork/brt-lib-transactionparser';
+import * as brtBinaryCodec from '@brtnetwork/brt-binary-codec';
+import * as brtAddressCodec from '@brtnetwork/brt-address-codec';
 
-// this is required to check if the app is running in development mode. 
+// this is required to check if the app is running in development mode.
 import * as isDev from 'electron-is-dev';
 import * as notifier from 'electron-notification-desktop';
 
@@ -54,7 +54,7 @@ if (serve) {
   });
 }
 
-/* Handling squirrel.windows events on windows 
+/* Handling squirrel.windows events on windows
 only required if you have build the windows with target squirrel. For NSIS target you don't need it. */
 if (require('electron-squirrel-startup')) {
   showExitPrompt = false;
@@ -117,7 +117,7 @@ if (!fs.existsSync(defaultBRTPath)){
 }
 app.setPath('userData', defaultBRTPath);
 
-// configure loggging 
+// configure loggging
 const winston = require('winston');
 if(serve || debug){
   globalTS.loglevel = 'debug';
@@ -137,7 +137,7 @@ function customFileFormatter (options) {
    (options.meta && Object.keys(options.meta).length ? '\n\t'+ JSON.stringify(options.meta) : '' );
 }
 
-winston.add(winston.transports.File, 
+winston.add(winston.transports.File,
   { filename: logFile,
     level: globalTS.loglevel,
     maxsize: 100000000,
@@ -174,14 +174,17 @@ function createWindow() {
     minHeight: minimalHeight,
     icon: __dirname + '/favicon.ico',
     show: false,
-    darkTheme: true
+    darkTheme: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
   });
 
   // and load the index.html of the app.
   win.loadURL('file://' + __dirname + '/index.html');
 
   const page = win.webContents;
-  
+
   // Run the auto updater
   page.once('did-frame-finish-load', () => {
     const checkOS = isWindowsOrmacOS();
@@ -215,7 +218,7 @@ function createWindow() {
   });
 
   //push notification using electron-notification-desktop
-  ipcMain.on('push-notification', (event, arg) => { 
+  ipcMain.on('push-notification', (event, arg) => {
     const notification = new Notification({
       title: arg.title,
       body: arg.body,
@@ -227,7 +230,7 @@ function createWindow() {
     //   icon: path.join(__dirname, 'assets/brand/brt-icon-256x256.png'),
     //   duration: 4
     // });
-    
+
     // notification.on('close', function (event) {
     //   notification.hide();
     //   event.preventDefault();
@@ -245,14 +248,14 @@ function createWindow() {
   win.on('close', (e) => {
     // console.log("close - showExitPrompt: " + showExitPrompt + " exitFromLogin: " + globalTS.vars.exitFromLogin + " savedBeforeQuit: " + savedBeforeQuit);
     if(globalTS.vars.exitFromLogin && showExitPrompt){
-      // Prevent the window from closing 
-      e.preventDefault() 
+      // Prevent the window from closing
+      e.preventDefault()
       globalTS.vars.exitFromLogin = false;
       showExitPrompt = false;
       savedBeforeQuit = true;
       win.close();
     } else if(!globalTS.vars.exitFromRenderer){
-      // Prevent the window from closing 
+      // Prevent the window from closing
       e.preventDefault();
       dialog.showMessageBox({
           type: 'info',
@@ -262,7 +265,7 @@ function createWindow() {
       });
     } else {
       if (showExitPrompt) {
-          e.preventDefault() // Prevents the window from closing 
+          e.preventDefault() // Prevents the window from closing
           dialog.showMessageBox({
               type: 'question',
               buttons: ['Yes', 'No'],
@@ -276,7 +279,7 @@ function createWindow() {
               }
           });
       } else if(!savedBeforeQuit) {
-        // Prevent the window from closing 
+        // Prevent the window from closing
         e.preventDefault();
         if(win != null){
           ipcMain.on('wallet-closed', (event, arg) => {

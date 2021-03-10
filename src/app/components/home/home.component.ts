@@ -28,7 +28,7 @@ import { NotificationService } from '../../providers/notification.service';
 const path = require('path');
 const fs = require('fs');
 const crypto = require('crypto');
-import * as brtAddressCodec from 'brt-libjs-address-codec';
+import * as brtAddressCodec from '@brtnetwork/brt-address-codec';
 
 @Component({
   selector: 'app-home',
@@ -245,8 +245,8 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
           }
         },
       ]}
-      // { label: 'Import Existing Wallet', 
-      //   click(menuItem, browserWindow, event) { 
+      // { label: 'Import Existing Wallet',
+      //   click(menuItem, browserWindow, event) {
       //     browserWindow.webContents.send('context-menu-event', 'add-wallet');
       //   }
       // }
@@ -974,7 +974,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     // create a filename
     let filename = this.datePipe.transform(Date.now(), "yyyy-MM-dd-HH-mm-ss") + "-brt-wallet.backup";
     let backupFilePath = path.join(this.backupPath, filename);
-    // Write the JSON array to the file 
+    // Write the JSON array to the file
     fs.writeFileSync(backupFilePath, dbDump);
     // signal electron we are done
     // this.electron.ipcRenderer.sendSync("backup-finished");
@@ -1078,7 +1078,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
       Fee: this.brtService.serverStateSubject.getValue().validated_ledger.base_fee + '',
       SignerQuorum: this.ms_setting_quorum,
       SignerEntries: this.ms_setting_signers.filter(signer => {
-        return signer.weight > 0 && brtAddressCodec.isValidAccountID(signer.signer)
+        return signer.weight > 0 && brtAddressCodec.isValidClassicAddress(signer.signer)
       }).map(signer => {
         return {
           SignerEntry: {
@@ -1134,7 +1134,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   addSigner(signer, weight) {
-    if (brtAddressCodec.isValidAccountID(signer) === false) {
+    if (brtAddressCodec.isValidClassicAddress(signer) === false) {
       this.electron.remote.dialog.showMessageBox(
         { message: "You entered an invalid AccountID, it can not be added as a signer.",
           buttons: ["OK"]

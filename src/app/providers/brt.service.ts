@@ -8,7 +8,7 @@ import { Subject } from 'rxjs/Subject';
 import { WebsocketService } from './websocket.service';
 import { WalletService } from './wallet.service';
 import { LocalStorageService } from "ngx-store";
-import { LedgerStreamMessages, ServerStateMessage, 
+import { LedgerStreamMessages, ServerStateMessage,
          ServerDefinition } from '../domain/websocket-types';
 import { LogService } from './log.service';
 import { LokiKey, LokiAccount, LokiTransaction, LokiTxStatus, LokiAccountSettings, LokiSignedTransaction } from '../domain/lokijs';
@@ -20,7 +20,7 @@ import { ElectronService } from './electron.service';
 import Big from 'big.js';
 import BigNumber from 'bignumber.js'
 import {utils} from 'protractor';
-import * as brtAddressCodec from 'brt-libjs-address-codec/src/index';
+import * as brtAddressCodec from '@brtnetwork/brt-address-codec';
 const crypto = require('crypto');
 
 @Injectable()
@@ -49,7 +49,7 @@ export class brtService implements OnDestroy {
     public fullAccountRefresh = false;
     public accountRefreshCount = 0;
 
-    constructor(private logger: LogService, 
+    constructor(private logger: LogService,
                 private wsService: WebsocketService,
                 private walletService: WalletService,
                 private notificationService: NotificationService,
@@ -78,7 +78,7 @@ export class brtService implements OnDestroy {
             // re-initialize server state
             this.initServerState();
             this.disconnectStarted = false;
-            // find server to connect to 
+            // find server to connect to
             this.wsService.findBestServer(connectToProduction);
             // check if the server is found, otherwise wait till it is
             const serverFoundSubscription = this.wsService.isServerFindComplete$.subscribe(serverFound => {
@@ -229,7 +229,7 @@ export class brtService implements OnDestroy {
                                 if(incommingMessage.ledger_index <= tx.lastLedgerSequence){
                                     this.logger.debug("### brtService - check TX: " + JSON.stringify(tx));
                                     // get the tx to check its status
-                                    this.getTransaction(tx.txID);    
+                                    this.getTransaction(tx.txID);
                                 }
                             }
                         });
@@ -351,10 +351,10 @@ export class brtService implements OnDestroy {
                             }
                         }
                     });
-                    this.logger.debug("### brtService - Account TX - OUT: " + outgoingCount + 
-                                        " TOTAL: " + dbAccountTransactions.length + 
+                    this.logger.debug("### brtService - Account TX - OUT: " + outgoingCount +
+                                        " TOTAL: " + dbAccountTransactions.length +
                                         " Sequence: " + account_result.Sequence +
-                                        " Last DB Sequence: " + lastSequence + 
+                                        " Last DB Sequence: " + lastSequence +
                                         " Get Ledgers From: " + lastTxLedgerIndex);
                     // the account transaction total from the database to check if we are missing transactions
                     let accountTxBalance = this.walletService.getAccountTXBalance(walletAccount.accountID);
@@ -380,7 +380,7 @@ export class brtService implements OnDestroy {
                         for (let i=startIndex; i <= endIndex; i++){
                             this.getLedger(i);
                         }
-                        this.ledgersLoaded = true;   
+                        this.ledgersLoaded = true;
                     }
                 } else if(incommingMessage['id'] == 'AccountUpdates'){
                     this.logger.debug("### brtService - Account Update: " + JSON.stringify(incommingMessage.result));
@@ -435,12 +435,12 @@ export class brtService implements OnDestroy {
                         // insert into the wallet
                         this.walletService.addTransaction(dbTX);
                         this.notificationService.addMessage(
-                            { title:'Transaction Submitted', 
+                            { title:'Transaction Submitted',
                               body:'Your transaction has been submitted succesfully to the network.'
                             });
                     } else {
                         this.notificationService.addMessage(
-                            { title:'Transaction Submit Error', 
+                            { title:'Transaction Submit Error',
                               body: incommingMessage.result.engine_result_message
                             });
                     }
@@ -460,14 +460,14 @@ export class brtService implements OnDestroy {
                         // save updated record
                         this.walletService.updateTransaction(tx);
                         let updateTxIndex = this.transactions.findIndex( item => item.txID == tx.txID);
-                        this.transactions[updateTxIndex] = tx;    
+                        this.transactions[updateTxIndex] = tx;
                     }
                     // update accounts
                     if(tx.direction == AppConstants.KEY_WALLET_TX_IN){
                         this.getAccountInfo(tx.destination, false);
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
-                                {title: 'Incoming BRT Transaction', 
+                                {title: 'Incoming BRT Transaction',
                                 body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
                                     ' coins from ' + tx.accountID});
                         }
@@ -475,7 +475,7 @@ export class brtService implements OnDestroy {
                         this.getAccountInfo(tx.accountID, false);
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
-                                {title: 'Outgoing BRT Transaction', 
+                                {title: 'Outgoing BRT Transaction',
                                 body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
                                     ' coins to ' + tx.destination});
                         }
@@ -484,7 +484,7 @@ export class brtService implements OnDestroy {
                         this.getAccountInfo(tx.accountID, false);
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
-                                {title: 'Wallet Transaction', 
+                                {title: 'Wallet Transaction',
                                 body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
                                     ' coins to your own address ' + tx.destination});
                         }
@@ -499,7 +499,7 @@ export class brtService implements OnDestroy {
                         // check the TransactionType
                         if(element.tx.TransactionType == 'Payment'){
                             this.logger.debug("### brtService - Payment Tx: " + element.tx.hash);
-                            let tx = { 
+                            let tx = {
                                 validated: element.validated,
                                 ledger_index: element.tx.ledger_index,
                                 transaction: element.tx,
@@ -532,13 +532,13 @@ export class brtService implements OnDestroy {
             } else if(incommingMessage.status === 'error'){
                 this.logger.debug("### brtService - Error Received: " + JSON.stringify(incommingMessage));
 
-            } else { 
+            } else {
                 this.logger.debug("unmapped message: " + JSON.stringify(incommingMessage));
             }
         });
     }
 
-    
+
     sendCommand(command: Object){
         this.wsService.sendingCommands.next(JSON.stringify(command));
     }
@@ -613,7 +613,7 @@ export class brtService implements OnDestroy {
         // check if we have a marker to start from
         if(startMarker){
             this.logger.debug("### brtService - getAccountTx - addMarker: " + JSON.stringify(startMarker));
-            accountTxRequest['marker'] = startMarker; 
+            accountTxRequest['marker'] = startMarker;
         }
         this.sendCommand(accountTxRequest);
     }
@@ -640,11 +640,11 @@ export class brtService implements OnDestroy {
     }
 
     generateNewKeyPair(): LokiKey {
-        let newKeyPair: LokiKey = { 
-            privateKey: "", 
-            publicKey: "", 
-            accountID: "", 
-            secret: "", 
+        let newKeyPair: LokiKey = {
+            privateKey: "",
+            publicKey: "",
+            accountID: "",
+            secret: "",
             encrypted: false
         };
         newKeyPair.secret = this.electron.remote.getGlobal("vars").brtKeypairs.generateSeed();
@@ -704,7 +704,7 @@ export class brtService implements OnDestroy {
         if(input.sequence !== undefined){
              txJSON.Sequence = input.sequence;
         }
-    
+
         if (input.invoiceID !== undefined) {
             txJSON.InvoiceID = input.invoiceID;
         }
@@ -728,7 +728,7 @@ export class brtService implements OnDestroy {
             tx.SigningPubKey = accountKey.publicKey;
             let encodedTx = this.electron.remote.getGlobal("vars").brtBinaryCodec.encodeForSigning(tx);
             tx.TxnSignature = this.electron.remote.getGlobal("vars").brtKeypairs.sign(encodedTx, privateKey);
-            return this.electron.remote.getGlobal("vars").brtBinaryCodec.encode(tx);   
+            return this.electron.remote.getGlobal("vars").brtBinaryCodec.encode(tx);
         } else {
             // something went wrong, probably a wrong password
             return AppConstants.KEY_ERRORED;
@@ -861,7 +861,7 @@ export class brtService implements OnDestroy {
             this.getAccountInfo(dbTX.destination, false);
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
-                    {title: 'Incoming BRT Transaction', 
+                    {title: 'Incoming BRT Transaction',
                     body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
                         ' coins from ' + dbTX.accountID + bodyMessage});
             }
@@ -869,7 +869,7 @@ export class brtService implements OnDestroy {
             this.getAccountInfo(dbTX.accountID, false);
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
-                    {title: 'Outgoing BRT Transaction', 
+                    {title: 'Outgoing BRT Transaction',
                     body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
                         ' coins to ' + dbTX.destination + bodyMessage});
             }
@@ -878,7 +878,7 @@ export class brtService implements OnDestroy {
             this.getAccountInfo(dbTX.accountID, false);
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
-                    {title: 'Wallet Transaction', 
+                    {title: 'Wallet Transaction',
                     body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
                         ' coins to your own address ' + dbTX.destination + bodyMessage});
             }
@@ -930,7 +930,7 @@ export class brtService implements OnDestroy {
                         this.getAccountInfo(dbTX.destination, false);
                         if (!this.fullAccountRefresh) {
                             this.notificationService.addMessage(
-                                {title: 'Incoming CRN Fee Transaction', 
+                                {title: 'Incoming CRN Fee Transaction',
                                 body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
                                     ' coins for CRN Ledger Round ' + dbTX.lastLedgerSequence});
                         }
@@ -966,8 +966,8 @@ export class brtService implements OnDestroy {
         accumulator.concat(_tx.Signers || []), []);
 
         const signers = unsortedSigners.sort((a, b) => {
-            const hexA = new BigNumber((Buffer.from( brtAddressCodec.decodeAddress(a.Signer.Account))).toString('hex'), 16);
-            const hexB = new BigNumber((Buffer.from( brtAddressCodec.decodeAddress(b.Signer.Account))).toString('hex'), 16);
+            const hexA = new BigNumber((Buffer.from( brtAddressCodec.decodeAccountID(a.Signer.Account))).toString('hex'), 16);
+            const hexB = new BigNumber((Buffer.from( brtAddressCodec.decodeAccountID(b.Signer.Account))).toString('hex'), 16);
             return hexA.comparedTo(hexB);
         });
 
@@ -988,10 +988,10 @@ export class brtService implements OnDestroy {
         return "";
         }
     }
-    
+
     verifyMessage(msg: string, signature: string, publicKey: string): boolean {
         return this.electron.remote.getGlobal('vars').brtKeypairs.verifyMessage(this.convertStringToHex(msg), signature, publicKey);
-    } 
-  
+    }
+
 
 }
