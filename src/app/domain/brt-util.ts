@@ -8,15 +8,15 @@ export class BRTUtil {
     static brtToUnixTimestamp(rpepoch: number): number {
         return (rpepoch + 0x386D4380) * 1000
     }
-    
+
     static unixTobrtTimestamp(timestamp: number): number {
         return Math.round(timestamp / 1000) - 0x386D4380
     }
-    
+
     static brtTimeToISO8601(brtTime: number): string {
         return new Date(this.brtToUnixTimestamp(brtTime)).toISOString()
     }
-    
+
     static iso8601TobrtTime(iso8601: string): number {
         return this.unixTobrtTimestamp(Date.parse(iso8601))
     }
@@ -25,22 +25,22 @@ export class BRTUtil {
         return this.unixTobrtTimestamp(Date.now());
     }
 
-    static dropsToCsc(drops: string): string {
+    static dropsToBrt(drops: string): string {
         try{
             let bigDrops = new Big(drops);
             if(bigDrops > 0){
-                return (bigDrops).div(100000000.0).toString();
+                return (bigDrops).div(1000000.0).toString();
             } else {
                 return "0.00";
             }
         } catch {
             return "0.00";
         }
-        
+
     }
 
     static brtToDrops(brt: string): string {
-        let brt_drops = (new Big(brt)).times(100000000.0);
+        let brt_drops = (new Big(brt)).times(1000000.0);
         return brt_drops.toString();
     }
 
@@ -94,7 +94,7 @@ export class BRTUtil {
         }
         return {
             Memo: removeUndefined({
-                MemoData: stringToHex(inputMemo.memo.memoData), 
+                MemoData: stringToHex(inputMemo.memo.memoData),
                 MemoType: stringToHex(inputMemo.memo.memoType),
                 MemoFormat: stringToHex(inputMemo.memo.memoFormat)
             })
@@ -164,7 +164,7 @@ export class BRTUtil {
         for (var i=0; i<length ; ++i) {
             var char = accountID[i];
             var p = positions[char];
-    
+
             // if we encounter an invalid character, decoding fails
             if (p === undefined) {
                 return false;
@@ -177,7 +177,7 @@ export class BRTUtil {
                 seen_other = true;
             }
         }
-        var hex = num.toString(16);        
+        var hex = num.toString(16);
         // num.toString(16) does not have leading 0
         if (hex.length % 2 !== 0) {
             hex = '0' + hex;

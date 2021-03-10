@@ -76,7 +76,7 @@ export class SendCoinsComponent implements OnInit {
   footer_visible: boolean = false;
   error_message: string = "";
 
-  constructor(private logger:LogService, 
+  constructor(private logger:LogService,
               private brtService: brtService,
               private walletService: WalletService,
               private messageService: MessageService,
@@ -92,7 +92,7 @@ export class SendCoinsComponent implements OnInit {
       if(result == AppConstants.KEY_LOADED){
         this.walletService.getAllAccounts().forEach( element => {
           if(new Big(element.balance) > 0){
-            let accountLabel = element.label + " - " + element.accountID.substring(0,10) + '...' + " [Balance: " + 
+            let accountLabel = element.label + " - " + element.accountID.substring(0,10) + '...' + " [Balance: " +
                                 this.brtAmountPipe.transform(element.balance, false, true) + "]";
             this.accounts.push({label: accountLabel, value: element.accountID});
           }
@@ -115,9 +115,9 @@ export class SendCoinsComponent implements OnInit {
       if(serverState.server_state == 'full'){
         if(serverState.validated_ledger != null && serverState.validated_ledger.base_fee != null){
           this.allowSendFromCurrentConnection = true;
-          this.fees = BRTUtil.dropsToCsc(serverState.validated_ledger.base_fee.toString());
+          this.fees = BRTUtil.dropsToBrt(serverState.validated_ledger.base_fee.toString());
           this.minimalFee = this.fees;
-          this.accountReserve = BRTUtil.dropsToCsc(serverState.validated_ledger.reserve_base.toString());
+          this.accountReserve = BRTUtil.dropsToBrt(serverState.validated_ledger.reserve_base.toString());
         } else {
           this.allowSendFromCurrentConnection = false;
         }
@@ -144,7 +144,7 @@ export class SendCoinsComponent implements OnInit {
     });
     // this.brtService.ledgerSubject.subscribe( ledger => {
     //   this.logger.debug("### SendCoins - ledger: " + JSON.stringify(ledger));
-    //   this.fees = BRTUtil.dropsToCsc(ledger.fee_base.toString());
+    //   this.fees = BRTUtil.dropsToBrt(ledger.fee_base.toString());
     //   this.minimalFee = this.fees;
     //   this.logger.debug("### SendCoins - minimalFee: " + this.minimalFee);
     // });
@@ -165,7 +165,7 @@ export class SendCoinsComponent implements OnInit {
     this.accounts.push({label:'Select Account ...', value:null});
     this.walletService.getAllAccounts().forEach( element => {
       if(new Big(element.balance) > 0){
-        let accountLabel = element.label + "(" + element.accountID.substring(0,8)+ "...) [Balance: " + BRTUtil.dropsToCsc(element.balance) + "]";
+        let accountLabel = element.label + "(" + element.accountID.substring(0,8)+ "...) [Balance: " + BRTUtil.dropsToBrt(element.balance) + "]";
         this.accounts.push({label: accountLabel, value: element.accountID});
       }
     });
@@ -256,9 +256,9 @@ export class SendCoinsComponent implements OnInit {
       this.walletPassword = "";
       this.signAndSubmitIcon = "fa-check";
     } else {
-      let preparePayment: PrepareTxPayment = 
-          { source: this.selectedAccount, 
-            destination: this.recipient, 
+      let preparePayment: PrepareTxPayment =
+          { source: this.selectedAccount,
+            destination: this.recipient,
             amountDrops: BRTUtil.brtToDrops(this.amount),
             feeDrops: BRTUtil.brtToDrops(this.fees),
             description: this.description
@@ -307,8 +307,8 @@ export class SendCoinsComponent implements OnInit {
     this.initPasswordCheck();
     if(!this.allowSendFromCurrentConnection){
       this.electronService.remote.dialog.showMessageBox(
-        { message: "The server you are connected to can not relay your transaction at this moment. Reconnect or close and re-open your wallet to retry.", 
-          buttons: ["OK"] 
+        { message: "The server you are connected to can not relay your transaction at this moment. Reconnect or close and re-open your wallet to retry.",
+          buttons: ["OK"]
         });
     } else {
       this.showPasswordDialog = true;
@@ -354,16 +354,16 @@ export class SendCoinsComponent implements OnInit {
           } else {
             amountToSend = maxToSend;
           }
-          this.amount = BRTUtil.dropsToCsc(amountToSend.toString());
+          this.amount = BRTUtil.dropsToBrt(amountToSend.toString());
           this.logger.debug("### Set amount to limited: " + this.amount);
         }
         // set total to send
         if(!includeReserve){
-          this.totalSend = BRTUtil.dropsToCsc(
+          this.totalSend = BRTUtil.dropsToBrt(
             amountToSend.plus(new Big(BRTUtil.brtToDrops(this.fees)))
           );
         } else {
-          this.totalSend = BRTUtil.dropsToCsc(
+          this.totalSend = BRTUtil.dropsToBrt(
             amountToSend.plus(new Big(BRTUtil.brtToDrops(this.fees)))
                         .plus(new Big(BRTUtil.brtToDrops(this.accountReserve)))
           );
@@ -413,13 +413,13 @@ export class SendCoinsComponent implements OnInit {
   sendAllCoins() {
     this.logger.debug('### Send All coins !!');
     if (!this.includeReserve) {
-      this.amount = BRTUtil.dropsToCsc(
+      this.amount = BRTUtil.dropsToBrt(
         new Big(this.walletService.getAccountBalance(this.selectedAccount))
           .minus(new Big(BRTUtil.brtToDrops(this.fees)))
           .minus(new Big(BRTUtil.brtToDrops(this.accountReserve)))
       );
     } else {
-      this.amount = BRTUtil.dropsToCsc(
+      this.amount = BRTUtil.dropsToBrt(
         new Big(this.walletService.getAccountBalance(this.selectedAccount))
           .minus(new Big(BRTUtil.brtToDrops(this.fees)))
       );

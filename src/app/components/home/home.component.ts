@@ -803,7 +803,7 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   doBalanceUpdate() {
     this.walletBalance = this.walletService.getWalletBalance() ? this.walletService.getWalletBalance() : "0";
     this.logger.debug("### HOME - Wallet Balance: " + this.walletBalance);
-    this.balance = BRTUtil.dropsToCsc(this.walletBalance);
+    this.balance = BRTUtil.dropsToBrt(this.walletBalance);
     let balanceBRT = new Big(this.balance);
     if(this.marketService.coinMarketInfo != null && this.marketService.coinMarketInfo.price_fiat !== undefined){
       this.logger.debug("### BRT Price: " + this.marketService.brtPrice + " BTC: " + this.marketService.btcPrice + " Fiat: " + this.marketService.coinMarketInfo.price_fiat);

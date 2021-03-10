@@ -25,7 +25,7 @@ export class BRTAmountPipe implements PipeTransform {
         if(value == null){
             return "";
         } else if(isNaN(value)){
-            let amount = BRTUtil.dropsToCsc(value);
+            let amount = BRTUtil.dropsToBrt(value);
             if(numberFormat != null && numberFormat){
                 amount = this.numberPipe.transform(amount, "1.2-8");
             }
@@ -34,7 +34,7 @@ export class BRTAmountPipe implements PipeTransform {
             }
             return amount;
         } else {
-            let amount = BRTUtil.dropsToCsc(value.toString());
+            let amount = BRTUtil.dropsToBrt(value.toString());
             if(numberFormat != null && numberFormat){
                 amount = this.numberPipe.transform(amount, "1.2-8");
             }

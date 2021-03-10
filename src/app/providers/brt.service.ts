@@ -468,7 +468,7 @@ export class brtService implements OnDestroy {
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
                                 {title: 'Incoming BRT Transaction',
-                                body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
+                                body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToBrt(tx.amount), "1.2-8") +
                                     ' coins from ' + tx.accountID});
                         }
                     } else if(tx.direction == AppConstants.KEY_WALLET_TX_OUT){
@@ -476,7 +476,7 @@ export class brtService implements OnDestroy {
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
                                 {title: 'Outgoing BRT Transaction',
-                                body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
+                                body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToBrt(tx.amount), "1.2-8") +
                                     ' coins to ' + tx.destination});
                         }
                     } else {
@@ -485,7 +485,7 @@ export class brtService implements OnDestroy {
                         if(notifyUser && !this.fullAccountRefresh){
                             this.notificationService.addMessage(
                                 {title: 'Wallet Transaction',
-                                body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(tx.amount), "1.2-8") +
+                                body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToBrt(tx.amount), "1.2-8") +
                                     ' coins to your own address ' + tx.destination});
                         }
                     }
@@ -862,7 +862,7 @@ export class brtService implements OnDestroy {
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
                     {title: 'Incoming BRT Transaction',
-                    body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                    body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToBrt(dbTX.amount), "1.2-8") +
                         ' coins from ' + dbTX.accountID + bodyMessage});
             }
         } else if(dbTX.direction == AppConstants.KEY_WALLET_TX_OUT){
@@ -870,7 +870,7 @@ export class brtService implements OnDestroy {
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
                     {title: 'Outgoing BRT Transaction',
-                    body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                    body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToBrt(dbTX.amount), "1.2-8") +
                         ' coins to ' + dbTX.destination + bodyMessage});
             }
         } else {
@@ -879,7 +879,7 @@ export class brtService implements OnDestroy {
             if (!this.fullAccountRefresh) {
                 this.notificationService.addMessage(
                     {title: 'Wallet Transaction',
-                    body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                    body: 'You sent '+ this.decimalPipe.transform(BRTUtil.dropsToBrt(dbTX.amount), "1.2-8") +
                         ' coins to your own address ' + dbTX.destination + bodyMessage});
             }
         }
@@ -931,7 +931,7 @@ export class brtService implements OnDestroy {
                         if (!this.fullAccountRefresh) {
                             this.notificationService.addMessage(
                                 {title: 'Incoming CRN Fee Transaction',
-                                body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToCsc(dbTX.amount), "1.2-8") +
+                                body: 'You received '+ this.decimalPipe.transform(BRTUtil.dropsToBrt(dbTX.amount), "1.2-8") +
                                     ' coins for CRN Ledger Round ' + dbTX.lastLedgerSequence});
                         }
                     } else {
