@@ -1268,7 +1268,7 @@ p-togglebutton.ng-dirty.ng-invalid .ui-button {
   color: #212121;
 }
 .ui-datepicker.ui-widget .ui-datepicker-calendar td a.ui-state-active {
-  background-color: #2a454e;
+  background-color: #00a88f;
   color: #ffffff;
 }
 .ui-datepicker.ui-widget .ui-datepicker-calendar tr:last-child td {
