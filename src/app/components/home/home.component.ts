@@ -805,6 +805,10 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
     this.logger.debug("### HOME - Wallet Balance: " + this.walletBalance);
     this.balance = BRTUtil.dropsToBrt(this.walletBalance);
     let balanceBRT = new Big(this.balance);
+    let fiatValue = balanceBRT.times(new Big('0.5')).toString();
+    this.fiat_balance = this.currencyPipe.transform(fiatValue, 'USD', "symbol", "1.2-2")
+    // TODO: remove it on coinmarketcap activation
+    return
     if(this.marketService.coinMarketInfo != null && this.marketService.coinMarketInfo.price_fiat !== undefined){
       this.logger.debug("### BRT Price: " + this.marketService.brtPrice + " BTC: " + this.marketService.btcPrice + " Fiat: " + this.marketService.coinMarketInfo.price_fiat);
       let fiatValue = balanceBRT.times(new Big(this.marketService.coinMarketInfo.price_fiat)).toString();

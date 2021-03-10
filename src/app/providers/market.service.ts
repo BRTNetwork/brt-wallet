@@ -19,7 +19,7 @@ export class MarketService {
     public exchangeUpdates = new Subject<Array<ExchangesType>>();
     public coininfoUpdates = new Subject<CoinMarketCapType>();
     public btcPrice: number = 1;
-    public brtPrice: number = 0.00000001;
+    public brtPrice: number = 0.000001;
     public fiatCurrency = 'USD';
 
     constructor(private logger: LogService,
@@ -54,15 +54,16 @@ export class MarketService {
     getFiatCurrencies(): SelectItem[] {
         let currencies: SelectItem[] = [];
         currencies.push({label: 'USD', value: 'USD'});
-        currencies.push({label: 'EUR', value: 'EUR'});
-        currencies.push({label: 'GBP', value: 'GBP'});
-        currencies.push({label: 'JPY', value: 'JPY'});
-        currencies.push({label: 'CAD', value: 'CAD'});
-        currencies.push({label: 'AUD', value: 'AUD'});
-        currencies.push({label: 'BRL', value: 'BRL'});
-        currencies.push({label: 'CHF', value: 'CHF'});
-        currencies.push({label: 'NZD', value: 'NZD'});
-        currencies.push({label: 'RUB', value: 'RUB'});
+        // TODO: remove it on coinmarketcap activation
+        // currencies.push({label: 'EUR', value: 'EUR'});
+        // currencies.push({label: 'GBP', value: 'GBP'});
+        // currencies.push({label: 'JPY', value: 'JPY'});
+        // currencies.push({label: 'CAD', value: 'CAD'});
+        // currencies.push({label: 'AUD', value: 'AUD'});
+        // currencies.push({label: 'BRL', value: 'BRL'});
+        // currencies.push({label: 'CHF', value: 'CHF'});
+        // currencies.push({label: 'NZD', value: 'NZD'});
+        // currencies.push({label: 'RUB', value: 'RUB'});
         return currencies;
     }
 
@@ -109,7 +110,7 @@ export class MarketService {
         this.http.get<Array<ExchangesType>>(this.exchangesURL, options).subscribe(result => {
             this.exchanges = result;
             // get max last price
-            this.brtPrice = 0.00000001;
+            this.brtPrice = 0.000001;
             this.exchanges.forEach(exchange => {
                 if (exchange.last > this.brtPrice) {
                     this.brtPrice = exchange.last;
