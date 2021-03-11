@@ -896,14 +896,14 @@ export class HomeComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   onSendCoins() {
-    this.logger.debug("Send Coins Clicked !!");
+    this.logger.debug("Send Clicked !!");
     this.active_menu_item = "send";
     // navigate to send
     this.router.navigate(['home', 'send']);
   }
 
   onReceiveCoins() {
-    this.logger.debug("Receive Coins Clicked !!");
+    this.logger.debug("Receive Clicked !!");
     this.active_menu_item = "receive";
     // navigate to receive
     this.router.navigate(['home', 'receive']);

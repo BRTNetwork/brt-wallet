@@ -11,7 +11,7 @@ import { ElectronService } from '../../../providers/electron.service';
 export class SupportComponent implements OnInit {
 
   constructor(private logger: LogService,
-              private electronService: ElectronService) { 
+              private electronService: ElectronService) {
           this.logger.debug("### INIT Support ###");
   }
 
@@ -21,17 +21,12 @@ export class SupportComponent implements OnInit {
 
   openFAQ(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://brt.network/faq/");
+    this.electronService.remote.shell.openExternal("https://brt.network/#faq");
   }
 
   openReddit(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://www.reddit.com/r/brt/");
-  }
-
-  openDiscord(){
-    event.preventDefault();
-    this.electronService.remote.shell.openExternal("http://brt.chat/");
+    this.electronService.remote.shell.openExternal("https://www.reddit.com/r/BRTNetwork/");
   }
 
   openWebsite(){
@@ -46,26 +41,21 @@ export class SupportComponent implements OnInit {
 
   openContactForm(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://brt.network/contact");
+    this.electronService.remote.shell.openExternal("https://brt.network/");
   }
 
   openEmail(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("mailto:support@brt.org");
+    this.electronService.remote.shell.openExternal("mailto:support@brt.network");
   }
 
   openFacebook(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://www.facebook.com/brt/");
+    this.electronService.remote.shell.openExternal("https://www.facebook.com/brt.network/");
   }
 
   openTwitter(){
     event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://twitter.com/brt");
-  }
-
-  openBitcoinTalk() {
-    event.preventDefault();
-    this.electronService.remote.shell.openExternal("https://bitcointalk.org/index.php?topic=3262543.0");
+    this.electronService.remote.shell.openExternal("https://twitter.com/BRTNetwork");
   }
 }

@@ -41,7 +41,7 @@ globalTS.vars.exitFromRenderer = false;
 globalTS.vars.exitFromLogin = false;
 
 // define auto update url
-let updaterFeedURL = 'https://download.brt.org/update/' + platform + '/' + version;
+let updaterFeedURL = 'https://download.brt.network/update/' + platform + '/' + version;
 if(version.indexOf("beta") !== -1){
 	updaterFeedURL = updaterFeedURL + '/' + 'beta';
 }

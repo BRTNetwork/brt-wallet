@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LogService } from '../../../providers/log.service';
 import { AppConstants } from '../../../domain/app-constants';
-import { Menu as ElectronMenu, MenuItem as ElectronMenuItem } from "electron"; 
+import { Menu as ElectronMenu, MenuItem as ElectronMenuItem } from "electron";
 import { ElectronService } from '../../../providers/electron.service';
 import { MarketService } from '../../../providers/market.service';
 import { BRTUtil } from '../../../domain/brt-util';
@@ -20,13 +20,13 @@ export class ExchangesComponent implements OnInit {
   selectedExchangeRow: ExchangesType;
   exchanges: Array<ExchangesType> = [];
   fiatValue: string = "0.00";
-  coinSupply: string = "40000000000";
+  coinSupply: string = "21000000";
   marketCapital: string = "0.00";
 
   constructor(private logger: LogService,
               private electronService: ElectronService,
               private marketService: MarketService,
-              private currencyPipe: CurrencyPipe ) { 
+              private currencyPipe: CurrencyPipe ) {
     this.logger.debug("### INIT Exchanges ###");
     this.exchanges = this.marketService.exchanges;
   }
@@ -34,14 +34,14 @@ export class ExchangesComponent implements OnInit {
   ngOnInit() {
     // init exchanges context menu
     let exchanges_context_menu_template = [
-      { label: 'Visit Exchange', 
+      { label: 'Visit Exchange',
         click(menuItem, browserWindow, event) {
           browserWindow.webContents.send('exchanges-context-menu-event', 'visit-exchange');
         }
       }
     ];
     this.exchange_context_menu = this.electronService.remote.Menu.buildFromTemplate(exchanges_context_menu_template);
-    
+
     // listen to address context menu events
     this.electronService.ipcRenderer.on('exchanges-context-menu-event', (event, arg) => {
       this.logger.debug("### Exchanges Menu Event: " + arg);
@@ -85,7 +85,7 @@ export class ExchangesComponent implements OnInit {
     this.selectedExchangeRow = e.data;
   }
 
-  
+
   visitExchange(){
     if(this.selectedExchangeRow){
       this.electronService.remote.shell.openExternal(this.selectedExchangeRow.tradeURL);

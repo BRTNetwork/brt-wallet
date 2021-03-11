@@ -175,7 +175,7 @@ export class PaperwalletComponent implements OnInit {
                 <strong>Step 4. Keep your private key secret</strong><br>
                 <p>The private key is literally the keys to your coins. If someone were to obtain it, they could withdraw the funds currently in the wallet, and any funds that might be deposited in that wallet.<br>
                 </p><br>
-                <p>Please test sending a small amount before receiving any large payments. You can check the balance of your wallet using your public address here: https://explorer.brt.org/<br></p>
+                <p>Please test sending a small amount before receiving any large payments. You can check the balance of your wallet using your public address here: https://explorer.brt.network/<br></p>
             </div>
             </body>
           </html>`)

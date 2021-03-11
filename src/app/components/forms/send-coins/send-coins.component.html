@@ -1,5 +1,5 @@
 <div class="ui-g form-container">
-    <p class="form-text-header">Send Coins</p>
+    <p class="form-text-header">Send</p>
     <div class="ui-g-12">
         <div class="ui-inputgroup">
             <span class="ui-inputgroup-addon" style="box-sizing: content-box; width: 50px;"><i class="icon icon-id"></i></span>
@@ -23,7 +23,7 @@
         <div class="ui-inputgroup">
             <span class="ui-inputgroup-addon" style="box-sizing: content-box; width: 50px;"><i class="icon icon-text"></i></span>
             <input type="text" pInputText placeholder="Description" [(ngModel)]="description" (keyup.enter)="focusAmount()"
-                    [disabled]="!selectedAccount || invalidReceipient" #descriptionInput>         
+                    [disabled]="!selectedAccount || invalidReceipient" #descriptionInput>
         </div>
     </div>
     <div class="ui-g-12">
@@ -31,7 +31,7 @@
             <span class="ui-inputgroup-addon" style="box-sizing: content-box; width: 50px;"><i class="icon icon-tag"></i></span>
             <input type="number" placeholder="Destination Tag" [(ngModel)]="destinationTag" (keyup.enter)="focusAmount()"
                     [disabled]="!selectedAccount || invalidReceipient" min="1" step="1" (ngModelChange)="onDestinationTagChange($event)"
-                    #destinationTagInput>         
+                    #destinationTagInput>
         </div>
     </div>
     <!-- DISABLED InvoiceID for now, need to add checks to validate its contents
@@ -39,7 +39,7 @@
         <div class="ui-inputgroup">
             <span class="ui-inputgroup-addon" style="box-sizing: content-box; width: 50px;">ID</span>
             <input type="text" pInputText placeholder="Invoice ID" [(ngModel)]="invoiceID" (keyup.enter)="focusAmount()"
-                    [disabled]="!selectedAccount || invalidReceipient" #invoiceIDInput>         
+                    [disabled]="!selectedAccount || invalidReceipient" #invoiceIDInput>
         </div>
     </div>
     -->
@@ -47,7 +47,7 @@
         <div class="ui-inputgroup">
             <span class="ui-inputgroup-addon" style="box-sizing: content-box; width: 50px;">Amount</span>
             <input type="text" pInputText placeholder="Amount" [(ngModel)]="amount" (keyup.enter)="focusFees()"
-                    [disabled]="!selectedAccount || invalidReceipient" (ngModelChange)="onAmountChange($event)" 
+                    [disabled]="!selectedAccount || invalidReceipient" (ngModelChange)="onAmountChange($event)"
                     autocomplete="off" #amountInput id="amount">
             <button pButton type="button" (click)="sendAllCoins()" label="all" [disabled]="!selectedAccount || invalidReceipient"></button>
         </div>
@@ -57,21 +57,21 @@
             <span class="ui-inputgroup-addon" style="box-sizing: content-box; width: 50px;">Fees</span>
             <input type="number" pInputText placeholder="Fees" [(ngModel)]="fees" (keyup.enter)="doSendCoins()"
                     min="{{minimalFee}}" step="{{minimalFee}}" [disabled]="!selectedAccount || invalidReceipient"
-                    (ngModelChange)="onFeesChange($event)" #feesInput>         
+                    (ngModelChange)="onFeesChange($event)" #feesInput>
         </div>
     </div>
     <!--
     <div class="ui-g-12">
         <div class="ui-inputgroup" [matTooltip]="reserve_tooltip">
             <span class="ui-inputgroup-addon" style="box-sizing: content-box; width: 50px;">Reserve</span>
-            <input type="number" pInputText [(ngModel)]="accountReserve" #reserveInput disabled>         
+            <input type="number" pInputText [(ngModel)]="accountReserve" #reserveInput disabled>
         </div>
     </div>
     -->
     <div class="ui-g-12">
         <div class="ui-inputgroup" [matTooltip]="total_tooltip">
             <span class="ui-inputgroup-addon" style="box-sizing: content-box; width: 50px;">Total</span>
-            <input type="text" pInputText [ngModel]="totalSendFormatted" #totalSendInput disabled>         
+            <input type="text" pInputText [ngModel]="totalSendFormatted" #totalSendInput disabled>
         </div>
     </div>
     <!-- We need to have the option to include the reserve as well in the future !!!
@@ -87,14 +87,14 @@
         <button pButton type="button" (click)="showGenerateTx()" icon="icon icon-arrow-right" iconPos="left" label="Generate Multisigning Transaction"
                 *ngIf="walletMasterKeyDisabled || multiSignEnabled"
                 [disabled]="!isSendValid || !isConnected"></button>
-        <button pButton type="button" (click)="doSendCoins()"  *ngIf="!walletMasterKeyDisabled" icon="icon icon-arrow-right" iconPos="left" label="Send Coins"
+        <button pButton type="button" (click)="doSendCoins()"  *ngIf="!walletMasterKeyDisabled" icon="icon icon-arrow-right" iconPos="left" label="Send"
                 [disabled]="!isSendValid || !isConnected"></button>
     </div>
 </div>
 
 
 
-<p-dialog [(visible)]="showPasswordDialog" [width]="480" [height]="325" [closable]="true" 
+<p-dialog [(visible)]="showPasswordDialog" [width]="480" [height]="325" [closable]="true"
     [modal]="true" appendTo="body">
     <p-header>
         <i class="icon brt-dialog-icon icon-chip"></i>
@@ -103,8 +103,8 @@
     <div class="ui-g ui-fluid">
         <div class="ui-g-1"></div>
         <div class="ui-g-10">
-            <p>You are about to send <span class="confirm-text">{{amount | toNumber | number:'1.2-8'}}</span> 
-                coins to account <span class="confirm-text">{{recipient}}</span> and are paying <span class="confirm-text">{{fees}}</span>  
+            <p>You are about to send <span class="confirm-text">{{amount | toNumber | number:'1.2-8'}}</span>
+                coins to account <span class="confirm-text">{{recipient}}</span> and are paying <span class="confirm-text">{{fees}}</span>
                 in fees for the transaction.</p>
             <p>Please enter your wallet password to confirm and sign your transaction.</p>
         </div>
@@ -116,7 +116,7 @@
             <div class="ui-inputgroup">
                 <span class="ui-inputgroup-addon" style="box-sizing: content-box;"><i class="icon icon-key"></i></span>
                 <input type="password" pInputText placeholder="Wallet Password" style="width: 100%; padding-left: 5px;"
-                       [(ngModel)]="walletPassword" (keyup.enter)="doSignAndSubmitTx()" #passwordInput>         
+                       [(ngModel)]="walletPassword" (keyup.enter)="doSignAndSubmitTx()" #passwordInput>
             </div>
         </div>
         <div class="ui-g-1"></div>
@@ -124,11 +124,11 @@
     <div class="ui-g ui-fluid">
         <div class="ui-g-1"></div>
         <div class="ui-g-5">
-            <button pButton type="button" (click)="cancelSend()" icon="fa-ban" iconPos="right" label="Cancel" 
+            <button pButton type="button" (click)="cancelSend()" icon="fa-ban" iconPos="right" label="Cancel"
                 style="width: 165px;"></button>
         </div>
         <div class="ui-g-5">
-            <button pButton type="button" (click)="doSignAndSubmitTx()" [(icon)]="signAndSubmitIcon" iconPos="right" 
+            <button pButton type="button" (click)="doSignAndSubmitTx()" [(icon)]="signAndSubmitIcon" iconPos="right"
                         label="Sign And Submit" style="width: 165px;"></button>
         <div class="ui-g-1"></div>
         </div>
@@ -148,7 +148,7 @@
         <div class="ui-g-1"></div>
         <div class="ui-g-10">
             <p>Create a multisignature transaction for sending <span class="confirm-text">{{amount | toNumber | number:'1.2-8'}}</span>
-                coins from account <span class="confirm-text">{{selectedAccount}}</span> to account <span class="confirm-text">{{recipient}}</span> 
+                coins from account <span class="confirm-text">{{selectedAccount}}</span> to account <span class="confirm-text">{{recipient}}</span>
                 with a fee of <span class="confirm-text">{{fees}}</span> coins.</p>
             <p>Please enter your wallet password to create and view the transaction.</p>
         </div>

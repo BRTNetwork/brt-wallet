@@ -15,14 +15,14 @@ import { Connection } from 'rxjs-websockets';
 export class WebsocketService {
 
     private TEST_SERVERS: Array<ServerDefinition> = [
-        { server_id: 'wst01.brt.org', server_url: 'ws://wst01.brt.org:7007/', response_time: -1 },
-        { server_id: 'wst02.brt.org', server_url: 'ws://wst02.brt.org:7007/', response_time: -1 }
+        // { server_id: 'wst01.brt.network', server_url: 'ws://wst01.brt.network:7007/', response_time: -1 },
+        // { server_id: 'wst02.brt.network', server_url: 'ws://wst02.brt.network:7007/', response_time: -1 }
     ];
     private PROD_SERVERS: Array<ServerDefinition> = [
-        { server_id: 'ws01.brt.org', server_url: 'wss://ws01.brt.org:4443/', response_time: -1 },
-        { server_id: 'ws02.brt.org', server_url: 'wss://ws02.brt.org:4443/', response_time: -1 },
-        { server_id: 'ws03.brt.org', server_url: 'wss://ws03.brt.org:4443/', response_time: -1 },
-        { server_id: 'ws04.brt.org', server_url: 'wss://ws04.brt.org:4443/', response_time: -1 }
+        { server_id: 'vega.brt.network', server_url: 'wss://vega.brt.network/', response_time: -1 },
+        // { server_id: 'ws02.brt.network', server_url: 'wss://ws02.brt.network:4443/', response_time: -1 },
+        // { server_id: 'ws03.brt.network', server_url: 'wss://ws03.brt.network:4443/', response_time: -1 },
+        // { server_id: 'ws04.brt.network', server_url: 'wss://ws04.brt.network:4443/', response_time: -1 }
     ];
 
     private currentServerFound: boolean = false;
